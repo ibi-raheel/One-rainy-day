@@ -1,10 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useApp } from "@/store/app";
 import { I } from "@/components/design/Icons";
 import { CountUp } from "@/components/design/CountUp";
 import { Rainfield } from "@/components/design/Rain";
-import { unitLabel } from "@/lib/units";
-import type { Ingredient } from "@/db/types";
+import type { StockItem } from "@/db/types";
 
 type Status = "ok" | "low" | "critical";
 type Filter = "all" | Status;
@@ -13,92 +12,88 @@ async function copyToClipboard(text: string): Promise<boolean> {
   try { await navigator.clipboard.writeText(text); return true; } catch { return false; }
 }
 
-/**
- * Derive a status from on-hand qty vs reorder point.
- * - critical: ≤ 30% of reorder, or 0 with reorder set
- * - low: ≤ reorder
- * - ok: above reorder, or no reorder set yet
- */
-function statusOf(on_hand: number, reorder: number): Status {
+function statusOf(qty: number, reorder: number): Status {
   if (reorder <= 0) return "ok";
-  if (on_hand <= reorder * 0.3) return "critical";
-  if (on_hand <= reorder) return "low";
+  if (qty <= reorder * 0.3) return "critical";
+  if (qty <= reorder) return "low";
   return "ok";
 }
 
+const COMMON_UNITS = ["ea", "g", "kg", "lb", "oz", "ml", "L", "gal", "pkg", "case", "bottle", "bag"];
+
 export function StockTab() {
+  const stockItems = useApp((s) => s.stockItems);
+  const upsertStockItem = useApp((s) => s.upsertStockItem);
+  const deleteStockItem = useApp((s) => s.deleteStockItem);
   const ingredients = useApp((s) => s.ingredients);
-  const upsert = useApp((s) => s.upsertIngredient);
+
   const [filter, setFilter] = useState<Filter>("all");
+  const [editing, setEditing] = useState<StockItem | "new" | null>(null);
   const [drag, setDrag] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [drafts, setDrafts] = useState<Record<string, { quantity?: string; reorder?: string }>>({});
 
-  // Local edit buffers — keyed by ingredient id, used while typing.
-  // Commit on blur. Avoids a re-render on every keystroke.
-  const [drafts, setDrafts] = useState<Record<string, { on_hand?: string; reorder?: string }>>({});
-
-  const stockRows = useMemo(() => {
-    return ingredients
-      .map((i) => {
-        const onHand = i.on_hand_qty ?? 0;
-        const reorder = i.reorder_point ?? 0;
-        return { ingredient: i, status: statusOf(onHand, reorder) };
-      })
+  const rows = useMemo(() => {
+    return stockItems
+      .map((s) => ({
+        item: s,
+        status: statusOf(s.quantity, s.reorder_point ?? 0),
+      }))
       .sort((a, b) => {
         const order = { critical: 0, low: 1, ok: 2 } as const;
         if (order[a.status] !== order[b.status]) return order[a.status] - order[b.status];
-        return a.ingredient.name.localeCompare(b.ingredient.name);
+        return a.item.name.localeCompare(b.item.name);
       });
-  }, [ingredients]);
+  }, [stockItems]);
 
-  const list = stockRows.filter((s) => filter === "all" || s.status === filter);
   const counts = {
-    all: stockRows.length,
-    critical: stockRows.filter((s) => s.status === "critical").length,
-    low: stockRows.filter((s) => s.status === "low").length,
-    ok: stockRows.filter((s) => s.status === "ok").length,
+    all: rows.length,
+    critical: rows.filter((s) => s.status === "critical").length,
+    low: rows.filter((s) => s.status === "low").length,
+    ok: rows.filter((s) => s.status === "ok").length,
   };
+  const list = rows.filter((s) => filter === "all" || s.status === filter);
 
-  const commit = async (ingredient: Ingredient, field: "on_hand" | "reorder", raw: string) => {
+  const commit = async (item: StockItem, field: "quantity" | "reorder", raw: string) => {
     const num = raw === "" ? 0 : parseFloat(raw);
     if (!isFinite(num) || num < 0) {
-      // bad input, snap back
-      setDrafts((d) => { const n = { ...d }; delete n[ingredient.id]; return n; });
+      setDrafts((d) => { const n = { ...d }; delete n[item.id]; return n; });
       return;
     }
-    const next: Ingredient = {
-      ...ingredient,
-      ...(field === "on_hand"
-        ? { on_hand_qty: num, last_restocked_at: num > (ingredient.on_hand_qty ?? 0) ? new Date().toISOString() : ingredient.last_restocked_at }
+    const next: StockItem = {
+      ...item,
+      ...(field === "quantity"
+        ? {
+            quantity: num,
+            last_restocked_at: num > item.quantity ? new Date().toISOString() : item.last_restocked_at,
+          }
         : { reorder_point: num }),
     };
-    setDrafts((d) => { const n = { ...d }; delete n[ingredient.id]; return n; });
-    await upsert(next as any);
+    setDrafts((d) => { const n = { ...d }; delete n[item.id]; return n; });
+    await upsertStockItem(next);
   };
 
-  const restock = async (ingredient: Ingredient) => {
-    // Restock to 2× reorder, or 1 unit if no reorder set
-    const target = ingredient.reorder_point && ingredient.reorder_point > 0
-      ? ingredient.reorder_point * 2
-      : (ingredient.package_quantity || 1);
-    const next: Ingredient = {
-      ...ingredient,
-      on_hand_qty: target,
+  const restock = async (item: StockItem) => {
+    const target = item.reorder_point && item.reorder_point > 0
+      ? item.reorder_point * 2
+      : Math.max(1, item.quantity);
+    const next: StockItem = {
+      ...item,
+      quantity: target,
       last_restocked_at: new Date().toISOString(),
     };
-    await upsert(next as any);
+    await upsertStockItem(next);
   };
 
   const copyOrderList = async () => {
-    const lowOrCritical = stockRows.filter((s) => s.status !== "ok");
+    const lowOrCritical = rows.filter((s) => s.status !== "ok");
     if (lowOrCritical.length === 0) {
       alert("Nothing below reorder point right now.");
       return;
     }
-    // Group by vendor
-    const byVendor = new Map<string, typeof stockRows>();
+    const byVendor = new Map<string, typeof rows>();
     for (const s of lowOrCritical) {
-      const v = (s.ingredient.vendor || "(no supplier)").trim();
+      const v = (s.item.vendor || "(no supplier)").trim();
       if (!byVendor.has(v)) byVendor.set(v, []);
       byVendor.get(v)!.push(s);
     }
@@ -106,8 +101,8 @@ export function StockTab() {
     for (const [vendor, items] of byVendor) {
       lines.push(`${vendor}:`);
       for (const s of items) {
-        const need = Math.max(0, (s.ingredient.reorder_point ?? 0) * 2 - (s.ingredient.on_hand_qty ?? 0));
-        lines.push(`  • ${s.ingredient.name}: order ~${need.toFixed(2)} ${unitLabel(s.ingredient.package_unit)} (currently ${s.ingredient.on_hand_qty ?? 0})`);
+        const need = Math.max(0, (s.item.reorder_point ?? 0) * 2 - s.item.quantity);
+        lines.push(`  • ${s.item.name}: order ~${need.toFixed(2)} ${s.item.unit} (currently ${s.item.quantity})`);
       }
       lines.push("");
     }
@@ -120,19 +115,18 @@ export function StockTab() {
     }
   };
 
-  // Group order-soon list by supplier for the bottom card
   const orderSoonByVendor = useMemo(() => {
-    const map = new Map<string, typeof stockRows>();
-    for (const s of stockRows) {
+    const map = new Map<string, typeof rows>();
+    for (const s of rows) {
       if (s.status === "ok") continue;
-      const v = (s.ingredient.vendor || "(no supplier)").trim();
+      const v = (s.item.vendor || "(no supplier)").trim();
       if (!map.has(v)) map.set(v, []);
       map.get(v)!.push(s);
     }
     return Array.from(map.entries());
-  }, [stockRows]);
+  }, [rows]);
 
-  const isEmpty = ingredients.length === 0;
+  const isEmpty = stockItems.length === 0;
 
   return (
     <div className="view">
@@ -143,8 +137,8 @@ export function StockTab() {
             <h1>Stock</h1>
             <p className="subtle">
               {isEmpty
-                ? "Add ingredients first; their on-hand and reorder levels live here."
-                : "Click a number to edit. Quick restock fills back to 2× reorder point and stamps the date."}
+                ? "What's actually in your pantry right now. Add an item to start tracking."
+                : "What you have on hand. Click a number to edit. Quick restock fills back to 2× reorder."}
             </p>
           </div>
           <div className="head-stats">
@@ -160,6 +154,13 @@ export function StockTab() {
               <span className="v" style={{ color: "var(--success)" }}><CountUp to={counts.ok} delay={200} /></span>
               <span className="l">ok</span>
             </div>
+            <button
+              className="btn primary"
+              style={{ alignSelf: "center", marginLeft: 8 }}
+              onClick={() => setEditing("new")}
+            >
+              <I.Plus /> Add stock
+            </button>
           </div>
         </div>
       </div>
@@ -178,15 +179,31 @@ export function StockTab() {
             </div>
           </div>
           {isEmpty ? (
-            <div style={{ padding: 32, textAlign: "center", color: "var(--text-muted)", fontSize: 13 }}>
-              No ingredients yet. Head over to the Ingredients tab to add some, then come back to set on-hand quantities.
+            <div style={{ padding: 40, textAlign: "center" }}>
+              <div style={{
+                width: 56, height: 56, borderRadius: "50%",
+                background: "var(--accent-mist)",
+                color: "var(--accent-deep)",
+                display: "grid", placeItems: "center",
+                margin: "0 auto 14px",
+              }}>
+                <I.Box />
+              </div>
+              <h3 style={{ margin: "0 0 6px", fontSize: 18 }}>No stock items yet</h3>
+              <p className="muted" style={{ fontSize: 13.5, maxWidth: 360, margin: "0 auto 16px" }}>
+                Stock is separate from your ingredients catalog. Add what's actually in your pantry — like
+                "Whole milk · 4 gallons" — and we'll track when it gets low.
+              </p>
+              <button className="btn primary" onClick={() => setEditing("new")}>
+                <I.Plus /> Add your first item
+              </button>
             </div>
           ) : (
             <table className="tbl nums">
               <thead>
                 <tr>
-                  <th>Ingredient</th>
-                  <th className="r">On hand</th>
+                  <th>Item</th>
+                  <th className="r">Quantity</th>
                   <th className="r">Reorder at</th>
                   <th className="r">Status</th>
                   <th className="r">Restocked</th>
@@ -195,17 +212,26 @@ export function StockTab() {
               </thead>
               <tbody>
                 {list.map((s) => {
-                  const i = s.ingredient;
-                  const onHand = i.on_hand_qty ?? 0;
-                  const reorder = i.reorder_point ?? 0;
-                  const ratio = Math.min(1, reorder > 0 ? onHand / Math.max(reorder * 2, onHand || 1) : 1);
-                  const draft = drafts[i.id] ?? {};
+                  const it = s.item;
+                  const reorder = it.reorder_point ?? 0;
+                  const ratio = Math.min(1, reorder > 0 ? it.quantity / Math.max(reorder * 2, it.quantity || 1) : 1);
+                  const draft = drafts[it.id] ?? {};
                   return (
-                    <tr key={i.id}>
+                    <tr key={it.id}>
                       <td className="name-cell">
-                        {i.name}
-                        {i.vendor && (
-                          <div className="muted" style={{ fontSize: 11, marginTop: 2 }}>{i.vendor}</div>
+                        <button
+                          onClick={() => setEditing(it)}
+                          style={{
+                            background: "transparent", border: "none", padding: 0,
+                            color: "inherit", font: "inherit", cursor: "pointer",
+                            textAlign: "left",
+                          }}
+                          title="Edit item"
+                        >
+                          {it.name}
+                        </button>
+                        {it.vendor && (
+                          <div className="muted" style={{ fontSize: 11, marginTop: 2 }}>{it.vendor}</div>
                         )}
                       </td>
                       <td className="r">
@@ -229,9 +255,9 @@ export function StockTab() {
                             type="number"
                             step="any"
                             min="0"
-                            value={draft.on_hand ?? String(onHand)}
-                            onChange={(e) => setDrafts((d) => ({ ...d, [i.id]: { ...d[i.id], on_hand: e.target.value } }))}
-                            onBlur={(e) => commit(i, "on_hand", e.target.value)}
+                            value={draft.quantity ?? String(it.quantity)}
+                            onChange={(e) => setDrafts((d) => ({ ...d, [it.id]: { ...d[it.id], quantity: e.target.value } }))}
+                            onBlur={(e) => commit(it, "quantity", e.target.value)}
                             onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
                             style={{
                               width: 70, padding: "3px 6px", textAlign: "right",
@@ -241,9 +267,7 @@ export function StockTab() {
                               color: "var(--ink)",
                             }}
                           />
-                          <span style={{ color: "var(--text-muted)", fontSize: 11, minWidth: 30 }}>
-                            {unitLabel(i.package_unit)}
-                          </span>
+                          <span style={{ color: "var(--text-muted)", fontSize: 11, minWidth: 30 }}>{it.unit}</span>
                         </div>
                       </td>
                       <td className="r">
@@ -253,8 +277,8 @@ export function StockTab() {
                             step="any"
                             min="0"
                             value={draft.reorder ?? String(reorder)}
-                            onChange={(e) => setDrafts((d) => ({ ...d, [i.id]: { ...d[i.id], reorder: e.target.value } }))}
-                            onBlur={(e) => commit(i, "reorder", e.target.value)}
+                            onChange={(e) => setDrafts((d) => ({ ...d, [it.id]: { ...d[it.id], reorder: e.target.value } }))}
+                            onBlur={(e) => commit(it, "reorder", e.target.value)}
                             onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
                             style={{
                               width: 60, padding: "3px 6px", textAlign: "right",
@@ -263,9 +287,7 @@ export function StockTab() {
                               fontSize: 12.5, color: "var(--text)",
                             }}
                           />
-                          <span style={{ color: "var(--text-muted)", fontSize: 11, minWidth: 30 }}>
-                            {unitLabel(i.package_unit)}
-                          </span>
+                          <span style={{ color: "var(--text-muted)", fontSize: 11, minWidth: 30 }}>{it.unit}</span>
                         </div>
                       </td>
                       <td className="r">
@@ -275,18 +297,31 @@ export function StockTab() {
                         </span>
                       </td>
                       <td className="r muted">
-                        {i.last_restocked_at
-                          ? new Date(i.last_restocked_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })
+                        {it.last_restocked_at
+                          ? new Date(it.last_restocked_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })
                           : "—"}
                       </td>
-                      <td className="r">
+                      <td className="r" style={{ whiteSpace: "nowrap" }}>
                         <button
                           className="btn"
-                          style={{ padding: "4px 10px", fontSize: 11.5 }}
-                          onClick={() => restock(i)}
+                          style={{ padding: "4px 10px", fontSize: 11.5, marginRight: 4 }}
+                          onClick={() => restock(it)}
                           title="Quick restock to 2× reorder point"
                         >
                           Restock
+                        </button>
+                        <button
+                          className="btn ghost"
+                          style={{ padding: "4px 8px", fontSize: 11.5, color: "var(--error)" }}
+                          onClick={() => {
+                            if (confirm(`Remove "${it.name}" from stock?`)) {
+                              void deleteStockItem(it.id);
+                            }
+                          }}
+                          title="Remove from stock"
+                          aria-label={`Remove ${it.name} from stock`}
+                        >
+                          <I.X />
                         </button>
                       </td>
                     </tr>
@@ -339,30 +374,14 @@ export function StockTab() {
           </div>
 
           <div className="card fade-up" style={{ animationDelay: ".22s" }}>
-            <div className="card-head"><h3>Pending review</h3><span className="card-sub">2 receipts</span></div>
+            <div className="card-head"><h3>Quick add</h3><span className="card-sub">manual entry</span></div>
             <div style={{ padding: "12px 20px 18px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderBottom: "1px solid var(--border)" }}>
-                <div style={{
-                  width: 38, height: 38, borderRadius: 6,
-                  background: "repeating-linear-gradient(135deg, rgba(168,111,61,.18) 0 4px, rgba(168,111,61,.10) 4px 8px), var(--accent-mist)",
-                }}/>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 500 }}>Restaurant Depot · May 7</div>
-                  <div className="muted" style={{ fontSize: 12 }}>$182.40 · 14 line items · 12 matched</div>
-                </div>
-                <button className="btn" onClick={() => window.openModal?.("review")}>Review</button>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0" }}>
-                <div style={{
-                  width: 38, height: 38, borderRadius: 6,
-                  background: "repeating-linear-gradient(135deg, rgba(80,107,69,.18) 0 4px, rgba(80,107,69,.10) 4px 8px), var(--success-soft)",
-                }}/>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 500 }}>Sam's Club · May 7</div>
-                  <div className="muted" style={{ fontSize: 12 }}>$96.18 · 8 line items · 7 matched</div>
-                </div>
-                <button className="btn" onClick={() => window.openModal?.("review")}>Review</button>
-              </div>
+              <p className="muted" style={{ fontSize: 13, margin: "0 0 12px" }}>
+                Track what's in your pantry without it being tied to a recipe ingredient.
+              </p>
+              <button className="btn primary" onClick={() => setEditing("new")}>
+                <I.Plus /> New stock item
+              </button>
             </div>
           </div>
         </div>
@@ -383,7 +402,9 @@ export function StockTab() {
         </div>
         {orderSoonByVendor.length === 0 ? (
           <div style={{ padding: 28, textAlign: "center", color: "var(--text-muted)", fontSize: 13 }}>
-            Nothing is below its reorder point right now. Stock looks healthy.
+            {isEmpty
+              ? "Add some stock items first to see what needs reordering."
+              : "Nothing is below its reorder point right now. Stock looks healthy."}
           </div>
         ) : (
           <div style={{ padding: 20, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
@@ -391,14 +412,241 @@ export function StockTab() {
               <div key={vendor}>
                 <div className="label-cap" style={{ marginBottom: 10 }}>{vendor}</div>
                 {items.map((s) => (
-                  <span key={s.ingredient.id} className="tag" style={{ marginRight: 6, marginBottom: 4, display: "inline-block" }}>
-                    {s.ingredient.name} × ~{Math.max(1, Math.ceil((s.ingredient.reorder_point ?? 0) * 2 - (s.ingredient.on_hand_qty ?? 0)))} {unitLabel(s.ingredient.package_unit)}
+                  <span key={s.item.id} className="tag" style={{ marginRight: 6, marginBottom: 4, display: "inline-block" }}>
+                    {s.item.name} × ~{Math.max(1, Math.ceil((s.item.reorder_point ?? 0) * 2 - s.item.quantity))} {s.item.unit}
                   </span>
                 ))}
               </div>
             ))}
           </div>
         )}
+      </div>
+
+      {editing !== null && (
+        <StockItemModal
+          initial={editing}
+          ingredientHints={ingredients.map((i) => ({ id: i.id, name: i.name, vendor: i.vendor }))}
+          onClose={() => setEditing(null)}
+          onSave={async (s) => {
+            await upsertStockItem(s);
+            setEditing(null);
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+interface ModalProps {
+  initial: StockItem | "new";
+  ingredientHints: { id: string; name: string; vendor?: string }[];
+  onClose: () => void;
+  onSave: (s: Omit<StockItem, "created_at" | "updated_at"> & { created_at?: string }) => Promise<void>;
+}
+
+function StockItemModal({ initial, ingredientHints, onClose, onSave }: ModalProps) {
+  const isNew = initial === "new";
+  const init: StockItem = isNew
+    ? {
+        id: "", name: "", quantity: 0, unit: "ea",
+        reorder_point: 0, vendor: "", notes: "", ingredient_id: "",
+        created_at: "", updated_at: "",
+      }
+    : initial as StockItem;
+
+  const [name, setName] = useState(init.name);
+  const [quantity, setQuantity] = useState<string>(String(init.quantity ?? 0));
+  const [unit, setUnit] = useState(init.unit || "ea");
+  const [reorder, setReorder] = useState<string>(String(init.reorder_point ?? 0));
+  const [vendor, setVendor] = useState(init.vendor ?? "");
+  const [notes, setNotes] = useState(init.notes ?? "");
+  const [ingredientId, setIngredientId] = useState(init.ingredient_id ?? "");
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  const trimmedName = name.trim();
+  const qtyNum = parseFloat(quantity);
+  const reorderNum = parseFloat(reorder);
+  const canSave = trimmedName.length > 0 && isFinite(qtyNum) && qtyNum >= 0 && !saving;
+
+  async function handleSave() {
+    if (!canSave) return;
+    setSaving(true);
+    setErr(null);
+    try {
+      await onSave({
+        id: isNew ? "" : (initial as StockItem).id,
+        name: trimmedName,
+        quantity: qtyNum,
+        unit: unit.trim() || "ea",
+        reorder_point: isFinite(reorderNum) && reorderNum > 0 ? reorderNum : undefined,
+        vendor: vendor.trim() || undefined,
+        notes: notes.trim() || undefined,
+        ingredient_id: ingredientId || undefined,
+        last_restocked_at: isNew && qtyNum > 0 ? new Date().toISOString() : (initial as StockItem).last_restocked_at,
+        ...(isNew ? {} : { created_at: (initial as StockItem).created_at }),
+      });
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+      setSaving(false);
+    }
+  }
+
+  // When user picks an ingredient hint, auto-fill name/vendor if empty
+  const pickIngredient = (id: string) => {
+    setIngredientId(id);
+    if (!id) return;
+    const ing = ingredientHints.find((i) => i.id === id);
+    if (!ing) return;
+    if (!name.trim()) setName(ing.name);
+    if (!vendor.trim() && ing.vendor) setVendor(ing.vendor);
+  };
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      style={{
+        position: "fixed", inset: 0, zIndex: 60,
+        background: "rgba(10, 14, 16, 0.55)",
+        backdropFilter: "blur(6px)",
+        display: "grid", placeItems: "center",
+        padding: 20,
+      }}
+    >
+      <div
+        className="card"
+        style={{ width: "min(560px, 100%)", maxHeight: "90vh", overflow: "auto", padding: 0 }}
+      >
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "18px 22px", borderBottom: "1px solid rgba(0,0,0,0.06)",
+        }}>
+          <h3 style={{ margin: 0 }}>{isNew ? "Add stock item" : "Edit stock item"}</h3>
+          <button className="btn ghost" onClick={onClose} aria-label="Close"><I.X /></button>
+        </div>
+
+        <div style={{ padding: 22, display: "grid", gap: 14 }}>
+          <label style={{ display: "grid", gap: 6 }}>
+            <span className="label-cap">Name *</span>
+            <input
+              className="input-base"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Whole milk, gallon"
+              autoFocus
+            />
+          </label>
+
+          {ingredientHints.length > 0 && (
+            <label style={{ display: "grid", gap: 6 }}>
+              <span className="label-cap">Link to ingredient (optional)</span>
+              <select
+                className="input-base"
+                value={ingredientId}
+                onChange={(e) => pickIngredient(e.target.value)}
+              >
+                <option value="">— None —</option>
+                {ingredientHints.map((i) => (
+                  <option key={i.id} value={i.id}>{i.name}{i.vendor ? ` · ${i.vendor}` : ""}</option>
+                ))}
+              </select>
+            </label>
+          )}
+
+          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 14 }}>
+            <label style={{ display: "grid", gap: 6 }}>
+              <span className="label-cap">Quantity *</span>
+              <input
+                className="input-base"
+                type="number"
+                step="any"
+                min="0"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+              />
+            </label>
+            <label style={{ display: "grid", gap: 6 }}>
+              <span className="label-cap">Unit</span>
+              <input
+                className="input-base"
+                list="stock-units"
+                value={unit}
+                onChange={(e) => setUnit(e.target.value)}
+                placeholder="ea, g, ml, pkg…"
+              />
+              <datalist id="stock-units">
+                {COMMON_UNITS.map((u) => <option key={u} value={u} />)}
+              </datalist>
+            </label>
+          </div>
+
+          <label style={{ display: "grid", gap: 6 }}>
+            <span className="label-cap">Reorder when below</span>
+            <input
+              className="input-base"
+              type="number"
+              step="any"
+              min="0"
+              value={reorder}
+              onChange={(e) => setReorder(e.target.value)}
+              placeholder="0 = no reorder alert"
+            />
+          </label>
+
+          <label style={{ display: "grid", gap: 6 }}>
+            <span className="label-cap">Supplier (optional)</span>
+            <input
+              className="input-base"
+              value={vendor}
+              onChange={(e) => setVendor(e.target.value)}
+              placeholder="e.g. Restaurant Depot"
+            />
+          </label>
+
+          <label style={{ display: "grid", gap: 6 }}>
+            <span className="label-cap">Notes</span>
+            <textarea
+              className="input-base"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Anything to remember about this item"
+              rows={3}
+              style={{ resize: "vertical", minHeight: 60 }}
+            />
+          </label>
+
+          {err && (
+            <div style={{
+              padding: "10px 12px",
+              background: "rgba(220, 38, 38, 0.08)",
+              border: "1px solid rgba(220, 38, 38, 0.2)",
+              borderRadius: 8,
+              color: "var(--error)",
+              fontSize: 13,
+            }}>
+              {err}
+            </div>
+          )}
+        </div>
+
+        <div style={{
+          display: "flex", gap: 10, justifyContent: "flex-end",
+          padding: "14px 22px",
+          borderTop: "1px solid rgba(0,0,0,0.06)",
+        }}>
+          <button className="btn ghost" onClick={onClose} disabled={saving}>Cancel</button>
+          <button className="btn primary" onClick={handleSave} disabled={!canSave}>
+            {saving ? "Saving…" : (isNew ? "Add item" : "Save changes")}
+          </button>
+        </div>
       </div>
     </div>
   );

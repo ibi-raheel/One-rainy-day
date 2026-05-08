@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { api } from "@/db/api";
-import type { Ingredient, Recipe, AppSettings, Supplier } from "@/db/types";
+import type { Ingredient, Recipe, AppSettings, Supplier, StockItem } from "@/db/types";
 import { computeRecipeCost, type RecipeCostResult } from "@/lib/cost";
 import { nanoid } from "nanoid";
 
@@ -8,6 +8,7 @@ interface AppState {
   ingredients: Ingredient[];
   recipes: Recipe[];
   suppliers: Supplier[];
+  stockItems: StockItem[];
   settings: AppSettings | null;
   loaded: boolean;
   loadError: string | null;
@@ -28,6 +29,9 @@ interface AppState {
 
   upsertSupplier: (s: Omit<Supplier, "created_at" | "updated_at"> & { created_at?: string }) => Promise<void>;
   deleteSupplier: (id: string) => Promise<void>;
+
+  upsertStockItem: (s: Omit<StockItem, "created_at" | "updated_at"> & { created_at?: string }) => Promise<void>;
+  deleteStockItem: (id: string) => Promise<void>;
 
   costFor: (recipeId: string) => RecipeCostResult | null;
 
@@ -76,6 +80,7 @@ export const useApp = create<AppState>((set, get) => ({
   ingredients: [],
   recipes: [],
   suppliers: [],
+  stockItems: [],
   settings: null,
   loaded: false,
   loadError: null,
@@ -90,10 +95,12 @@ export const useApp = create<AppState>((set, get) => ({
       const ingredients = (state.ingredients ?? []).map(normalize);
       const recipes = (state.recipes ?? []).map(normalizeRecipe);
       const suppliers = (state.suppliers ?? []) as Supplier[];
+      const stockItems = (state.stockItems ?? []) as StockItem[];
       set({
         ingredients,
         recipes,
         suppliers,
+        stockItems,
         settings: state.settings ?? { id: "singleton", period_label: "per day" },
         loaded: true,
         loadError: null,
@@ -216,6 +223,39 @@ export const useApp = create<AppState>((set, get) => ({
       await api.deleteSupplier(id);
     } catch (err) {
       set({ suppliers: prev, loadError: err instanceof Error ? err.message : String(err) });
+      throw err;
+    }
+  },
+
+  async upsertStockItem(s) {
+    const now = new Date().toISOString();
+    const next: StockItem = {
+      ...s,
+      id: s.id || nanoid(),
+      created_at: s.created_at || now,
+      updated_at: now,
+    } as StockItem;
+    const prev = get().stockItems;
+    const idx = prev.findIndex((x) => x.id === next.id);
+    const optimistic = idx >= 0
+      ? [...prev.slice(0, idx), next, ...prev.slice(idx + 1)]
+      : [...prev, next];
+    set({ stockItems: optimistic });
+    try {
+      await api.putStockItem(next);
+    } catch (err) {
+      set({ stockItems: prev, loadError: err instanceof Error ? err.message : String(err) });
+      throw err;
+    }
+  },
+
+  async deleteStockItem(id) {
+    const prev = get().stockItems;
+    set({ stockItems: prev.filter((s) => s.id !== id) });
+    try {
+      await api.deleteStockItem(id);
+    } catch (err) {
+      set({ stockItems: prev, loadError: err instanceof Error ? err.message : String(err) });
       throw err;
     }
   },

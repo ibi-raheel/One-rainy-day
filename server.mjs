@@ -37,6 +37,7 @@ const DEFAULT_STATE = {
   ingredients: [],
   recipes: [],
   suppliers: [],
+  stockItems: [],
   settings: { id: "singleton", period_label: "per day" },
 };
 
@@ -56,6 +57,7 @@ async function readState() {
       ingredients: Array.isArray(parsed.ingredients) ? parsed.ingredients : [],
       recipes: Array.isArray(parsed.recipes) ? parsed.recipes : [],
       suppliers: Array.isArray(parsed.suppliers) ? parsed.suppliers : [],
+      stockItems: Array.isArray(parsed.stockItems) ? parsed.stockItems : [],
       settings: parsed.settings && typeof parsed.settings === "object"
         ? { id: "singleton", period_label: "per day", ...parsed.settings }
         : { ...DEFAULT_STATE.settings },
@@ -166,6 +168,7 @@ app.put("/api/state", async (req, res, next) => {
       ingredients: Array.isArray(body.ingredients) ? body.ingredients : [],
       recipes: Array.isArray(body.recipes) ? body.recipes : [],
       suppliers: Array.isArray(body.suppliers) ? body.suppliers : [],
+      stockItems: Array.isArray(body.stockItems) ? body.stockItems : [],
       settings: body.settings && typeof body.settings === "object"
         ? { id: "singleton", period_label: "per day", ...body.settings }
         : (Array.isArray(body.settings) && body.settings[0]) || { ...DEFAULT_STATE.settings },
@@ -238,6 +241,30 @@ app.delete("/api/suppliers/:id", async (req, res, next) => {
     const state = await readState();
     if (!Array.isArray(state.suppliers)) state.suppliers = [];
     state.suppliers = state.suppliers.filter((s) => s.id !== req.params.id);
+    await writeState(state, req.headers["x-client-id"] || null);
+    res.json({ ok: true });
+  } catch (e) { next(e); }
+});
+
+// Stock items (independent collection — NOT auto-derived from ingredients)
+app.put("/api/stock-items/:id", async (req, res, next) => {
+  try {
+    const state = await readState();
+    if (!Array.isArray(state.stockItems)) state.stockItems = [];
+    const incoming = { ...req.body, id: req.params.id };
+    const idx = state.stockItems.findIndex((s) => s.id === incoming.id);
+    if (idx >= 0) state.stockItems[idx] = incoming;
+    else state.stockItems.push(incoming);
+    await writeState(state, req.headers["x-client-id"] || null);
+    res.json(incoming);
+  } catch (e) { next(e); }
+});
+
+app.delete("/api/stock-items/:id", async (req, res, next) => {
+  try {
+    const state = await readState();
+    if (!Array.isArray(state.stockItems)) state.stockItems = [];
+    state.stockItems = state.stockItems.filter((s) => s.id !== req.params.id);
     await writeState(state, req.headers["x-client-id"] || null);
     res.json({ ok: true });
   } catch (e) { next(e); }

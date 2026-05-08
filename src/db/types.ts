@@ -83,6 +83,27 @@ export interface AppSettings {
   period_label: string; // e.g. "per day", "per week"
 }
 
+/**
+ * Stock items are independent of the Ingredients catalog.
+ * Users add them manually as a "what's in my pantry right now" log.
+ * They can optionally reference an ingredient by id, but the Stock tab does
+ * NOT auto-populate from ingredients.
+ */
+export interface StockItem {
+  id: string;
+  name: string;
+  quantity: number;
+  unit: string;            // free-text or BaseUnit string ("g", "ml", "ea", etc.)
+  reorder_point?: number;  // optional threshold; below = low/critical
+  vendor?: string;         // optional supplier hint for the order list
+  notes?: string;
+  /** optional link to an existing Ingredient (not enforced) */
+  ingredient_id?: string;
+  last_restocked_at?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export type SupplierTier = "Primary" | "Watching" | "Trial";
 
 export interface Supplier {
