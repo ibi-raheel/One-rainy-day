@@ -21,6 +21,7 @@ interface SupplierRow {
   monthSpend: number;
   notes?: string;
   raw?: Supplier;
+  isHidden?: boolean;
 }
 
 /** A few enrichment hints for vendors auto-derived from ingredient.vendor. */
@@ -58,8 +59,17 @@ export function SuppliersTab() {
   const customSuppliers = useApp((s) => s.suppliers);
   const upsertSupplier = useApp((s) => s.upsertSupplier);
   const deleteSupplier = useApp((s) => s.deleteSupplier);
+  const settings = useApp((s) => s.settings);
+  const hideVendor = useApp((s) => s.hideVendor);
+  const unhideVendor = useApp((s) => s.unhideVendor);
 
   const [editing, setEditing] = useState<Supplier | "new" | null>(null);
+  const [showHidden, setShowHidden] = useState(false);
+
+  const hiddenVendors = useMemo(
+    () => new Set((settings?.hiddenVendors ?? []).map((v) => v.trim())),
+    [settings?.hiddenVendors],
+  );
 
   // Items count + month spend signal per vendor name.
   const vendorStats = useMemo(() => {
@@ -101,6 +111,7 @@ export function SuppliersTab() {
 
     const derived: SupplierRow[] = Array.from(vendorStats.entries())
       .filter(([name]) => !customByName.has(name.trim().toLowerCase()))
+      .filter(([name]) => showHidden || !hiddenVendors.has(name.trim()))
       .sort((a, b) => b[1].count - a[1].count)
       .map(([name, stats]) => {
         const metaKey = Object.keys(VENDOR_META).find((k) => name.toLowerCase().includes(k.toLowerCase()));
@@ -115,11 +126,17 @@ export function SuppliersTab() {
           contact: meta.contact ?? "—",
           items: stats.count,
           monthSpend: stats.count * 18,
+          isHidden: hiddenVendors.has(name.trim()),
         };
       });
 
     return [...customRows, ...derived];
-  }, [customSuppliers, vendorStats]);
+  }, [customSuppliers, vendorStats, hiddenVendors, showHidden]);
+
+  const hiddenCount = useMemo(
+    () => Array.from(vendorStats.keys()).filter((v) => hiddenVendors.has(v.trim())).length,
+    [vendorStats, hiddenVendors],
+  );
 
   const totalSpend = rows.reduce((s, x) => s + x.monthSpend, 0);
   const avgOnTime = Math.round(
@@ -154,6 +171,21 @@ export function SuppliersTab() {
               <span className="v"><CountUp to={avgOnTime} delay={240} />%</span>
               <span className="l">on-time avg</span>
             </div>
+            {hiddenCount > 0 && (
+              <button
+                className="btn ghost"
+                style={{
+                  alignSelf: "center",
+                  background: "var(--bg-surface)",
+                  borderColor: "var(--border)",
+                  color: "var(--text)",
+                }}
+                onClick={() => setShowHidden((v) => !v)}
+                title={showHidden ? "Re-hide hidden suppliers" : "Show hidden suppliers"}
+              >
+                {showHidden ? "Hide hidden" : `Show hidden (${hiddenCount})`}
+              </button>
+            )}
             <button
               className="btn primary"
               style={{ alignSelf: "center", marginLeft: 8 }}
@@ -214,6 +246,7 @@ export function SuppliersTab() {
               padding: 22,
               cursor: "pointer",
               borderLeft: s.isCustom ? "3px solid var(--cognac)" : undefined,
+              opacity: s.isHidden ? 0.55 : 1,
             }}
           >
             <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
@@ -279,18 +312,49 @@ export function SuppliersTab() {
                     </button>
                   </>
                 ) : (
-                  <button
-                    className="btn ghost"
-                    title="Promote to custom supplier"
-                    aria-label="Promote to custom supplier"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openCard();
-                    }}
-                    style={{ color: "var(--text-2)" }}
-                  >
-                    <I.Plus /> Save
-                  </button>
+                  <>
+                    <button
+                      className="btn ghost"
+                      title="Save as a custom supplier"
+                      aria-label="Save as custom supplier"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openCard();
+                      }}
+                      style={{ color: "var(--text-2)" }}
+                    >
+                      <I.Plus /> Save
+                    </button>
+                    {s.isHidden ? (
+                      <button
+                        className="btn ghost"
+                        title="Restore this supplier to the list"
+                        aria-label="Restore supplier"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          void unhideVendor(s.name);
+                        }}
+                        style={{ color: "var(--success)" }}
+                      >
+                        Restore
+                      </button>
+                    ) : (
+                      <button
+                        className="btn ghost"
+                        title="Hide this supplier from the list (does not change ingredients)"
+                        aria-label="Hide supplier"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (confirm(`Hide "${s.name}" from the supplier list? Your ingredients keep this vendor — you can restore it later.`)) {
+                            void hideVendor(s.name);
+                          }
+                        }}
+                        style={{ color: "var(--error)" }}
+                      >
+                        <I.X />
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             </div>

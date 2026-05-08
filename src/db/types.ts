@@ -81,6 +81,8 @@ export interface Recipe {
 export interface AppSettings {
   id: "singleton";
   period_label: string; // e.g. "per day", "per week"
+  /** Vendor strings (case-sensitive, exact match) to hide from the Suppliers tab. */
+  hiddenVendors?: string[];
 }
 
 /**

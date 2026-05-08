@@ -37,6 +37,9 @@ interface AppState {
 
   setPeriodLabel: (label: string) => Promise<void>;
 
+  hideVendor: (name: string) => Promise<void>;
+  unhideVendor: (name: string) => Promise<void>;
+
   /** Replace the entire backing store (used by Import). */
   replaceAll: (state: { ingredients: Ingredient[]; recipes: Recipe[]; settings: AppSettings }) => Promise<void>;
 }
@@ -268,12 +271,44 @@ export const useApp = create<AppState>((set, get) => ({
   },
 
   async setPeriodLabel(label) {
-    const next: AppSettings = { id: "singleton", period_label: label };
+    const cur = get().settings ?? { id: "singleton", period_label: "per day" };
+    const next: AppSettings = { ...cur, id: "singleton", period_label: label };
+    const prev = get().settings;
     set({ settings: next });
     try {
       await api.putSettings(next);
     } catch (err) {
-      set({ loadError: err instanceof Error ? err.message : String(err) });
+      set({ settings: prev, loadError: err instanceof Error ? err.message : String(err) });
+      throw err;
+    }
+  },
+
+  async hideVendor(name) {
+    const cur = get().settings ?? { id: "singleton", period_label: "per day" };
+    const hidden = new Set(cur.hiddenVendors ?? []);
+    if (hidden.has(name)) return;
+    hidden.add(name);
+    const next: AppSettings = { ...cur, hiddenVendors: Array.from(hidden) };
+    const prev = get().settings;
+    set({ settings: next });
+    try {
+      await api.putSettings(next);
+    } catch (err) {
+      set({ settings: prev, loadError: err instanceof Error ? err.message : String(err) });
+      throw err;
+    }
+  },
+
+  async unhideVendor(name) {
+    const cur = get().settings ?? { id: "singleton", period_label: "per day" };
+    const hidden = (cur.hiddenVendors ?? []).filter((v) => v !== name);
+    const next: AppSettings = { ...cur, hiddenVendors: hidden };
+    const prev = get().settings;
+    set({ settings: next });
+    try {
+      await api.putSettings(next);
+    } catch (err) {
+      set({ settings: prev, loadError: err instanceof Error ? err.message : String(err) });
       throw err;
     }
   },
