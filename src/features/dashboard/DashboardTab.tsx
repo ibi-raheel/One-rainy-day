@@ -160,17 +160,34 @@ export function DashboardTab() {
     if (adding) newNameRef.current?.focus();
   }, [adding]);
 
-  const visiblePrep = useMemo(() => prepList.filter((p) => p.when === prepView), [prepList, prepView]);
-  const remainingPrep = visiblePrep.filter((p) => !(doneIds.has(p.id) || p.status === "done")).length;
+  // Items that have just been checked off and are fading out.
+  const [vanishingIds, setVanishingIds] = useState<Set<number>>(new Set());
+
+  const visiblePrep = useMemo(
+    () => prepList.filter(
+      (p) =>
+        p.when === prepView
+        // hide already-completed items, but keep ones currently fading out
+        && !(p.status === "done" || (doneIds.has(p.id) && !vanishingIds.has(p.id))),
+    ),
+    [prepList, prepView, doneIds, vanishingIds],
+  );
+  const remainingPrep = visiblePrep.filter((p) => !vanishingIds.has(p.id)).length;
 
   // Today's prep
   const toggleDone = (id: number) => {
-    setDoneIds((s) => {
-      const n = new Set(s);
-      if (n.has(id)) n.delete(id);
-      else n.add(id);
-      return n;
-    });
+    if (doneIds.has(id) || vanishingIds.has(id)) {
+      // un-check (item already checked, animating, or done) — remove from doneIds and vanishing
+      setDoneIds((s) => { const n = new Set(s); n.delete(id); return n; });
+      setVanishingIds((s) => { const n = new Set(s); n.delete(id); return n; });
+      return;
+    }
+    // check + fade out, then permanently remove from the visible list
+    setDoneIds((s) => { const n = new Set(s); n.add(id); return n; });
+    setVanishingIds((s) => { const n = new Set(s); n.add(id); return n; });
+    window.setTimeout(() => {
+      setVanishingIds((s) => { const n = new Set(s); n.delete(id); return n; });
+    }, 320);
   };
 
   const startAdd = () => { setNewName(""); setNewYield(""); setNewMinutes(""); setAdding(true); };
@@ -476,12 +493,25 @@ export function DashboardTab() {
             ) : (
               visiblePrep.map((p) => {
                 const isDone = doneIds.has(p.id) || p.status === "done";
+                const isVanishing = vanishingIds.has(p.id);
                 const cls = isDone ? "done" : p.status === "in_progress" ? "in_progress" : "";
                 return (
                   <div
                     key={p.id}
                     className={`prep-row ${isDone ? "done" : ""}`}
                     onClick={() => toggleDone(p.id)}
+                    style={isVanishing ? {
+                      opacity: 0,
+                      transform: "translateX(8px)",
+                      maxHeight: 0,
+                      paddingTop: 0,
+                      paddingBottom: 0,
+                      borderColor: "transparent",
+                      overflow: "hidden",
+                      transition: "opacity .28s var(--ease), transform .28s var(--ease), max-height .28s var(--ease), padding .28s var(--ease), border-color .28s var(--ease)",
+                    } : {
+                      transition: "opacity .28s var(--ease), transform .28s var(--ease), max-height .28s var(--ease), padding .28s var(--ease), border-color .28s var(--ease)",
+                    }}
                   >
                     <div className={`prep-check ${cls}`}>{isDone && <I.Check />}</div>
                     <div>
