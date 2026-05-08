@@ -436,12 +436,51 @@ export function MarketTab() {
             ) : (
               yoursRows.map((row) => (
                 <tr key={row.ingredient_id}>
-                  <td className="name-cell">{row.ingredient}</td>
+                  <td className="name-cell">
+                    {row.product?.url ? (
+                      <a
+                        href={row.product.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="market-name-link"
+                        title={`Open ${row.product.title || row.ingredient} on ${row.product.source_name}`}
+                      >
+                        {row.ingredient}
+                        <svg
+                          aria-hidden="true"
+                          width="12" height="12" viewBox="0 0 24 24"
+                          fill="none" stroke="currentColor" strokeWidth="1.8"
+                          strokeLinecap="round" strokeLinejoin="round"
+                          style={{ marginLeft: 6, opacity: 0.6, verticalAlign: "-1px" }}
+                        >
+                          <path d="M14 4h6v6"/>
+                          <path d="M20 4L10 14"/>
+                          <path d="M19 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h6"/>
+                        </svg>
+                      </a>
+                    ) : (
+                      row.ingredient
+                    )}
+                  </td>
                   <td className="r">{fmtMoney(row.her)}/{row.base_unit}</td>
                   <td className="r">
-                    <strong style={{ color: row.delta != null && row.delta < 0 ? "var(--success)" : "var(--text)" }}>
-                      {row.best != null ? `${fmtMoney(row.best)}/${row.base_unit}` : "—"}
-                    </strong>
+                    {row.product?.url ? (
+                      <a
+                        href={row.product.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="market-name-link"
+                        style={{ fontWeight: 500 }}
+                      >
+                        <strong style={{ color: row.delta != null && row.delta < 0 ? "var(--success)" : "var(--text)" }}>
+                          {row.best != null ? `${fmtMoney(row.best)}/${row.base_unit}` : "—"}
+                        </strong>
+                      </a>
+                    ) : (
+                      <strong style={{ color: row.delta != null && row.delta < 0 ? "var(--success)" : "var(--text)" }}>
+                        {row.best != null ? `${fmtMoney(row.best)}/${row.base_unit}` : "—"}
+                      </strong>
+                    )}
                   </td>
                   <td>{row.supplier}</td>
                   <td className="r">

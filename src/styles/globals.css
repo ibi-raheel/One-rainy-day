@@ -1017,6 +1017,20 @@ body::after {
 .text-info { color: var(--info); }
 .border-border { border-color: var(--border); }
 
+/* Market — Your-ingredients name & cheapest-price columns become links to the
+   matched product page. Subtle by default; underline + accent on hover. */
+.market-name-link {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(168,111,61,0.35);
+  transition: color .15s var(--ease), border-color .15s var(--ease);
+}
+.market-name-link:hover {
+  color: var(--accent-deep);
+  border-bottom-color: var(--accent);
+}
+.market-name-link strong { color: inherit; }
+
 /* Ingredients tab toolbar — wraps cleanly on mobile, single row on desktop. */
 .ing-toolbar {
   display: flex; align-items: center; gap: 12px;
