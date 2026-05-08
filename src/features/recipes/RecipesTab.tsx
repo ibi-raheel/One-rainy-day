@@ -25,16 +25,8 @@ export function RecipesTab() {
     sub: recipes.filter((r) => r.type === "sub_recipe").length,
   };
 
-  const list = useMemo(() => {
-    const filtered = recipes.filter((r) =>
-      filter === "all"
-        ? true
-        : filter === "menu"
-        ? r.type === "menu_item"
-        : r.type === "sub_recipe"
-    );
-    // Compute cost + margin for sort-by-margin
-    const enriched = filtered.map((r) => {
+  const enriched = useMemo(() => {
+    return recipes.map((r) => {
       const cost = computeRecipeCost(r, ingredientsById, recipesById);
       const margin =
         r.type === "menu_item" && r.sale_price && cost.total_cost > 0
@@ -42,9 +34,25 @@ export function RecipesTab() {
           : null;
       return { recipe: r, cost: cost.total_cost, margin };
     });
-    enriched.sort((a, b) => (b.margin ?? -2) - (a.margin ?? -2));
-    return enriched;
-  }, [recipes, filter, ingredientsById, recipesById]);
+  }, [recipes, ingredientsById, recipesById]);
+
+  const menuRows = useMemo(
+    () =>
+      enriched
+        .filter((e) => e.recipe.type === "menu_item")
+        .sort((a, b) => (b.margin ?? -2) - (a.margin ?? -2)),
+    [enriched]
+  );
+  const subRows = useMemo(
+    () =>
+      enriched
+        .filter((e) => e.recipe.type === "sub_recipe")
+        .sort((a, b) => a.recipe.name.localeCompare(b.recipe.name)),
+    [enriched]
+  );
+
+  const showMenu = filter === "all" || filter === "menu";
+  const showSub = filter === "all" || filter === "sub";
 
   const createRecipe = async (type: Recipe["type"]) => {
     const id = nanoid();
@@ -96,7 +104,7 @@ export function RecipesTab() {
         <div className="muted" style={{ fontSize: 12.5, marginLeft: "auto" }}>Sorted by margin</div>
       </div>
 
-      {list.length === 0 ? (
+      {recipes.length === 0 ? (
         <div className="card" style={{ padding: 40, textAlign: "center", color: "var(--text-muted)" }}>
           <p style={{ marginTop: 0 }}>No recipes yet — start with a menu item or a sub-recipe.</p>
           <div style={{ display: "inline-flex", gap: 8, marginTop: 8 }}>
@@ -105,15 +113,118 @@ export function RecipesTab() {
           </div>
         </div>
       ) : (
+        <>
+          {showMenu && (
+            <RecipeSection
+              kind="menu"
+              count={menuRows.length}
+              onAdd={() => createRecipe("menu_item")}
+              rows={menuRows}
+              onOpen={(id) => setOpenId(id)}
+            />
+          )}
+          {showSub && (
+            <div style={{ marginTop: showMenu ? 28 : 0 }}>
+              <RecipeSection
+                kind="sub"
+                count={subRows.length}
+                onAdd={() => createRecipe("sub_recipe")}
+                rows={subRows}
+                onOpen={(id) => setOpenId(id)}
+              />
+            </div>
+          )}
+        </>
+      )}
+
+      {openRecipe && (
+        <RecipeEditModal
+          recipe={openRecipe}
+          onClose={() => setOpenId(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+interface SectionProps {
+  kind: "menu" | "sub";
+  count: number;
+  onAdd: () => void;
+  rows: { recipe: import("@/db/types").Recipe; cost: number; margin: number | null }[];
+  onOpen: (id: string) => void;
+}
+
+function RecipeSection({ kind, count, onAdd, rows, onOpen }: SectionProps) {
+  const isMenu = kind === "menu";
+  const accentColor = isMenu ? "var(--accent)" : "var(--info)";
+  const accentSoft = isMenu ? "var(--accent-soft)" : "var(--info-soft)";
+  const title = isMenu ? "Menu items" : "Sub-recipes";
+  const desc = isMenu
+    ? "What customers buy. Tap to edit pricing, ingredients, procedure."
+    : "Prep components reused across menu items — sauces, syrups, batters.";
+
+  return (
+    <section>
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        marginBottom: 12,
+        paddingBottom: 8,
+        borderBottom: `1px solid ${accentSoft}`,
+      }}>
+        <div style={{
+          width: 6, height: 24, borderRadius: 3,
+          background: accentColor,
+        }}/>
+        <h2 style={{
+          margin: 0, fontFamily: "Fraunces, serif",
+          fontSize: 20, color: "var(--ink)",
+          letterSpacing: "-0.012em",
+        }}>{title}</h2>
+        <span style={{
+          fontSize: 11, color: "var(--text-2)", fontWeight: 600,
+          letterSpacing: ".08em", textTransform: "uppercase",
+        }}>{count}</span>
+        <span style={{ fontSize: 12.5, color: "var(--text-muted)", flex: 1 }}>
+          {desc}
+        </span>
+        <button className="btn" onClick={onAdd}>
+          <I.Plus /> New {isMenu ? "menu item" : "sub-recipe"}
+        </button>
+      </div>
+
+      {count === 0 ? (
+        <div className="card" style={{ padding: 22, textAlign: "center", color: "var(--text-muted)", fontSize: 13 }}>
+          {isMenu
+            ? "No menu items yet. Add one to start tracking margins."
+            : "No sub-recipes yet. Use sub-recipes for syrups, sauces, fillings — anything reused."}
+        </div>
+      ) : (
         <div className="rcards stagger">
-          {list.map(({ recipe: r, cost, margin }) => {
-            const isSub = r.type === "sub_recipe";
+          {rows.map(({ recipe: r, cost, margin }) => {
             const tone = margin == null ? "cool" : margin < 0.6 ? "red" : margin < 0.7 ? "amber" : "green";
             return (
-              <div key={r.id} className="rcard" onClick={() => setOpenId(r.id)}>
+              <div
+                key={r.id}
+                className="rcard"
+                onClick={() => onOpen(r.id)}
+                style={{
+                  borderLeft: `3px solid ${accentColor}`,
+                  paddingLeft: 18,
+                }}
+              >
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                  <span className={`tag ${isSub ? "sub" : ""}`}>
-                    {isSub ? "Sub-recipe" : "Menu item"}
+                  <span
+                    className="tag"
+                    style={{
+                      background: accentSoft,
+                      color: isMenu ? "var(--accent-deep)" : "var(--info)",
+                      borderColor: isMenu ? "rgba(168,111,61,.3)" : "rgba(45,87,94,.3)",
+                    }}
+                  >
+                    {isMenu ? "Menu item" : "Sub-recipe"}
                   </span>
                 </div>
                 <h4>{r.name}</h4>
@@ -142,13 +253,6 @@ export function RecipesTab() {
           })}
         </div>
       )}
-
-      {openRecipe && (
-        <RecipeEditModal
-          recipe={openRecipe}
-          onClose={() => setOpenId(null)}
-        />
-      )}
-    </div>
+    </section>
   );
 }

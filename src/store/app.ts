@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import { api } from "@/db/api";
-import type { Ingredient, Recipe, AppSettings } from "@/db/types";
+import type { Ingredient, Recipe, AppSettings, Supplier } from "@/db/types";
 import { computeRecipeCost, type RecipeCostResult } from "@/lib/cost";
 import { nanoid } from "nanoid";
 
 interface AppState {
   ingredients: Ingredient[];
   recipes: Recipe[];
+  suppliers: Supplier[];
   settings: AppSettings | null;
   loaded: boolean;
   loadError: string | null;
@@ -24,6 +25,9 @@ interface AppState {
 
   upsertRecipe: (r: Omit<Recipe, "created_at" | "updated_at"> & { created_at?: string }) => Promise<void>;
   deleteRecipe: (id: string) => Promise<void>;
+
+  upsertSupplier: (s: Omit<Supplier, "created_at" | "updated_at"> & { created_at?: string }) => Promise<void>;
+  deleteSupplier: (id: string) => Promise<void>;
 
   costFor: (recipeId: string) => RecipeCostResult | null;
 
@@ -58,6 +62,9 @@ const normalize = (i: any): Ingredient => ({
   delivery_cost: i.delivery_cost ?? 0,
   allergens: i.allergens ?? [],
   dietary_flags: i.dietary_flags ?? [],
+  on_hand_qty: i.on_hand_qty ?? 0,
+  reorder_point: i.reorder_point ?? 0,
+  last_restocked_at: i.last_restocked_at,
 });
 
 const normalizeRecipe = (r: any): Recipe => ({
@@ -68,6 +75,7 @@ const normalizeRecipe = (r: any): Recipe => ({
 export const useApp = create<AppState>((set, get) => ({
   ingredients: [],
   recipes: [],
+  suppliers: [],
   settings: null,
   loaded: false,
   loadError: null,
@@ -81,9 +89,11 @@ export const useApp = create<AppState>((set, get) => ({
       const state = await api.loadState();
       const ingredients = (state.ingredients ?? []).map(normalize);
       const recipes = (state.recipes ?? []).map(normalizeRecipe);
+      const suppliers = (state.suppliers ?? []) as Supplier[];
       set({
         ingredients,
         recipes,
+        suppliers,
         settings: state.settings ?? { id: "singleton", period_label: "per day" },
         loaded: true,
         loadError: null,
@@ -173,6 +183,39 @@ export const useApp = create<AppState>((set, get) => ({
     } catch (err) {
       set({ recipes: prev, loadError: err instanceof Error ? err.message : String(err) });
       recompute(set, get);
+      throw err;
+    }
+  },
+
+  async upsertSupplier(s) {
+    const now = new Date().toISOString();
+    const next: Supplier = {
+      ...s,
+      id: s.id || nanoid(),
+      created_at: s.created_at || now,
+      updated_at: now,
+    } as Supplier;
+    const prev = get().suppliers;
+    const idx = prev.findIndex((x) => x.id === next.id);
+    const optimistic = idx >= 0
+      ? [...prev.slice(0, idx), next, ...prev.slice(idx + 1)]
+      : [...prev, next];
+    set({ suppliers: optimistic });
+    try {
+      await api.putSupplier(next);
+    } catch (err) {
+      set({ suppliers: prev, loadError: err instanceof Error ? err.message : String(err) });
+      throw err;
+    }
+  },
+
+  async deleteSupplier(id) {
+    const prev = get().suppliers;
+    set({ suppliers: prev.filter((s) => s.id !== id) });
+    try {
+      await api.deleteSupplier(id);
+    } catch (err) {
+      set({ suppliers: prev, loadError: err instanceof Error ? err.message : String(err) });
       throw err;
     }
   },

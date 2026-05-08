@@ -94,14 +94,14 @@ export function IngredientsTab() {
       <div className="flex items-center justify-between gap-3 mb-3">
         <div className="relative flex-1 max-w-sm">
           <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted pointer-events-none"
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted pointer-events-none z-10"
             strokeWidth={1.5}
           />
           <Input
             placeholder="Search ingredients…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="pl-9"
+            style={{ paddingLeft: 36 }}
           />
         </div>
         <button
@@ -111,6 +111,11 @@ export function IngredientsTab() {
             "btn-ghost text-sm",
             groupBySupplier && "!bg-accent-soft !border-accent text-text-primary"
           )}
+          style={
+            groupBySupplier
+              ? undefined
+              : { background: "var(--bg-surface)", borderColor: "var(--border)", color: "var(--text)" }
+          }
           title="Group ingredients by supplier"
         >
           <Layers className="h-3.5 w-3.5" strokeWidth={1.5} />

@@ -54,8 +54,11 @@
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; margin: 0; }
 
-/* Default icon sizing */
-svg { flex-shrink: 0; }
+/* Default icon sizing — every inline SVG defaults to 1em (≈14px at body size).
+ * Specific contexts below override this. Without this default, an SVG with
+ * only viewBox (no width/height attrs) will fill its container, which has
+ * blown up the Browse search icon previously. */
+svg { width: 1em; height: 1em; flex-shrink: 0; }
 .weather-pill svg { width: 14px; height: 14px; }
 .search > svg { width: 14px; height: 14px; color: var(--text-muted); }
 .icon-btn svg { width: 16px; height: 16px; }

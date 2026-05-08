@@ -36,6 +36,7 @@ const DEFAULT_STATE = {
   version: 1,
   ingredients: [],
   recipes: [],
+  suppliers: [],
   settings: { id: "singleton", period_label: "per day" },
 };
 
@@ -54,6 +55,7 @@ async function readState() {
       version: parsed.version ?? 1,
       ingredients: Array.isArray(parsed.ingredients) ? parsed.ingredients : [],
       recipes: Array.isArray(parsed.recipes) ? parsed.recipes : [],
+      suppliers: Array.isArray(parsed.suppliers) ? parsed.suppliers : [],
       settings: parsed.settings && typeof parsed.settings === "object"
         ? { id: "singleton", period_label: "per day", ...parsed.settings }
         : { ...DEFAULT_STATE.settings },
@@ -163,6 +165,7 @@ app.put("/api/state", async (req, res, next) => {
       version: 1,
       ingredients: Array.isArray(body.ingredients) ? body.ingredients : [],
       recipes: Array.isArray(body.recipes) ? body.recipes : [],
+      suppliers: Array.isArray(body.suppliers) ? body.suppliers : [],
       settings: body.settings && typeof body.settings === "object"
         ? { id: "singleton", period_label: "per day", ...body.settings }
         : (Array.isArray(body.settings) && body.settings[0]) || { ...DEFAULT_STATE.settings },
@@ -211,6 +214,30 @@ app.delete("/api/recipes/:id", async (req, res, next) => {
   try {
     const state = await readState();
     state.recipes = state.recipes.filter((r) => r.id !== req.params.id);
+    await writeState(state, req.headers["x-client-id"] || null);
+    res.json({ ok: true });
+  } catch (e) { next(e); }
+});
+
+// Suppliers (custom records, separate from vendor strings on ingredients)
+app.put("/api/suppliers/:id", async (req, res, next) => {
+  try {
+    const state = await readState();
+    if (!Array.isArray(state.suppliers)) state.suppliers = [];
+    const incoming = { ...req.body, id: req.params.id };
+    const idx = state.suppliers.findIndex((s) => s.id === incoming.id);
+    if (idx >= 0) state.suppliers[idx] = incoming;
+    else state.suppliers.push(incoming);
+    await writeState(state, req.headers["x-client-id"] || null);
+    res.json(incoming);
+  } catch (e) { next(e); }
+});
+
+app.delete("/api/suppliers/:id", async (req, res, next) => {
+  try {
+    const state = await readState();
+    if (!Array.isArray(state.suppliers)) state.suppliers = [];
+    state.suppliers = state.suppliers.filter((s) => s.id !== req.params.id);
     await writeState(state, req.headers["x-client-id"] || null);
     res.json({ ok: true });
   } catch (e) { next(e); }

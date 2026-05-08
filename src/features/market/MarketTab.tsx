@@ -66,8 +66,8 @@ export function MarketTab() {
   const [snapshot, setSnapshot] = useState<MarketSnapshot | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [onlyOnSale, setOnlyOnSale] = useState(false);
-  const [browseTab, setBrowseTab] = useState<"cheapest" | "sales" | "browse">("cheapest");
+  const [yoursFilter, setYoursFilter] = useState<"all" | "cheaper" | "onsale">("all");
+  const [browseTab, setBrowseTab] = useState<"yours" | "sales" | "browse">("yours");
   const [browseQuery, setBrowseQuery] = useState("");
   const [applyTarget, setApplyTarget] = useState<{ ingredientId: string; product: MarketProductLite } | null>(null);
 
@@ -137,30 +137,39 @@ export function MarketTab() {
       .slice(0, 80);
   }, [snapshot, browseQuery]);
 
-  // Build the find-cheapest table — one row per matched ingredient, with the best comparable price.
-  const cheapestRows = useMemo(() => {
-    if (!snapshot) return [] as Array<{ ingredient: string; her: number; best: number | null; supplier: string; delta: number | null; product: MarketProduct | null; ingredient_id: string; base_unit: string }>;
-    const rows = snapshot.matches
-      .filter((m) => m.candidates.length > 0)
-      .map((m) => {
-        const best = m.candidates.find((c) => c.estimated_per_base_unit != null);
-        const product = best ? productsById.get(best.product_id) ?? null : null;
-        return {
-          ingredient: m.ingredient_name,
-          ingredient_id: m.ingredient_id,
-          base_unit: m.base_unit,
-          her: m.her_per_base,
-          best: best?.estimated_per_base_unit ?? null,
-          supplier: product?.source_name ?? "—",
-          delta: best?.delta_pct ?? null,
-          product,
-        };
-      })
-      .filter((r) => (onlyOnSale ? !!r.product?.on_sale : true))
-      .sort((a, b) => (a.delta ?? 999) - (b.delta ?? 999))
-      .slice(0, 12);
-    return rows;
-  }, [snapshot, productsById, onlyOnSale]);
+  // Your ingredients table — every ingredient with at least one market match.
+  // When no match exists, the row still shows her current cost. The user can
+  // filter to cheaper-than-yours or only-on-sale.
+  const yoursRows = useMemo(() => {
+    if (!snapshot) return [] as Array<{ ingredient: string; her: number; best: number | null; supplier: string; delta: number | null; product: MarketProduct | null; ingredient_id: string; base_unit: string; on_sale: boolean }>;
+    const rows = snapshot.matches.map((m) => {
+      const best = m.candidates.find((c) => c.estimated_per_base_unit != null);
+      const product = best ? productsById.get(best.product_id) ?? null : null;
+      return {
+        ingredient: m.ingredient_name,
+        ingredient_id: m.ingredient_id,
+        base_unit: m.base_unit,
+        her: m.her_per_base,
+        best: best?.estimated_per_base_unit ?? null,
+        supplier: product?.source_name ?? "—",
+        delta: best?.delta_pct ?? null,
+        product,
+        on_sale: !!product?.on_sale,
+      };
+    });
+    const filtered = rows.filter((r) => {
+      if (yoursFilter === "cheaper") return r.delta != null && r.delta < -0.5;
+      if (yoursFilter === "onsale") return r.on_sale;
+      return true;
+    });
+    // Sort: cheaper-deltas first, then no-match rows last
+    filtered.sort((a, b) => {
+      const ad = a.delta ?? 999;
+      const bd = b.delta ?? 999;
+      return ad - bd;
+    });
+    return filtered;
+  }, [snapshot, productsById, yoursFilter]);
 
   if (loading) {
     return (
@@ -317,19 +326,19 @@ export function MarketTab() {
         })}
       </div>
 
-      {/* Tabbed product browser: Cheapest / Sales / Browse */}
+      {/* Tabbed product browser: Your ingredients / Active sales / Browse */}
       <div className="card fade-up">
         <div className="card-head">
           <h3>
-            {browseTab === "cheapest"
-              ? "Find cheapest"
+            {browseTab === "yours"
+              ? "Your ingredients"
               : browseTab === "sales"
               ? "Active sales"
               : "Browse all products"}
           </h3>
           <span className="card-sub">
-            {browseTab === "cheapest"
-              ? "apples-to-apples public price compare"
+            {browseTab === "yours"
+              ? "your prices vs the market"
               : browseTab === "sales"
               ? `${onSaleProducts.length} on sale right now`
               : `${browseProducts.length} of ${snapshot.products.length}`}
@@ -337,10 +346,10 @@ export function MarketTab() {
           <div className="right">
             <div className="segmented">
               <button
-                className={browseTab === "cheapest" ? "on" : ""}
-                onClick={() => setBrowseTab("cheapest")}
+                className={browseTab === "yours" ? "on" : ""}
+                onClick={() => setBrowseTab("yours")}
               >
-                Cheapest ({cheapestRows.length})
+                Your ingredients ({snapshot.matches.length})
               </button>
               <button
                 className={browseTab === "sales" ? "on" : ""}
@@ -355,13 +364,21 @@ export function MarketTab() {
                 Browse
               </button>
             </div>
-            {browseTab === "cheapest" && (
-              <button
-                className={`btn ${onlyOnSale ? "primary" : ""}`}
-                onClick={() => setOnlyOnSale((v) => !v)}
-              >
-                <I.Filter /> Only on-sale
-              </button>
+            {browseTab === "yours" && (
+              <div className="segmented" style={{ marginLeft: 8 }}>
+                <button
+                  className={yoursFilter === "all" ? "on" : ""}
+                  onClick={() => setYoursFilter("all")}
+                >All</button>
+                <button
+                  className={yoursFilter === "cheaper" ? "on" : ""}
+                  onClick={() => setYoursFilter("cheaper")}
+                >Cheaper</button>
+                <button
+                  className={yoursFilter === "onsale" ? "on" : ""}
+                  onClick={() => setYoursFilter("onsale")}
+                >On sale</button>
+              </div>
             )}
           </div>
         </div>
@@ -369,7 +386,22 @@ export function MarketTab() {
         {browseTab === "browse" && (
           <div style={{ padding: "12px 20px 0" }}>
             <div style={{ position: "relative", maxWidth: 380 }}>
-              <I.Search />
+              <span
+                style={{
+                  position: "absolute",
+                  left: 11,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: "var(--text-muted)",
+                  pointerEvents: "none",
+                  display: "inline-flex",
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="7"/>
+                  <path d="M21 21l-4.3-4.3"/>
+                </svg>
+              </span>
               <input
                 className="input-base"
                 placeholder="Search products by name, vendor, or source…"
@@ -377,14 +409,11 @@ export function MarketTab() {
                 onChange={(e) => setBrowseQuery(e.target.value)}
                 style={{ paddingLeft: 34 }}
               />
-              <span style={{ position: "absolute", left: 11, top: 11, color: "var(--text-muted)" }}>
-                <I.Search />
-              </span>
             </div>
           </div>
         )}
 
-        {browseTab === "cheapest" && (
+        {browseTab === "yours" && (
           <table className="tbl nums">
           <thead>
             <tr>
@@ -397,14 +426,14 @@ export function MarketTab() {
             </tr>
           </thead>
           <tbody>
-            {cheapestRows.length === 0 ? (
+            {yoursRows.length === 0 ? (
               <tr>
                 <td colSpan={6} style={{ textAlign: "center", padding: 30, color: "var(--text-muted)" }}>
                   No matches yet. Refresh, or check your ingredient names match common public listings.
                 </td>
               </tr>
             ) : (
-              cheapestRows.map((row) => (
+              yoursRows.map((row) => (
                 <tr key={row.ingredient_id}>
                   <td className="name-cell">{row.ingredient}</td>
                   <td className="r">{fmtMoney(row.her)}/{row.base_unit}</td>

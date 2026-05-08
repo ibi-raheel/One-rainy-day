@@ -11,12 +11,13 @@
  *   - any ngrok URL pointing at the local server
  */
 
-import type { Ingredient, Recipe, AppSettings } from "./types";
+import type { Ingredient, Recipe, AppSettings, Supplier } from "./types";
 
 export interface ServerState {
   version: number;
   ingredients: Ingredient[];
   recipes: Recipe[];
+  suppliers?: Supplier[];
   settings: AppSettings;
 }
 
@@ -54,7 +55,7 @@ export const api = {
     return http("GET", "/api/state");
   },
 
-  replaceState(state: { ingredients: Ingredient[]; recipes: Recipe[]; settings: AppSettings | AppSettings[] }) {
+  replaceState(state: { ingredients: Ingredient[]; recipes: Recipe[]; suppliers?: Supplier[]; settings: AppSettings | AppSettings[] }) {
     return http<ServerState>("PUT", "/api/state", state);
   },
 
@@ -76,6 +77,14 @@ export const api = {
 
   putSettings(settings: AppSettings): Promise<AppSettings> {
     return http("PUT", "/api/settings", settings);
+  },
+
+  putSupplier(s: Supplier): Promise<Supplier> {
+    return http("PUT", `/api/suppliers/${encodeURIComponent(s.id)}`, s);
+  },
+
+  deleteSupplier(id: string): Promise<{ ok: true }> {
+    return http("DELETE", `/api/suppliers/${encodeURIComponent(id)}`);
   },
 
   loadMarket(): Promise<any> {

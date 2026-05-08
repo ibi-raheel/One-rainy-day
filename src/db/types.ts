@@ -32,6 +32,10 @@ export interface Ingredient {
   waste_factor: number; // default 1.0; actual_used = recipe_qty * waste_factor for ordering
   allergens: Allergen[];
   dietary_flags: DietaryFlag[];
+  // Stock fields — editable on the Stock tab; default to 0 / undefined
+  on_hand_qty?: number;       // in package_unit
+  reorder_point?: number;     // in package_unit; below this = low/critical
+  last_restocked_at?: string; // ISO date string
   notes?: string;
   created_at: string;
   updated_at: string;
@@ -77,4 +81,19 @@ export interface Recipe {
 export interface AppSettings {
   id: "singleton";
   period_label: string; // e.g. "per day", "per week"
+}
+
+export type SupplierTier = "Primary" | "Watching" | "Trial";
+
+export interface Supplier {
+  id: string;
+  name: string;
+  tier: SupplierTier;
+  contact?: string;        // e.g. "Member · #82-441" or "Pickup · 1130 W North Ave"
+  lead_time?: string;      // e.g. "Same day", "1 day", "3 days"
+  categories?: string[];   // e.g. ["Dairy", "Eggs"]
+  on_time_pct?: number;    // 0-100
+  notes?: string;
+  created_at: string;
+  updated_at: string;
 }
