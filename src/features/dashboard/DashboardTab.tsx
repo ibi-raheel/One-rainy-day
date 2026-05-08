@@ -5,20 +5,10 @@ import { I } from "@/components/design/Icons";
 import { Spark } from "@/components/design/Spark";
 import { CountUp } from "@/components/design/CountUp";
 import { Rainfield } from "@/components/design/Rain";
+import type { PrepItem } from "@/db/types";
 
 type SortKey = "name" | "cost" | "price" | "margin" | "vol";
 type PrepView = "today" | "tomorrow" | "week";
-
-interface PrepRow {
-  id: number;
-  name: string;
-  yield: string;
-  forItems: string[];
-  status: "pending" | "in_progress" | "done";
-  minutes: number;
-  /** Which day-bucket this prep belongs to. */
-  when: PrepView;
-}
 
 interface AlertRow {
   kind: "stock" | "market";
@@ -33,15 +23,6 @@ const TODAY = new Date().toLocaleDateString("en-US", {
   month: "long",
   day: "numeric",
 });
-
-const DEFAULT_PREP: PrepRow[] = [
-  { id: 1, name: "Vanilla syrup batch",     yield: "1.2 L",          forItems: ["Vanilla latte", "Iced vanilla cold brew"], status: "pending",     minutes: 18, when: "today" },
-  { id: 2, name: "Egg-and-cheese filling",  yield: "24 sandwiches",  forItems: ["Breakfast sando"],                          status: "in_progress", minutes: 12, when: "today" },
-  { id: 3, name: "Chai concentrate",        yield: "800 ml",         forItems: ["Dirty chai", "Iced chai"],                  status: "done",        minutes: 14, when: "today" },
-  { id: 4, name: "Turkey-ham slice prep",   yield: "32 portions",    forItems: ["Turkey sando"],                             status: "pending",     minutes:  9, when: "today" },
-  { id: 5, name: "Cold brew batch",         yield: "5 L",            forItems: ["Iced cold brew"],                           status: "pending",     minutes: 30, when: "tomorrow" },
-  { id: 6, name: "Pesto refresh",           yield: "500 ml",         forItems: ["Avocado toast", "Pesto chicken sando"],     status: "pending",     minutes: 25, when: "week" },
-];
 
 export function DashboardTab() {
   const ingredients = useApp((s) => s.ingredients);
@@ -60,13 +41,15 @@ export function DashboardTab() {
     }
   };
 
-  const [doneIds, setDoneIds] = useState<Set<number>>(() => new Set([3]));
   const [sortKey, setSortKey] = useState<SortKey>("margin");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
 
-  // Today's prep state — view filter + editable list + inline add input
+  // Today's prep — server-persisted via store
+  const prepItems = useApp((s) => s.prepItems);
+  const upsertPrepItem = useApp((s) => s.upsertPrepItem);
+  const deletePrepItem = useApp((s) => s.deletePrepItem);
+
   const [prepView, setPrepView] = useState<PrepView>("today");
-  const [prepList, setPrepList] = useState<PrepRow[]>(DEFAULT_PREP);
   const [adding, setAdding] = useState(false);
   const [newName, setNewName] = useState("");
   const [newYield, setNewYield] = useState("");
@@ -160,34 +143,39 @@ export function DashboardTab() {
     if (adding) newNameRef.current?.focus();
   }, [adding]);
 
-  // Items that have just been checked off and are fading out.
-  const [vanishingIds, setVanishingIds] = useState<Set<number>>(new Set());
+  // Items that have just been checked off and are fading out (animation only).
+  const [vanishingIds, setVanishingIds] = useState<Set<string>>(new Set());
 
   const visiblePrep = useMemo(
-    () => prepList.filter(
+    () => prepItems.filter(
       (p) =>
         p.when === prepView
-        // hide already-completed items, but keep ones currently fading out
-        && !(p.status === "done" || (doneIds.has(p.id) && !vanishingIds.has(p.id))),
+        // hide already-completed items in the DB, but keep ones currently fading out
+        && !(p.status === "done" && !vanishingIds.has(p.id)),
     ),
-    [prepList, prepView, doneIds, vanishingIds],
+    [prepItems, prepView, vanishingIds],
   );
-  const remainingPrep = visiblePrep.filter((p) => !vanishingIds.has(p.id)).length;
+  const remainingPrep = visiblePrep.filter((p) => !vanishingIds.has(p.id) && p.status !== "done").length;
 
-  // Today's prep
-  const toggleDone = (id: number) => {
-    if (doneIds.has(id) || vanishingIds.has(id)) {
-      // un-check (item already checked, animating, or done) — remove from doneIds and vanishing
-      setDoneIds((s) => { const n = new Set(s); n.delete(id); return n; });
-      setVanishingIds((s) => { const n = new Set(s); n.delete(id); return n; });
+  /** Toggle done state. Persists to server. Plays a short fade animation when checking off. */
+  const toggleDone = (item: PrepItem) => {
+    if (item.status === "done") {
+      // un-check — set status back to pending and clear any vanishing flag
+      setVanishingIds((s) => { const n = new Set(s); n.delete(item.id); return n; });
+      void upsertPrepItem({ ...item, status: "pending" });
       return;
     }
-    // check + fade out, then permanently remove from the visible list
-    setDoneIds((s) => { const n = new Set(s); n.add(id); return n; });
-    setVanishingIds((s) => { const n = new Set(s); n.add(id); return n; });
+    // check + fade out, then persist as done
+    setVanishingIds((s) => { const n = new Set(s); n.add(item.id); return n; });
     window.setTimeout(() => {
-      setVanishingIds((s) => { const n = new Set(s); n.delete(id); return n; });
+      setVanishingIds((s) => { const n = new Set(s); n.delete(item.id); return n; });
     }, 320);
+    void upsertPrepItem({ ...item, status: "done" });
+  };
+
+  const removePrep = (item: PrepItem) => {
+    if (!confirm(`Remove "${item.name}" from prep?`)) return;
+    void deletePrepItem(item.id);
   };
 
   const startAdd = () => { setNewName(""); setNewYield(""); setNewMinutes(""); setAdding(true); };
@@ -197,17 +185,15 @@ export function DashboardTab() {
     if (!name) { cancelAdd(); return; }
     const minutes = Math.max(1, Math.min(999, parseInt(newMinutes || "10", 10) || 10));
     const yieldStr = newYield.trim() || "1 batch";
-    const nextId = (prepList.reduce((m, p) => Math.max(m, p.id), 0) || 0) + 1;
-    const row: PrepRow = {
-      id: nextId,
+    void upsertPrepItem({
+      id: "", // store will assign nanoid
       name,
-      yield: yieldStr,
-      forItems: ["—"],
+      yield_text: yieldStr,
+      for_items: ["—"],
       status: "pending",
       minutes,
       when: prepView,
-    };
-    setPrepList((cur) => [row, ...cur]);
+    });
     setAdding(false);
     setNewName(""); setNewYield(""); setNewMinutes("");
   };
@@ -492,14 +478,16 @@ export function DashboardTab() {
               </div>
             ) : (
               visiblePrep.map((p) => {
-                const isDone = doneIds.has(p.id) || p.status === "done";
+                const isDone = p.status === "done";
                 const isVanishing = vanishingIds.has(p.id);
                 const cls = isDone ? "done" : p.status === "in_progress" ? "in_progress" : "";
                 return (
                   <div
                     key={p.id}
                     className={`prep-row ${isDone ? "done" : ""}`}
-                    onClick={() => toggleDone(p.id)}
+                    onClick={() => toggleDone(p)}
+                    onContextMenu={(e) => { e.preventDefault(); removePrep(p); }}
+                    title="Click to mark done · right-click to remove"
                     style={isVanishing ? {
                       opacity: 0,
                       transform: "translateX(8px)",
@@ -516,9 +504,9 @@ export function DashboardTab() {
                     <div className={`prep-check ${cls}`}>{isDone && <I.Check />}</div>
                     <div>
                       <div className="prep-name">{p.name}</div>
-                      <div className="prep-meta">For {p.forItems.join(" · ")}</div>
+                      <div className="prep-meta">For {p.for_items.join(" · ")}</div>
                     </div>
-                    <span className="prep-yield">{p.yield}</span>
+                    <span className="prep-yield">{p.yield_text}</span>
                     <span className="prep-time">{p.minutes}<small>min</small></span>
                   </div>
                 );

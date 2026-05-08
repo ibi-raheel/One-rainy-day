@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { api } from "@/db/api";
-import type { Ingredient, Recipe, AppSettings, Supplier, StockItem } from "@/db/types";
+import type { Ingredient, Recipe, AppSettings, Supplier, StockItem, PrepItem } from "@/db/types";
 import { computeRecipeCost, type RecipeCostResult } from "@/lib/cost";
 import { nanoid } from "nanoid";
 
@@ -9,6 +9,7 @@ interface AppState {
   recipes: Recipe[];
   suppliers: Supplier[];
   stockItems: StockItem[];
+  prepItems: PrepItem[];
   settings: AppSettings | null;
   loaded: boolean;
   loadError: string | null;
@@ -32,6 +33,9 @@ interface AppState {
 
   upsertStockItem: (s: Omit<StockItem, "created_at" | "updated_at"> & { created_at?: string }) => Promise<void>;
   deleteStockItem: (id: string) => Promise<void>;
+
+  upsertPrepItem: (p: Omit<PrepItem, "created_at" | "updated_at"> & { created_at?: string }) => Promise<void>;
+  deletePrepItem: (id: string) => Promise<void>;
 
   costFor: (recipeId: string) => RecipeCostResult | null;
 
@@ -85,6 +89,7 @@ export const useApp = create<AppState>((set, get) => ({
   recipes: [],
   suppliers: [],
   stockItems: [],
+  prepItems: [],
   settings: null,
   loaded: false,
   loadError: null,
@@ -100,11 +105,13 @@ export const useApp = create<AppState>((set, get) => ({
       const recipes = (state.recipes ?? []).map(normalizeRecipe);
       const suppliers = (state.suppliers ?? []) as Supplier[];
       const stockItems = (state.stockItems ?? []) as StockItem[];
+      const prepItems = (state.prepItems ?? []) as PrepItem[];
       set({
         ingredients,
         recipes,
         suppliers,
         stockItems,
+        prepItems,
         settings: state.settings ?? { id: "singleton", period_label: "per day" },
         loaded: true,
         loadError: null,
@@ -260,6 +267,39 @@ export const useApp = create<AppState>((set, get) => ({
       await api.deleteStockItem(id);
     } catch (err) {
       set({ stockItems: prev, loadError: err instanceof Error ? err.message : String(err) });
+      throw err;
+    }
+  },
+
+  async upsertPrepItem(p) {
+    const now = new Date().toISOString();
+    const next: PrepItem = {
+      ...p,
+      id: p.id || nanoid(),
+      created_at: p.created_at || now,
+      updated_at: now,
+    } as PrepItem;
+    const prev = get().prepItems;
+    const idx = prev.findIndex((x) => x.id === next.id);
+    const optimistic = idx >= 0
+      ? [...prev.slice(0, idx), next, ...prev.slice(idx + 1)]
+      : [...prev, next];
+    set({ prepItems: optimistic });
+    try {
+      await api.putPrepItem(next);
+    } catch (err) {
+      set({ prepItems: prev, loadError: err instanceof Error ? err.message : String(err) });
+      throw err;
+    }
+  },
+
+  async deletePrepItem(id) {
+    const prev = get().prepItems;
+    set({ prepItems: prev.filter((p) => p.id !== id) });
+    try {
+      await api.deletePrepItem(id);
+    } catch (err) {
+      set({ prepItems: prev, loadError: err instanceof Error ? err.message : String(err) });
       throw err;
     }
   },

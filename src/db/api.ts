@@ -11,7 +11,7 @@
  *   - any ngrok URL pointing at the local server
  */
 
-import type { Ingredient, Recipe, AppSettings, Supplier, StockItem } from "./types";
+import type { Ingredient, Recipe, AppSettings, Supplier, StockItem, PrepItem } from "./types";
 
 export interface ServerState {
   version: number;
@@ -19,6 +19,7 @@ export interface ServerState {
   recipes: Recipe[];
   suppliers?: Supplier[];
   stockItems?: StockItem[];
+  prepItems?: PrepItem[];
   settings: AppSettings;
 }
 
@@ -94,6 +95,14 @@ export const api = {
 
   deleteStockItem(id: string): Promise<{ ok: true }> {
     return http("DELETE", `/api/stock-items/${encodeURIComponent(id)}`);
+  },
+
+  putPrepItem(p: PrepItem): Promise<PrepItem> {
+    return http("PUT", `/api/prep-items/${encodeURIComponent(p.id)}`, p);
+  },
+
+  deletePrepItem(id: string): Promise<{ ok: true }> {
+    return http("DELETE", `/api/prep-items/${encodeURIComponent(id)}`);
   },
 
   loadMarket(): Promise<any> {

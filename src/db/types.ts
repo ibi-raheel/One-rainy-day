@@ -106,6 +106,19 @@ export interface StockItem {
   updated_at: string;
 }
 
+/** A single prep task on the Dashboard's "Today's prep" card. Persisted. */
+export interface PrepItem {
+  id: string;
+  name: string;
+  yield_text: string;        // free text: "1.2 L", "24 sandwiches", "1 batch"
+  for_items: string[];       // which menu items this prep feeds
+  status: "pending" | "in_progress" | "done";
+  minutes: number;
+  when: "today" | "tomorrow" | "week";
+  created_at: string;
+  updated_at: string;
+}
+
 export type SupplierTier = "Primary" | "Watching" | "Trial";
 
 export interface Supplier {

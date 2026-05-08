@@ -38,6 +38,7 @@ const DEFAULT_STATE = {
   recipes: [],
   suppliers: [],
   stockItems: [],
+  prepItems: [],
   settings: { id: "singleton", period_label: "per day" },
 };
 
@@ -58,6 +59,7 @@ async function readState() {
       recipes: Array.isArray(parsed.recipes) ? parsed.recipes : [],
       suppliers: Array.isArray(parsed.suppliers) ? parsed.suppliers : [],
       stockItems: Array.isArray(parsed.stockItems) ? parsed.stockItems : [],
+      prepItems: Array.isArray(parsed.prepItems) ? parsed.prepItems : [],
       settings: parsed.settings && typeof parsed.settings === "object"
         ? { id: "singleton", period_label: "per day", ...parsed.settings }
         : { ...DEFAULT_STATE.settings },
@@ -169,6 +171,7 @@ app.put("/api/state", async (req, res, next) => {
       recipes: Array.isArray(body.recipes) ? body.recipes : [],
       suppliers: Array.isArray(body.suppliers) ? body.suppliers : [],
       stockItems: Array.isArray(body.stockItems) ? body.stockItems : [],
+      prepItems: Array.isArray(body.prepItems) ? body.prepItems : [],
       settings: body.settings && typeof body.settings === "object"
         ? { id: "singleton", period_label: "per day", ...body.settings }
         : (Array.isArray(body.settings) && body.settings[0]) || { ...DEFAULT_STATE.settings },
@@ -265,6 +268,30 @@ app.delete("/api/stock-items/:id", async (req, res, next) => {
     const state = await readState();
     if (!Array.isArray(state.stockItems)) state.stockItems = [];
     state.stockItems = state.stockItems.filter((s) => s.id !== req.params.id);
+    await writeState(state, req.headers["x-client-id"] || null);
+    res.json({ ok: true });
+  } catch (e) { next(e); }
+});
+
+// Prep items (Today's prep on the Dashboard)
+app.put("/api/prep-items/:id", async (req, res, next) => {
+  try {
+    const state = await readState();
+    if (!Array.isArray(state.prepItems)) state.prepItems = [];
+    const incoming = { ...req.body, id: req.params.id };
+    const idx = state.prepItems.findIndex((p) => p.id === incoming.id);
+    if (idx >= 0) state.prepItems[idx] = incoming;
+    else state.prepItems.push(incoming);
+    await writeState(state, req.headers["x-client-id"] || null);
+    res.json(incoming);
+  } catch (e) { next(e); }
+});
+
+app.delete("/api/prep-items/:id", async (req, res, next) => {
+  try {
+    const state = await readState();
+    if (!Array.isArray(state.prepItems)) state.prepItems = [];
+    state.prepItems = state.prepItems.filter((p) => p.id !== req.params.id);
     await writeState(state, req.headers["x-client-id"] || null);
     res.json({ ok: true });
   } catch (e) { next(e); }
