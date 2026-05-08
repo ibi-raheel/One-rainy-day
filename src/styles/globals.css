@@ -1016,3 +1016,174 @@ body::after {
 .text-error { color: var(--error); }
 .text-info { color: var(--info); }
 .border-border { border-color: var(--border); }
+
+/* ───────────────────────── Hamburger + scrim ─────────────────────────
+   Hidden by default on desktop, shown on small screens via the
+   responsive section below.
+*/
+.nav-toggle {
+  display: none;
+  width: 38px; height: 38px; border-radius: 8px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,252,245,0.85);
+  align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.nav-toggle svg { width: 22px; height: 22px; }
+.nav-toggle:hover { background: rgba(255,255,255,0.12); }
+.nav-scrim {
+  display: none;
+  position: fixed; inset: 0; z-index: 8;
+  background: rgba(10, 14, 16, 0.55);
+  backdrop-filter: blur(2px);
+  opacity: 0; transition: opacity .2s var(--ease);
+  pointer-events: none;
+}
+
+/* ───────────────────────── Mobile / phone layout ─────────────────────────
+   Targets: iPhone 16 Pro Max (430×932), Galaxy S23/S24 Ultra (~412×917).
+   Breakpoint at 860px catches portrait phones AND narrow tablets/split-screens.
+*/
+@media (max-width: 860px) {
+  /* App shell becomes a single column; sidebar is an off-canvas drawer */
+  .app { grid-template-columns: 1fr; }
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0;
+    width: min(86vw, 320px); height: 100vh; height: 100dvh;
+    transform: translateX(-100%);
+    transition: transform .25s var(--ease);
+    z-index: 12;
+    box-shadow: 0 0 50px rgba(0,0,0,0.45);
+    padding: 18px 16px 22px;
+  }
+  .app.nav-open .sidebar { transform: translateX(0); }
+  .app.nav-open .nav-scrim {
+    display: block; opacity: 1; pointer-events: auto;
+  }
+  .nav-toggle { display: inline-flex; }
+
+  /* Topbar: tighter padding, hide the ⌘K hint and search width tweaks */
+  .topbar {
+    padding: 10px 14px; gap: 10px;
+  }
+  .topbar .crumbs {
+    flex: 1; min-width: 0; font-size: 12px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .topbar .search { display: none; }
+  .topbar .btn.primary { padding: 8px 12px; font-size: 13px; }
+  .topbar .btn.primary svg { width: 14px; height: 14px; }
+
+  /* Page padding */
+  .page { padding: 16px 14px 80px; }
+
+  /* Page header: stack title + stats vertically */
+  .page-head { padding: 18px 18px 20px; border-radius: 14px; margin-bottom: 16px; }
+  .page-head h1 { font-size: 26px; line-height: 1.1; }
+  .page-head .head-row { flex-direction: column; align-items: stretch; gap: 14px; }
+  .page-head .head-stats {
+    margin-left: 0;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .page-head .head-stats .head-stat .v { font-size: 18px; }
+  .page-head .head-stats .head-stat .l { font-size: 10.5px; }
+  .page-head .head-stats .btn,
+  .page-head .head-stats .btn.primary {
+    grid-column: 1 / -1; justify-content: center;
+  }
+
+  /* All 2-column / 3-column / 4-column grids collapse to 1 column */
+  .row-2, .row-2-equal { grid-template-columns: 1fr; gap: 14px; }
+  .kpis { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .rcards { grid-template-columns: 1fr !important; gap: 12px; }
+  .order-suppliers { grid-template-columns: 1fr; }
+
+  /* Cards: bigger touch padding, smaller display nums */
+  .card { border-radius: 14px; }
+  .card-head {
+    flex-wrap: wrap; gap: 8px; padding: 14px 16px;
+  }
+  .card-head .right { flex-wrap: wrap; gap: 6px; }
+  .card-head h3 { font-size: 16px; }
+
+  /* Tables: allow horizontal scroll and tighten cells */
+  .card .tbl-wrap, .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tbl { font-size: 12.5px; }
+  .tbl th { padding: 10px 12px; font-size: 9.5px; }
+  .tbl td { padding: 10px 12px; font-size: 12.5px; }
+  .tbl .name-cell { min-width: 140px; }
+
+  /* Segmented buttons in card heads can wrap */
+  .segmented { flex-wrap: wrap; }
+
+  /* Modals: full-width on mobile with smaller padding */
+  .modal-backdrop { padding: 10px; }
+  .modal {
+    max-height: calc(100dvh - 20px);
+    border-radius: 14px;
+  }
+  .modal-head { padding: 14px 16px 12px; gap: 10px; }
+  .modal-head h2 { font-size: 18px; }
+  .modal-body { padding: 14px 16px; }
+  .modal-foot { padding: 12px 16px; flex-wrap: wrap; }
+
+  /* Bigger tap targets — buttons and inputs at minimum 40px tall */
+  .btn, .btn-primary, .btn-ghost, .btn-info {
+    min-height: 40px; padding: 9px 14px; font-size: 13.5px;
+  }
+  .input-base { padding: 11px 12px; font-size: 14.5px; min-height: 42px; }
+
+  /* Reduce decorative elements that tax mobile GPUs */
+  .page-rain { display: none; }
+
+  /* Topbar Quick add label can compact: keep icon + text on phone */
+  .topbar > .btn.primary { white-space: nowrap; }
+
+  /* Suppliers / Recipes / Stock / Market / etc. card grids */
+  .view .rcards.stagger { grid-template-columns: 1fr !important; }
+
+  /* Generic catch-all for inline grids using common patterns. React serialises
+     inline style values verbatim, so these substring selectors catch the
+     most common multi-column layouts inside cards/modals.                       */
+  [style*="repeat(2, 1fr)"],
+  [style*="repeat(2,1fr)"]   { grid-template-columns: 1fr !important; }
+  [style*="repeat(3, 1fr)"],
+  [style*="repeat(3,1fr)"]   { grid-template-columns: 1fr !important; }
+  [style*="repeat(4, 1fr)"],
+  [style*="repeat(4,1fr)"]   { grid-template-columns: repeat(2, 1fr) !important; }
+  [style*="grid-template-columns: 1fr 1fr"],
+  [style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }
+  [style*="grid-template-columns: 1.4fr 1fr"],
+  [style*="grid-template-columns:1.4fr 1fr"] { grid-template-columns: 1fr !important; }
+  [style*="grid-template-columns: 2fr 1fr"],
+  [style*="grid-template-columns:2fr 1fr"]   { grid-template-columns: 1fr !important; }
+  [style*="grid-template-columns: 1fr 1fr 2fr"],
+  [style*="grid-template-columns:1fr 1fr 2fr"] { grid-template-columns: 1fr !important; }
+  [style*="grid-template-columns: 140px 140px 1fr"] { grid-template-columns: 1fr !important; }
+  [style*="grid-template-columns: 1fr 110px 110px auto"] { grid-template-columns: 1fr !important; }
+}
+
+/* Even smaller phones (≤ 380 px wide). Tighten further. */
+@media (max-width: 380px) {
+  .page { padding: 12px 10px 64px; }
+  .page-head { padding: 16px 14px 18px; }
+  .page-head h1 { font-size: 22px; }
+  .page-head .head-stats { grid-template-columns: repeat(2, 1fr); }
+  .topbar { padding: 8px 10px; }
+  .topbar .crumbs { font-size: 11.5px; }
+  .topbar .btn.primary { padding: 7px 10px; font-size: 12.5px; }
+  .topbar .btn.primary span,
+  .topbar .btn.primary { /* keep "Quick add" but shrink */ }
+  .card-head { padding: 12px 14px; }
+  .card-head h3 { font-size: 15px; }
+}
+
+/* Tablet / split: 2-up grids stay 2 across, but page padding compresses */
+@media (min-width: 861px) and (max-width: 1100px) {
+  .page { padding: 24px 20px 80px; }
+  .row-2 { grid-template-columns: 1fr; gap: 18px; }
+  .rcards { grid-template-columns: repeat(2, 1fr); }
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+}

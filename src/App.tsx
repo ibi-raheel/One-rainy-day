@@ -59,7 +59,18 @@ export default function App() {
   const loaded = useApp((s) => s.loaded);
   const [tab, setTab] = useState<TabKey>("dashboard");
   const [modal, setModal] = useState<ModalKey | null>(null);
+  const [navOpen, setNavOpen] = useState(false);
   const debounceRef = useRef<number | null>(null);
+
+  // Auto-close the mobile drawer when the user taps a nav item or switches tabs
+  useEffect(() => { setNavOpen(false); }, [tab]);
+  // Close on Escape
+  useEffect(() => {
+    if (!navOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setNavOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [navOpen]);
 
   useEffect(() => {
     window.openModal = setModal;
@@ -97,7 +108,12 @@ export default function App() {
   return (
     <TooltipProvider>
       <PageRain count={35} />
-      <div className="app">
+      <div className={`app ${navOpen ? "nav-open" : ""}`}>
+        <div
+          className="nav-scrim"
+          onClick={() => setNavOpen(false)}
+          aria-hidden="true"
+        />
         <aside className="sidebar">
           <div className="brand">
             <Umbrella size={36} />
@@ -156,6 +172,16 @@ export default function App() {
 
         <main className="main">
           <div className="topbar">
+            <button
+              className="nav-toggle"
+              onClick={() => setNavOpen((v) => !v)}
+              aria-label={navOpen ? "Close navigation" : "Open navigation"}
+              aria-expanded={navOpen}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              </svg>
+            </button>
             <div className="crumbs">
               Workspace / <strong>{activeNav?.label ?? "Dashboard"}</strong>
             </div>
