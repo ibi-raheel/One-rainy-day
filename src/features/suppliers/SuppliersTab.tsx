@@ -61,6 +61,7 @@ export function SuppliersTab() {
   const deleteSupplier = useApp((s) => s.deleteSupplier);
   const settings = useApp((s) => s.settings);
   const hideVendor = useApp((s) => s.hideVendor);
+  const hideVendors = useApp((s) => s.hideVendors);
   const unhideVendor = useApp((s) => s.unhideVendor);
 
   const [editing, setEditing] = useState<Supplier | "new" | null>(null);
@@ -145,6 +146,56 @@ export function SuppliersTab() {
 
   const customCount = customSuppliers.length;
 
+  /**
+   * One-shot cleanup: hide every vendor-derived row that doesn't match one of the
+   * core primary suppliers, then add Costco + Sysco as custom suppliers if missing.
+   * Reversible via the "Show hidden" toggle and by deleting the new custom rows.
+   */
+  const KEEPER_PATTERNS = ["sam's club", "restaurant depot", "rishi tea", "barista underground"];
+  const isKeeperVendor = (name: string) => {
+    const n = name.trim().toLowerCase();
+    // exact match against the four standalone primary suppliers
+    return KEEPER_PATTERNS.includes(n);
+  };
+  const derivedToHide = useMemo(
+    () => Array.from(vendorStats.keys()).filter((v) => !isKeeperVendor(v) && !hiddenVendors.has(v.trim())),
+    [vendorStats, hiddenVendors],
+  );
+  const customLowerNames = useMemo(
+    () => new Set(customSuppliers.map((s) => s.name.trim().toLowerCase())),
+    [customSuppliers],
+  );
+  const needCostco = !customLowerNames.has("costco");
+  const needSysco = !customLowerNames.has("sysco");
+  // Show the bulk button if there's anything to do
+  const canResetToMains = derivedToHide.length > 0 || needCostco || needSysco;
+
+  const resetToMains = async () => {
+    const willHide = derivedToHide.length;
+    const willAdd = (needCostco ? 1 : 0) + (needSysco ? 1 : 0);
+    const msg = `Keep only the 6 main suppliers?\n\n` +
+      (willHide > 0 ? `• Hide ${willHide} vendor row${willHide === 1 ? "" : "s"} (your ingredients are not changed; you can restore later via Show hidden)\n` : "") +
+      (needCostco ? "• Add Costco as a custom supplier\n" : "") +
+      (needSysco ? "• Add Sysco as a custom supplier\n" : "") +
+      `\nAfter this you'll have: Sam's Club, Restaurant Depot, Rishi Tea, Barista Underground, Costco, Sysco.`;
+    if (!confirm(msg)) return;
+    if (derivedToHide.length > 0) await hideVendors(derivedToHide);
+    if (needCostco) {
+      await upsertSupplier({
+        id: "", name: "Costco", tier: "Primary",
+        contact: "Business member", lead_time: "Same day",
+        categories: ["Bulk", "Mixed"], on_time_pct: 98,
+      });
+    }
+    if (needSysco) {
+      await upsertSupplier({
+        id: "", name: "Sysco", tier: "Primary",
+        contact: "Wholesale rep", lead_time: "1 day",
+        categories: ["Foodservice", "Mixed"], on_time_pct: 96,
+      });
+    }
+  };
+
   return (
     <div className="view">
       <div className="page-head fade-up">
@@ -171,6 +222,21 @@ export function SuppliersTab() {
               <span className="v"><CountUp to={avgOnTime} delay={240} />%</span>
               <span className="l">on-time avg</span>
             </div>
+            {canResetToMains && (
+              <button
+                className="btn ghost"
+                style={{
+                  alignSelf: "center",
+                  background: "var(--bg-surface)",
+                  borderColor: "var(--border)",
+                  color: "var(--text)",
+                }}
+                onClick={() => { void resetToMains(); }}
+                title="Hide everything except the 6 main suppliers (Sam's, Restaurant Depot, Rishi, Barista, Costco, Sysco)"
+              >
+                Keep only 6 mains
+              </button>
+            )}
             {hiddenCount > 0 && (
               <button
                 className="btn ghost"

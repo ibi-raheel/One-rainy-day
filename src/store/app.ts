@@ -38,6 +38,7 @@ interface AppState {
   setPeriodLabel: (label: string) => Promise<void>;
 
   hideVendor: (name: string) => Promise<void>;
+  hideVendors: (names: string[]) => Promise<void>;
   unhideVendor: (name: string) => Promise<void>;
 
   /** Replace the entire backing store (used by Import). */
@@ -288,6 +289,25 @@ export const useApp = create<AppState>((set, get) => ({
     const hidden = new Set(cur.hiddenVendors ?? []);
     if (hidden.has(name)) return;
     hidden.add(name);
+    const next: AppSettings = { ...cur, hiddenVendors: Array.from(hidden) };
+    const prev = get().settings;
+    set({ settings: next });
+    try {
+      await api.putSettings(next);
+    } catch (err) {
+      set({ settings: prev, loadError: err instanceof Error ? err.message : String(err) });
+      throw err;
+    }
+  },
+
+  async hideVendors(names) {
+    const cur = get().settings ?? { id: "singleton", period_label: "per day" };
+    const hidden = new Set(cur.hiddenVendors ?? []);
+    let changed = false;
+    for (const n of names) {
+      if (!hidden.has(n)) { hidden.add(n); changed = true; }
+    }
+    if (!changed) return;
     const next: AppSettings = { ...cur, hiddenVendors: Array.from(hidden) };
     const prev = get().settings;
     set({ settings: next });
