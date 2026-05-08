@@ -414,6 +414,7 @@ export function MarketTab() {
         )}
 
         {browseTab === "yours" && (
+          <div className="tbl-wrap">
           <table className="tbl nums">
           <thead>
             <tr>
@@ -487,9 +488,11 @@ export function MarketTab() {
             )}
           </tbody>
         </table>
+          </div>
         )}
 
         {browseTab === "sales" && (
+          <div className="tbl-wrap">
           <table className="tbl nums">
             <thead>
               <tr>
@@ -555,9 +558,11 @@ export function MarketTab() {
               )}
             </tbody>
           </table>
+          </div>
         )}
 
         {browseTab === "browse" && (
+          <div className="tbl-wrap">
           <table className="tbl nums">
             <thead>
               <tr>
@@ -619,6 +624,7 @@ export function MarketTab() {
               )}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 

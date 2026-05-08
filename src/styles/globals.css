@@ -1017,6 +1017,18 @@ body::after {
 .text-info { color: var(--info); }
 .border-border { border-color: var(--border); }
 
+/* Ingredients tab toolbar — wraps cleanly on mobile, single row on desktop. */
+.ing-toolbar {
+  display: flex; align-items: center; gap: 12px;
+  flex-wrap: nowrap;
+}
+.ing-toolbar-search { position: relative; flex: 1; max-width: 384px; min-width: 0; }
+.ing-toolbar-btn { white-space: nowrap; }
+
+/* Ingredients table scroll container — keeps card edges intact while
+   the row content can scroll horizontally on narrow screens. */
+.ing-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
 /* ───────────────────────── Hamburger + scrim ─────────────────────────
    Hidden by default on desktop, shown on small screens via the
    responsive section below.
@@ -1143,6 +1155,27 @@ body::after {
 
   /* Suppliers / Recipes / Stock / Market / etc. card grids */
   .view .rcards.stagger { grid-template-columns: 1fr !important; }
+
+  /* ── Ingredients tab — mobile toolbar + table ── */
+  .ing-toolbar { flex-wrap: wrap; gap: 10px; }
+  .ing-toolbar-search { flex: 1 1 100%; max-width: none; }
+  .ing-toolbar > .ing-toolbar-btn { flex: 1 1 calc(50% - 5px); justify-content: center; }
+  .ing-table { min-width: 720px; } /* horizontal scroll inside .ing-table-scroll */
+  .ing-table th, .ing-table td { padding: 10px 12px !important; font-size: 12.5px; }
+  .ing-table .label-cap { font-size: 9.5px; }
+
+  /* ── Market tab — commodity cards + sparklines + filter row ── */
+  .commodity { padding: 12px 14px; }
+  .commodity .v { font-size: 22px; }
+  .commodity svg { max-width: 100%; height: auto; }
+  /* Market commodities grid: 2-up on phone instead of 4-up. The catch-all
+     selector earlier collapses to 1 column; tighten that for commodities. */
+  [style*="repeat(4, 1fr)"].fade-up,
+  [style*="repeat(4,1fr)"].fade-up { grid-template-columns: repeat(2, 1fr) !important; }
+  /* The commodities row directly: */
+  .view > div[style*="repeat(4"] { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+  /* Market section title is fine; just tighten card-head segmenteds */
+  .card-head .right .segmented + .segmented { margin-left: 0 !important; }
 
   /* Generic catch-all for inline grids using common patterns. React serialises
      inline style values verbatim, so these substring selectors catch the

@@ -91,8 +91,8 @@ export function IngredientsTab() {
         ]}
       />
 
-      <div className="flex items-center justify-between gap-3 mb-3">
-        <div className="relative flex-1 max-w-sm">
+      <div className="ing-toolbar mb-3">
+        <div className="ing-toolbar-search">
           <Search
             className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted pointer-events-none z-10"
             strokeWidth={1.5}
@@ -108,7 +108,7 @@ export function IngredientsTab() {
           type="button"
           onClick={() => setGroupBySupplier((v) => !v)}
           className={cn(
-            "btn-ghost text-sm",
+            "btn-ghost text-sm ing-toolbar-btn",
             groupBySupplier && "!bg-accent-soft !border-accent text-text-primary"
           )}
           style={
@@ -121,7 +121,7 @@ export function IngredientsTab() {
           <Layers className="h-3.5 w-3.5" strokeWidth={1.5} />
           {groupBySupplier ? "Grouped by supplier" : "Group by supplier"}
         </button>
-        <Button onClick={() => setAdding(true)}>
+        <Button onClick={() => setAdding(true)} className="ing-toolbar-btn">
           <Plus className="h-4 w-4" strokeWidth={1.5} />
           Add ingredient
         </Button>
@@ -157,7 +157,8 @@ export function IngredientsTab() {
         )
       ) : (
         <div className="card overflow-hidden">
-          <table className="w-full">
+          <div className="ing-table-scroll">
+          <table className="w-full ing-table">
             <thead>
               <tr className="border-b border-border bg-bg-surfaceAlt">
                 <th className="label-cap text-left px-5 py-3 w-8"></th>
@@ -232,6 +233,7 @@ export function IngredientsTab() {
               )}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 

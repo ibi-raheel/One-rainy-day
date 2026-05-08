@@ -199,6 +199,7 @@ export function StockTab() {
               </button>
             </div>
           ) : (
+            <div className="tbl-wrap">
             <table className="tbl nums">
               <thead>
                 <tr>
@@ -336,6 +337,7 @@ export function StockTab() {
                 )}
               </tbody>
             </table>
+            </div>
           )}
         </div>
 
