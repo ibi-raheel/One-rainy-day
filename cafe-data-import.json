@@ -1,0 +1,4801 @@
+{
+  "version": 1,
+  "exported_at": "2026-05-08T00:23:12.785480+00:00",
+  "ingredients": [
+    {
+      "id": "Putgy2w0DBfvFPbr72V-s",
+      "name": "Chicken thigh, boneless skinless",
+      "vendor": "Restaurant Depot / Sam's",
+      "package_quantity": 40,
+      "package_unit": "lb",
+      "package_cost": 130.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.007165029365597277,
+      "density_factors": [],
+      "waste_factor": 1.0,
+      "notes": "40 lb case (frozen). $130 from docx (~$130). Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "RRry76c6Z7vZbHwYocf2o",
+      "name": "Eggs, large grade A",
+      "vendor": "Restaurant Depot / Sam's",
+      "package_quantity": 180,
+      "package_unit": "piece",
+      "package_cost": 52.5,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 0.2916666666666667,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.02,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "15-doz flat (180 ct). 1 egg ≈ 50 g. Midpoint of $45–60. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "COy73zyWlfYX-ESP6Xn6p",
+      "name": "Turkey ham, sliced deli",
+      "vendor": "Restaurant Depot",
+      "package_quantity": 10,
+      "package_unit": "lb",
+      "package_cost": 55.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.012125434311010775,
+      "density_factors": [
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 28,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "10 lb tray (sliced). 1 slice ~28 g (estimated, deli-thin). Midpoint of $45–65. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "ErEJIr2U-TQkoRwziQqYj",
+      "name": "Whole milk",
+      "vendor": "Sam's Club",
+      "package_quantity": 1,
+      "package_unit": "gallon",
+      "package_cost": 3.48,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.0009193191754658016,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 1.0298661174047374,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "1 gallon (3,785 mL). ✓ Confirmed. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "pyGTilXK4b0ALyG7Oeg2G",
+      "name": "Heavy cream",
+      "vendor": "Sam's Club",
+      "package_quantity": 192,
+      "package_unit": "fl_oz",
+      "package_cost": 14.72,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.0025924109985854455,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.9803921568627451,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "Half gallon × 3-pack (5,678 mL = 192 fl oz). ✓ Confirmed. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "5kkDj2mIjSS_UOyAf9TXK",
+      "name": "Mayonnaise (Hellmann's Real)",
+      "vendor": "Webstaurant",
+      "package_quantity": 1,
+      "package_unit": "gallon",
+      "package_cost": 19.75,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.005217400492945282,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 226,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 14,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "1 gallon × 4-case at $78.99 = $19.75/gal. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "JYjB8hWKlRNl952Xq47Je",
+      "name": "Greek yogurt, plain whole",
+      "vendor": "Sam's Club",
+      "package_quantity": 907,
+      "package_unit": "g",
+      "package_cost": 5.75,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.006339581036383682,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 245,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "32 oz tub (907 g). Midpoint $5.50–6.00. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "CrtvHonG4wvK-W8ZBRtvy",
+      "name": "Shredded Parmesan",
+      "vendor": "Sam's Club / Restaurant Depot",
+      "package_quantity": 5,
+      "package_unit": "lb",
+      "package_cost": 29.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.012786821637065909,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 100,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 6.3,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "5 lb bag (2,268 g). Midpoint $26–32. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "mMwlBII2ufGP89GfpFvQD",
+      "name": "Sliced cheddar (Colby Jack)",
+      "vendor": "Sam's Club",
+      "package_quantity": 3,
+      "package_unit": "lb",
+      "package_cost": 16.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.012125434311010777,
+      "density_factors": [
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 19,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "120-slice case (3 lb / 1,360 g). 1 slice ≈ 19 g. Midpoint $15–18. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "h9RMHQAqC028xOg69z32l",
+      "name": "Cream cheese",
+      "vendor": "Sam's Club",
+      "package_quantity": 3,
+      "package_unit": "lb",
+      "package_cost": 9.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.006981310663915296,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 227,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 14,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "3 lb bar (1,360 g). Midpoint $8–11. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "4PmhcekuSHEu2IaKqS7Ji",
+      "name": "Butter, unsalted",
+      "vendor": "Sam's Club",
+      "package_quantity": 1,
+      "package_unit": "lb",
+      "package_cost": 5.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.011023122100918888,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 226,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 14.2,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "1 lb (4 sticks, 454 g). Midpoint $4.50–5.50. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "U_QrVrk2YfEY6eI9oB4Zk",
+      "name": "Sweetened condensed milk",
+      "vendor": "Webstaurant / Restaurant Depot",
+      "package_quantity": 397,
+      "package_unit": "g",
+      "package_cost": 2.2,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.005541561712846348,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 306,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "14 oz can (397 g). $2.20 per can (case midpoint $50–60 / 24). Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "ffGtsqzHrYRMlWOmJ0-su",
+      "name": "Iceberg / romaine lettuce",
+      "vendor": "Restaurant Depot / Sam's",
+      "package_quantity": 1,
+      "package_unit": "piece",
+      "package_cost": 2.0,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 2.0,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.0016666666666666668,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "Per head (~600 g). 1 piece = 600 g. Midpoint $1.50–2.50. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "B5LP8-E6-a_MdyFr1wHXf",
+      "name": "Roma tomato",
+      "vendor": "Restaurant Depot",
+      "package_quantity": 25,
+      "package_unit": "lb",
+      "package_cost": 27.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.00238099437379848,
+      "density_factors": [
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 120,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "25 lb case. 1 medium ~120 g. Midpoint $22–32. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "x2bG2Y46w33d6MmlEbtjv",
+      "name": "English / Persian cucumber",
+      "vendor": "Sam's Club / RD",
+      "package_quantity": 1,
+      "package_unit": "piece",
+      "package_cost": 1.02,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 1.02,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.003703703703703704,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "Each (~270 g). Midpoint $0.79–1.25. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "Q2n99V7LvnH9Esqs-OQu-",
+      "name": "Radishes",
+      "vendor": "Sam's / grocery",
+      "package_quantity": 150,
+      "package_unit": "g",
+      "package_cost": 1.75,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.011666666666666667,
+      "density_factors": [
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 25,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "Bunch (~150 g, ~6 ct). 1 radish ~25 g. Midpoint $1.50–2.00. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "UgX3nSjq2uk3f0yoN84px",
+      "name": "Yellow onion",
+      "vendor": "Restaurant Depot",
+      "package_quantity": 50,
+      "package_unit": "lb",
+      "package_cost": 18.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.0008157110354679977,
+      "density_factors": [
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 110,
+          "source": "library"
+        },
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 142,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "50 lb bag. 1 medium ~110 g; 1 cup diced ~142 g. Midpoint $15–22. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "iFBb1sQdzRcidab7CoMlU",
+      "name": "Garlic, peeled fresh",
+      "vendor": "Restaurant Depot",
+      "package_quantity": 5,
+      "package_unit": "lb",
+      "package_cost": 18.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.007936647912661599,
+      "density_factors": [
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 4,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "5 lb tub (2,268 g). 1 clove ~4 g. Midpoint $14–22. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "kx-q-itOS4qFd6A16IJS1",
+      "name": "Lemons (fresh)",
+      "vendor": "Sam's Club",
+      "package_quantity": 15,
+      "package_unit": "piece",
+      "package_cost": 8.5,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 0.5666666666666667,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.01,
+          "source": "library"
+        },
+        {
+          "from_unit": "ml",
+          "base_unit_amount": 0.022222222222222223,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 0.32859555555555553,
+          "source": "library"
+        },
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 0.10953155555555555,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "5 lb bag (~15 ct). 1 lemon = 100 g (~45 ml juice = 3 tbsp). Midpoint $7–10. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "x5sm7KG0cwTina1KEUta9",
+      "name": "Mint, fresh",
+      "vendor": "Grocery / RD",
+      "package_quantity": 28,
+      "package_unit": "g",
+      "package_cost": 2.75,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.09821428571428571,
+      "density_factors": [
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 0.3,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "1 oz clamshell (28 g). 1 leaf ≈ 0.3 g. Midpoint $2–3.50. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "7gbzYn5pxOfgT3o_5wJpH",
+      "name": "Parsley, flat-leaf fresh",
+      "vendor": "Grocery / RD",
+      "package_quantity": 60,
+      "package_unit": "g",
+      "package_cost": 1.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.025,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 60,
+          "source": "user"
+        },
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 0.5,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "Bunch (~60 g). 1 cup chopped ~60 g; 1 sprig ~0.5 g. Midpoint $1–2. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "gcFEbaBp7L7oWOz5NGPjO",
+      "name": "Basil, fresh",
+      "vendor": "Grocery / Sam's",
+      "package_quantity": 30,
+      "package_unit": "g",
+      "package_cost": 2.75,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.09166666666666666,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 25,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "Bunch (~30 g). 1 cup leaves ~25 g. Midpoint $2–3.50. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "u0_VDi3Pa8EHigzkiht36",
+      "name": "Spinach, baby",
+      "vendor": "Sam's Club",
+      "package_quantity": 454,
+      "package_unit": "g",
+      "package_cost": 4.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.00881057268722467,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 30,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "1 lb clamshell (454 g). 1 cup chopped ~30 g. Midpoint $3.50–4.50. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "-68ru2qQz1Rdai7eRLLvW",
+      "name": "Spring onions / scallions",
+      "vendor": "Sam's / grocery",
+      "package_quantity": 80,
+      "package_unit": "g",
+      "package_cost": 1.25,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.015625,
+      "density_factors": [
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 20,
+          "source": "user"
+        },
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 64,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "Bunch (~80 g, ~4 ct). 1 stalk ~20 g; 1 cup sliced ~64 g. Midpoint $0.99–1.50. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "6VFaFzCCoW0owczozqerv",
+      "name": "Raspberries, fresh",
+      "vendor": "Sam's Club",
+      "package_quantity": 340,
+      "package_unit": "g",
+      "package_cost": 4.99,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.014676470588235294,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 120,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "12 oz clamshell (340 g) at Sam's. Conf HIGH (per docx note).",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "f7_q3baCkjRniatTHY2t4",
+      "name": "Ginger root, fresh",
+      "vendor": "Sam's / RD",
+      "package_quantity": 1,
+      "package_unit": "lb",
+      "package_cost": 3.25,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.007165029365597277,
+      "density_factors": [
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 6,
+          "source": "library"
+        },
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 96,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "Per lb. 1 inch ~6 g; 1 cup sliced ~96 g. Midpoint $2.50–4.00. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "nAn2TEC2gFF1gqmpl_noK",
+      "name": "All-purpose flour",
+      "vendor": "Sam's Club / Restaurant Depot",
+      "package_quantity": 25,
+      "package_unit": "lb",
+      "package_cost": 13.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.00119049718689924,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 120,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 7.5,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "25 lb bag (11,340 g). Midpoint $12–15. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "61Pc-3k1zzY_CVWnHdStW",
+      "name": "Cake flour",
+      "vendor": "Sam's / Walmart Business",
+      "package_quantity": 5,
+      "package_unit": "lb",
+      "package_cost": 6.25,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.002755780525229722,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 120,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 7.5,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "5 lb bag (2,268 g). Midpoint $5.50–7.00. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "S-0evI2ZqGnEkjk6ybveV",
+      "name": "Granulated white sugar",
+      "vendor": "Sam's Club",
+      "package_quantity": 10,
+      "package_unit": "lb",
+      "package_cost": 6.58,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.0014506428684809257,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 198,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 12.4,
+          "source": "library"
+        },
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 4.1,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "10 lb bag (4,536 g). ✓ Confirmed. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "IOUXeVV4MIWRaEyTAx3CE",
+      "name": "Brown sugar (light, packed)",
+      "vendor": "Sam's Club",
+      "package_quantity": 7,
+      "package_unit": "lb",
+      "package_cost": 9.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.002834517111664857,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 213,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 13.3,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "7 lb bag (3,175 g). Midpoint $8–10. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "yJO-x03gOjqVs-qXJhrR1",
+      "name": "Cane sugar",
+      "vendor": "Sam's / Walmart",
+      "package_quantity": 4,
+      "package_unit": "lb",
+      "package_cost": 8.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.004684826892890528,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 200,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "4 lb bag (1,814 g). Midpoint $7–10. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "0hjT_Bq_aiH4Bq3NZpva0",
+      "name": "Salt (Diamond Crystal kosher)",
+      "vendor": "Sam's / Restaurant Depot",
+      "package_quantity": 3,
+      "package_unit": "lb",
+      "package_cost": 6.25,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.004592967542049537,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 128,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 8,
+          "source": "library"
+        },
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 2.7,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "3 lb box (1,360 g). Note: Morton kosher is 2× denser. Midpoint $5.50–7.00. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "FAxNHAfQMaJWcIMT74-o9",
+      "name": "Black pepper, ground",
+      "vendor": "Sam's / Restaurant Depot",
+      "package_quantity": 454,
+      "package_unit": "g",
+      "package_cost": 12.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.02753303964757709,
+      "density_factors": [
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 2.2,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 6.4,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "16 oz container (454 g). Midpoint $10–15. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "sERnV86LgtSu7REendOCW",
+      "name": "Red pepper / cayenne",
+      "vendor": "Restaurant Depot",
+      "package_quantity": 454,
+      "package_unit": "g",
+      "package_cost": 10.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.022026431718061675,
+      "density_factors": [
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 1.8,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "16 oz container (454 g). Midpoint $8–12. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "8bA-MY394o74xKW6Jl_2E",
+      "name": "Paprika (smoked or sweet)",
+      "vendor": "Restaurant Depot / Sam's",
+      "package_quantity": 454,
+      "package_unit": "g",
+      "package_cost": 11.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.024229074889867842,
+      "density_factors": [
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 2.3,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 6.8,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "16 oz container (454 g). Midpoint $8–14. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "Rfsts1HoS25uzB2CgajFX",
+      "name": "Ground cumin",
+      "vendor": "Restaurant Depot",
+      "package_quantity": 454,
+      "package_unit": "g",
+      "package_cost": 10.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.022026431718061675,
+      "density_factors": [
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 2.2,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "16 oz container (454 g). Midpoint $8–12. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "_t3OqycJteHNBxs0POUzn",
+      "name": "Garlic powder",
+      "vendor": "Sam's (Tone's)",
+      "package_quantity": 595,
+      "package_unit": "g",
+      "package_cost": 8.98,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.015092436974789916,
+      "density_factors": [
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 3.3,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 9.8,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "Tone's 21 oz (595 g) at Sam's. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "SPtAiOrsOnZXaoBpqDaPd",
+      "name": "Onion powder",
+      "vendor": "Sam's (Tone's)",
+      "package_quantity": 567,
+      "package_unit": "g",
+      "package_cost": 7.48,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.013192239858906525,
+      "density_factors": [
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 2.5,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "Tone's 20 oz (567 g) at Sam's. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "q4cxIoHcE3ZOTdRbS93dE",
+      "name": "Italian seasoning",
+      "vendor": "Sam's / RD",
+      "package_quantity": 142,
+      "package_unit": "g",
+      "package_cost": 6.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.045774647887323945,
+      "density_factors": [
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 1.2,
+          "source": "user"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 3.6,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "5 oz container (142 g). Midpoint $5–8. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "O78JUt2pguPyqgFuNwNyB",
+      "name": "Baking powder",
+      "vendor": "Sam's (Clabber Girl)",
+      "package_quantity": 4,
+      "package_unit": "lb",
+      "package_cost": 11.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.006338295208028361,
+      "density_factors": [
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 4,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 12,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "4 lb container (1,814 g). Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "5KHRoAp8rhSN5R1jEr11T",
+      "name": "Cream of tartar",
+      "vendor": "Sam's / Walmart",
+      "package_quantity": 227,
+      "package_unit": "g",
+      "package_cost": 10.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.04405286343612335,
+      "density_factors": [
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 3.2,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "8 oz jar (227 g). Midpoint $8–12. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "JSwGAsIOaWPIHKR_feytS",
+      "name": "Cornstarch",
+      "vendor": "Sam's / Walmart",
+      "package_quantity": 1,
+      "package_unit": "lb",
+      "package_cost": 2.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.005511561050459444,
+      "density_factors": [
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 2.3,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 7,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "1 lb box (454 g). Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "zum7AVA-gbvr17lMFI9bG",
+      "name": "Yellow mustard (prepared)",
+      "vendor": "Webstaurant / RD",
+      "package_quantity": 1,
+      "package_unit": "gallon",
+      "package_cost": 12.0,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.0031700661222958675,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.9756097560975611,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "1 gallon. Density ~1.025 g/ml. Midpoint $10–14. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "qFKP_RKrv_-WOolSMGTIu",
+      "name": "Distilled white vinegar",
+      "vendor": "Sam's / RD",
+      "package_quantity": 1,
+      "package_unit": "gallon",
+      "package_cost": 4.25,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.001122731751646453,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 1.0,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "1 gallon (3,785 mL). Treat as 1 g/ml. Midpoint $3.50–5.00. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "zHa7ijwd5cc8JL0g-Jp1f",
+      "name": "Extra virgin olive oil",
+      "vendor": "Sam's (Member's Mark / Bertolli)",
+      "package_quantity": 3,
+      "package_unit": "l",
+      "package_cost": 38.5,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.012833333333333334,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 1.0869565217391304,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "3 L tin (3,000 mL). Density ~0.92 g/ml. Midpoint $32–45. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "Xk_vGEgTcSevtPWCPu5OW",
+      "name": "Vanilla extract (pure)",
+      "vendor": "Sam's (Tone's) / Costco",
+      "package_quantity": 32,
+      "package_unit": "fl_oz",
+      "package_cost": 75.0,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.07925169492958223,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.9523809523809523,
+          "source": "library"
+        },
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 0.9535557485209742,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 0.9467903806097331,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "32 fl oz (946 mL). Imitation 32 oz $20–25 cheaper option. Midpoint $60–90. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "ui8ljruioe0QWrKpsn46J",
+      "name": "Honey",
+      "vendor": "Sam's / Costco",
+      "package_quantity": 5,
+      "package_unit": "lb",
+      "package_cost": 21.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.009479885006790242,
+      "density_factors": [
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 21,
+          "source": "library"
+        },
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 7,
+          "source": "library"
+        },
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 340,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "5 lb jug (2,268 g). Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "PR1V9EJp7-c4Xz7Qg53fa",
+      "name": "Maple syrup, pure",
+      "vendor": "Sam's / Costco (Kirkland)",
+      "package_quantity": 32,
+      "package_unit": "fl_oz",
+      "package_cost": 20.0,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.021133785314555262,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.7575757575757576,
+          "source": "library"
+        },
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 312,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 19.5,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "32 fl oz (946 mL). Density ~1.32 g/ml. Midpoint $15–25. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "oaT3BfF-JC6XYMeOevBD4",
+      "name": "Chipotle peppers in adobo",
+      "vendor": "Restaurant Depot / Sam's",
+      "package_quantity": 794,
+      "package_unit": "g",
+      "package_cost": 6.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.007556675062972292,
+      "density_factors": [
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 15,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "28 oz can (794 g). 1 pepper ~15 g. Midpoint $5–7. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "3bIw6T3rGXirAIJmT9U6f",
+      "name": "Sundried tomato (oil-packed)",
+      "vendor": "Sam's / RD",
+      "package_quantity": 907,
+      "package_unit": "g",
+      "package_cost": 15.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.016538037486218304,
+      "density_factors": [
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 14,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "32 oz jar (907 g). 1 tbsp diced ~14 g. Midpoint $12–18. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "Io7WVob42q1740mA5EtTU",
+      "name": "Tomato puree / passata",
+      "vendor": "Restaurant Depot",
+      "package_quantity": 2892,
+      "package_unit": "g",
+      "package_cost": 6.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.002247579529737206,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 245,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 15,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "#10 can (2,892 g). Midpoint $5–8. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "DFZC52P-OJphK10DasgvM",
+      "name": "Tahini",
+      "vendor": "Sam's (Member's Mark)",
+      "package_quantity": 454,
+      "package_unit": "g",
+      "package_cost": 8.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.018722466960352423,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 256,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 16,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "16 oz jar (454 g). Midpoint $7–10. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "5yl2Mf1MWoNDsO4S7XZ6Z",
+      "name": "Tamari (gluten-free soy sauce)",
+      "vendor": "Webstaurant / Whole Foods",
+      "package_quantity": 32,
+      "package_unit": "fl_oz",
+      "package_cost": 12.0,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.012680271188733157,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.9433962264150942,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "32 oz bottle (946 mL). San-J. Midpoint $10–14. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "tFb6aKOA4NAXxIoayTD1x",
+      "name": "Chili oil",
+      "vendor": "Asian market / RD",
+      "package_quantity": 8,
+      "package_unit": "fl_oz",
+      "package_cost": 7.5,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.03170067797183289,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 1.0869565217391304,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "8 oz bottle (237 mL). Lao Gan Ma. Midpoint $5–10. Conf LOW.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "7Au1lcor5VcTpS6ykGEca",
+      "name": "Crunchy peanut butter",
+      "vendor": "Sam's / RD",
+      "package_quantity": 5,
+      "package_unit": "lb",
+      "package_cost": 12.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.005291098608441066,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 270,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 16,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "5 lb tub (2,268 g). Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "FBK_eGpI48P3CmG0efRJi",
+      "name": "Sesame seeds, white",
+      "vendor": "Restaurant Depot / Asian market",
+      "package_quantity": 454,
+      "package_unit": "g",
+      "package_cost": 5.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.012114537444933921,
+      "density_factors": [
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 9,
+          "source": "library"
+        },
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 3,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "16 oz bag (454 g). Midpoint $4–7. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "9YzcyGpPimehDIa7eIILY",
+      "name": "Coffee Mate Original powder",
+      "vendor": "Sam's Club",
+      "package_quantity": 1587,
+      "package_unit": "g",
+      "package_cost": 10.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.00630119722747322,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 95,
+          "source": "calibrated"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 6,
+          "source": "calibrated"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "56 oz canister (1,587 g). ✓ Confirmed. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "vPCmpHGpS-yaRrrc5uEGf",
+      "name": "Espresso beans (whole)",
+      "vendor": "Specialty roaster",
+      "package_quantity": 5,
+      "package_unit": "lb",
+      "package_cost": 57.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.02535318083211344,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 110,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "5 lb bag (2,268 g). 1 cup whole = 110 g. Midpoint $45–70. Conf LOW (depends heavily on brand).",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "q-TNNiQOuprUjibZaAySw",
+      "name": "Matcha powder (Rishi)",
+      "vendor": "Rishi Tea",
+      "package_quantity": 100,
+      "package_unit": "g",
+      "package_cost": 38.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.38,
+      "density_factors": [
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 2,
+          "source": "calibrated"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 6,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "100 g tin. ✓ Confirmed. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "2iHU8zD2vaxkxemmpxN3x",
+      "name": "Lotus Biscoff cookie butter spread",
+      "vendor": "Webstaurant",
+      "package_quantity": 8000,
+      "package_unit": "g",
+      "package_cost": 97.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.0121875,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 288,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 18,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "17.64 lb pail (8,000 g). Midpoint $85–110. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "eGGoRosXD4G8YgO4Q0ZW6",
+      "name": "Lotus Biscoff crumb topping",
+      "vendor": "Webstaurant",
+      "package_quantity": 7500,
+      "package_unit": "g",
+      "package_cost": 70.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.009333333333333334,
+      "density_factors": [],
+      "waste_factor": 1.0,
+      "notes": "16.53 lb pail (7,500 g). Midpoint $60–80. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "-HP1D1Jot-Pw3ktOfcMD3",
+      "name": "Yuzu purée",
+      "vendor": "Specialty / Asian market",
+      "package_quantity": 1000,
+      "package_unit": "g",
+      "package_cost": 36.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.0365,
+      "density_factors": [],
+      "waste_factor": 1.0,
+      "notes": "1 kg bottle. Pourable purée. Midpoint $28–45. Conf LOW.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "bzOgOX95iy6KmDODPjlbb",
+      "name": "Mango purée (Simply Squeeze)",
+      "vendor": "Webstaurant / FoodserviceDirect",
+      "package_quantity": 1701,
+      "package_unit": "g",
+      "package_cost": 27.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.015873015873015872,
+      "density_factors": [],
+      "waste_factor": 1.0,
+      "notes": "60 oz bottle (1,701 g). Simply Squeeze. Midpoint $22–32. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "iqano2B7xeyxFitFeHfRL",
+      "name": "Mango popping boba (bursting pearls)",
+      "vendor": "Bossen / Tea Zone",
+      "package_quantity": 3175,
+      "package_unit": "g",
+      "package_cost": 33.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.010393700787401575,
+      "density_factors": [
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 13,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "7 lb tub (3,175 g). 1 tbsp ~13 g. Midpoint $28–38. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "5Mipjce0TLit5qPxp8cuD",
+      "name": "Wildberry purée",
+      "vendor": "Boiron / Monin",
+      "package_quantity": 1,
+      "package_unit": "l",
+      "package_cost": 22.5,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.0225,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 1.0,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "1 L bottle. Treat as 1 g/ml. Midpoint $15–30. Conf LOW.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "IXwj7R7PUCXLgrMYRPiUJ",
+      "name": "Lychee syrup (Torani/Monin)",
+      "vendor": "Webstaurant / Amazon",
+      "package_quantity": 750,
+      "package_unit": "ml",
+      "package_cost": 11.0,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.014666666666666666,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.7692307692307692,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "750 mL bottle. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "TFLsPIVkhH3qOtQrg5QAn",
+      "name": "Rose syrup (Monin)",
+      "vendor": "Webstaurant",
+      "package_quantity": 750,
+      "package_unit": "ml",
+      "package_cost": 12.5,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.016666666666666666,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.7692307692307692,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "750 mL bottle. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "ClFn-A3VJtqG--x0abL-_",
+      "name": "Mint mojito syrup",
+      "vendor": "Webstaurant (Torani/Monin)",
+      "package_quantity": 750,
+      "package_unit": "ml",
+      "package_cost": 11.5,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.015333333333333332,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.7692307692307692,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "750 mL bottle. Monin Mojito Mint. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "v38M5DfsyDE8bp0-4q_Vr",
+      "name": "Grenadine",
+      "vendor": "Webstaurant / liquor store",
+      "package_quantity": 1,
+      "package_unit": "l",
+      "package_cost": 10.0,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.01,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.8474576271186441,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "1 L bottle. Midpoint $8–12. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "IMLhwISedSEA7HLdk5oj3",
+      "name": "Pink lemonade dominade powder",
+      "vendor": "QUOTE NEEDED",
+      "package_quantity": 1,
+      "package_unit": "lb",
+      "package_cost": 0.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.0,
+      "density_factors": [],
+      "waste_factor": 1.0,
+      "notes": "QUOTE: Brand unverified. Package qty assumed 1 lb. Cost set to $0 — replace before using in cost calc.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "ct-JOJbm-CvyrdY2fON1b",
+      "name": "Old Soul taiyaki mix",
+      "vendor": "Old Soul (specialty)",
+      "package_quantity": 1.5,
+      "package_unit": "lb",
+      "package_cost": 0.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.0,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 120,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "QUOTE: Pack size not confirmed. 1.5 lb assumed; cost set to $0. Treat as flour-density.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "9ckhOoiCKuPBVbVwZISrF",
+      "name": "Sakura (cherry blossom) powder",
+      "vendor": "Specialty Japanese grocer",
+      "package_quantity": 100,
+      "package_unit": "g",
+      "package_cost": 0.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.0,
+      "density_factors": [
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 2,
+          "source": "user"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 6,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "QUOTE: Confirm form factor (powder vs syrup). Cost set to $0 — likely $25–45.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "RbnOaao0dhZc2BpH7isom",
+      "name": "Butterfly pea tea (loose, dried)",
+      "vendor": "Specialty tea / Amazon",
+      "package_quantity": 28,
+      "package_unit": "g",
+      "package_cost": 11.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.4107142857142857,
+      "density_factors": [
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 0.5,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "1 oz / 4 oz bag. 1 tsp ~0.5 g. Midpoint $8–15. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "MTgnuaSoZV9tUpcqIon08",
+      "name": "Loose leaf tea (assorted)",
+      "vendor": "Rishi / TeaSource",
+      "package_quantity": 1,
+      "package_unit": "lb",
+      "package_cost": 37.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.08267341575689166,
+      "density_factors": [
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 4.5,
+          "source": "user"
+        },
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 1.5,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "Hibiscus, golden yunnan, elderberry, orange blossom, kashmiri, karak — average $/lb. Midpoint $15–60. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "3Jl0eLRKVAnJOuAVrGVwq",
+      "name": "Honeycomb",
+      "vendor": "Specialty / Sam's seasonal",
+      "package_quantity": 1,
+      "package_unit": "lb",
+      "package_cost": 28.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.06283179597523766,
+      "density_factors": [
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 21,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "1 lb container. Treat tbsp like honey. Midpoint $22–35. Conf LOW.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "wYHMaJ_PVifCYwPo1JK4X",
+      "name": "Cardamom pods (green)",
+      "vendor": "Indo/Pak market",
+      "package_quantity": 454,
+      "package_unit": "g",
+      "package_cost": 20.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.04405286343612335,
+      "density_factors": [
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 0.3,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "16 oz container (454 g). 1 pod ~0.3 g. Midpoint $15–25. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "AspI4dLg_V-SVGZRrcXGI",
+      "name": "Pistachios, shelled",
+      "vendor": "Sam's / Costco",
+      "package_quantity": 907,
+      "package_unit": "g",
+      "package_cost": 23.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.025358324145534728,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 120,
+          "source": "library"
+        },
+        {
+          "from_unit": "tsp",
+          "base_unit_amount": 2.5,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "2 lb bag (907 g). Crushed: 1 tsp ~2.5 g. Midpoint $18–28. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "D_b84Lee3xrQqjorDOPFM",
+      "name": "Walnuts, halves",
+      "vendor": "Sam's / Costco",
+      "package_quantity": 3,
+      "package_unit": "lb",
+      "package_cost": 20.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.014697496134558518,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 128,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 8,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "3 lb bag (1,360 g). Midpoint $18–22. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "XBQmVXVlRy1ml1cMjkpWT",
+      "name": "Penne pasta (dry)",
+      "vendor": "Restaurant Depot",
+      "package_quantity": 20,
+      "package_unit": "lb",
+      "package_cost": 21.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.002314855641192966,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 105,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "20 lb case (9,072 g). Pricing shared with fettuccine. Midpoint $18–24. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "JQsY1_6RpDqkM4GOHxACR",
+      "name": "Fettuccine pasta (dry)",
+      "vendor": "Restaurant Depot",
+      "package_quantity": 20,
+      "package_unit": "lb",
+      "package_cost": 21.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.002314855641192966,
+      "density_factors": [],
+      "waste_factor": 1.0,
+      "notes": "20 lb case (9,072 g). Pricing shared with penne. Midpoint $18–24. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "RAV7iqs7yZG2rp25witp0",
+      "name": "Cassava pasta",
+      "vendor": "Whole Foods / Amazon",
+      "package_quantity": 340,
+      "package_unit": "g",
+      "package_cost": 6.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.01764705882352941,
+      "density_factors": [],
+      "waste_factor": 1.0,
+      "notes": "12 oz pack (340 g). Specialty GF. Midpoint $5–7. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "4lRszTdx_AiDMlg0Ztr68",
+      "name": "Pita chips",
+      "vendor": "Sam's (Stacy's)",
+      "package_quantity": 680,
+      "package_unit": "g",
+      "package_cost": 7.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.010294117647058823,
+      "density_factors": [
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 4,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "Stacy's 24 oz (680 g) at Sam's. 1 chip ~4 g. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "FH8Fi-JQ03StoqFCHkq27",
+      "name": "Croutons",
+      "vendor": "Restaurant Depot / Webstaurant",
+      "package_quantity": 5,
+      "package_unit": "lb",
+      "package_cost": 12.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.005511561050459444,
+      "density_factors": [
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 1.5,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "5 lb bag (2,268 g). 1 crouton ~1.5 g. Midpoint $10–15. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "BHlSDGmZ2TGcTzoQ6joy7",
+      "name": "Sliced sandwich bread",
+      "vendor": "Sam's / Walmart",
+      "package_quantity": 24,
+      "package_unit": "piece",
+      "package_cost": 3.48,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 0.145,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.03571428571428571,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "Loaf (24 oz, ~24 slices). 1 slice ~28 g. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "f6JnCPqvEebWAQIfRHqOK",
+      "name": "Hoagie / sub bread",
+      "vendor": "Sam's bakery / RD",
+      "package_quantity": 8,
+      "package_unit": "piece",
+      "package_cost": 7.5,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 0.9375,
+      "density_factors": [],
+      "waste_factor": 1.0,
+      "notes": "8-pack par-baked. Midpoint $5–10. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "wTSlGDq8b0d6yw6Z2riOo",
+      "name": "Just Bagels — Original (frozen)",
+      "vendor": "Webstaurant",
+      "package_quantity": 75,
+      "package_unit": "piece",
+      "package_cost": 80.0,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 1.0666666666666667,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.0078125,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "75 ct case, 4.5 oz each. 1 bagel = 128 g. Midpoint $70–90. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "5EXslzFAh0VX0cliCRJqQ",
+      "name": "Just Bagels — Everything",
+      "vendor": "Webstaurant",
+      "package_quantity": 75,
+      "package_unit": "piece",
+      "package_cost": 87.5,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 1.1666666666666667,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.0078125,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "75 ct case. Midpoint $80–95. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "DF44NgP12InaoPRYtJlYu",
+      "name": "Just Bagels — Jalapeño",
+      "vendor": "Specialty distributor",
+      "package_quantity": 75,
+      "package_unit": "piece",
+      "package_cost": 90.0,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 1.2,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.0078125,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "75 ct case. Midpoint $80–100. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "QlxYv9wzKjGpErRdYPOlm",
+      "name": "Bridor Perfect Croissant",
+      "vendor": "Webstaurant",
+      "package_quantity": 80,
+      "package_unit": "piece",
+      "package_cost": 99.99,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 1.2498749999999998,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.0125,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "80/case. 80 g raw. ✓ Verified Webstaurant. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "FFazo8fb7S5IBnGf18XIQ",
+      "name": "Bridor Butter Chocolatine",
+      "vendor": "Webstaurant",
+      "package_quantity": 60,
+      "package_unit": "piece",
+      "package_cost": 84.99,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 1.4164999999999999,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.0125,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "60/case. 80 g raw. ✓ Verified. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "MFBGIgmwPKZzGDuV5BHjN",
+      "name": "Bridor Spinach & Feta Bistro",
+      "vendor": "Webstaurant",
+      "package_quantity": 36,
+      "package_unit": "piece",
+      "package_cost": 88.49,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 2.458055555555555,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.00909090909090909,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "36/case. 110 g raw. ✓ Verified. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "F0Es6fBfTXx9IqvjMlFe5",
+      "name": "Bridor Tomato & Olive Bistro",
+      "vendor": "Webstaurant",
+      "package_quantity": 36,
+      "package_unit": "piece",
+      "package_cost": 92.99,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 2.583055555555555,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.00909090909090909,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "36/case. 110 g raw. ✓ Verified. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "A51iamMMsMUcu4Tk79MgU",
+      "name": "Bridor Peach Danish",
+      "vendor": "Webstaurant",
+      "package_quantity": 42,
+      "package_unit": "piece",
+      "package_cost": 59.99,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 1.4283333333333335,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.01098901098901099,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "42/case. 91 g raw. ✓ Verified. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "LABWrR3AdbZjz8WQbBD0D",
+      "name": "Bridor Strawberry Cheesecake Danish",
+      "vendor": "Webstaurant",
+      "package_quantity": 84,
+      "package_unit": "piece",
+      "package_cost": 126.49,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 1.5058333333333334,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.010101010101010102,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "84/case. 99 g raw. ✓ Verified. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "U99SOUsqFOq8SYx9M1sMd",
+      "name": "Bridor Apple Butter Danish",
+      "vendor": "Webstaurant",
+      "package_quantity": 60,
+      "package_unit": "piece",
+      "package_cost": 108.99,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 1.8165,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.008849557522123894,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "60/case. 113 g raw. ✓ Verified. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "BjEAkzfJq-I3vo500gsMN",
+      "name": "Frozen French fries",
+      "vendor": "Restaurant Depot (Lamb Weston)",
+      "package_quantity": 30,
+      "package_unit": "lb",
+      "package_cost": 34.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.002498574342874948,
+      "density_factors": [],
+      "waste_factor": 1.0,
+      "notes": "30 lb case. Midpoint $28–40. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "JDXx3w1-FKvRPqcXgdo46",
+      "name": "Frozen chicken nuggets",
+      "vendor": "Sam's / RD (Tyson)",
+      "package_quantity": 10,
+      "package_unit": "lb",
+      "package_cost": 32.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.007165029365597277,
+      "density_factors": [
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 16,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "10 lb bag. 1 nugget ~16 g. Midpoint $25–40. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "37ZBGl5CrbaZzBcaJGpss",
+      "name": "Gelato (per 3 gal tub)",
+      "vendor": "Local foodservice distributor",
+      "package_quantity": 3,
+      "package_unit": "gallon",
+      "package_cost": 47.5,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.004182726133584826,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 190,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "3 gal tub (~11,360 g). 1 cup ~190 g. Midpoint $35–60. Conf LOW.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "jKqD-tWUXBS5Tp9x84R-I",
+      "name": "Mochi (frozen)",
+      "vendor": "Costco / H Mart",
+      "package_quantity": 24,
+      "package_unit": "piece",
+      "package_cost": 20.0,
+      "delivery_cost": 0,
+      "base_unit": "piece",
+      "cost_per_base_unit": 0.8333333333333334,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.03333333333333333,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "24 ct box. 1 mochi ~30 g. Midpoint $15–25. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "5qWwUNmvEq7cVhCUwlqcf",
+      "name": "Sparkling water (plain)",
+      "vendor": "Sam's / Costco",
+      "package_quantity": 8500,
+      "package_unit": "ml",
+      "package_cost": 11.5,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.0013529411764705882,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 1.0,
+          "source": "user"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "Case 24 × 12 oz (~8,500 mL). Midpoint $8–15. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "1Jv0d_eG_vhvqTV_ZKEMW",
+      "name": "Semi-sweet chocolate chips",
+      "vendor": "Webstaurant / Restaurant Depot",
+      "package_quantity": 25,
+      "package_unit": "lb",
+      "package_cost": 67.5,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.0059524859344962,
+      "density_factors": [
+        {
+          "from_unit": "cup",
+          "base_unit_amount": 170,
+          "source": "library"
+        },
+        {
+          "from_unit": "tbsp",
+          "base_unit_amount": 10.6,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "25 lb bag. Midpoint $55–80. Conf MED.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "FIwzEampDmb8eQhcv4fhG",
+      "name": "Marshmallows, large",
+      "vendor": "Sam's / Walmart",
+      "package_quantity": 1,
+      "package_unit": "lb",
+      "package_cost": 3.0,
+      "delivery_cost": 0,
+      "base_unit": "g",
+      "cost_per_base_unit": 0.006613873260551332,
+      "density_factors": [
+        {
+          "from_unit": "piece",
+          "base_unit_amount": 7,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "1 lb bag (~50 ct). 1 large ~7 g. Midpoint $2–4. Conf HIGH.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "2uCzsOXY-anL_CMmZ433V",
+      "name": "Water",
+      "vendor": "(tap)",
+      "package_quantity": 1,
+      "package_unit": "gallon",
+      "package_cost": 0.0,
+      "delivery_cost": 0,
+      "base_unit": "ml",
+      "cost_per_base_unit": 0.0,
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 1.0,
+          "source": "library"
+        }
+      ],
+      "waste_factor": 1.0,
+      "notes": "Free. Created so recipes can reference water cleanly.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    }
+  ],
+  "recipes": [
+    {
+      "id": "A0c0n9Le0DenaglnAGX3x",
+      "name": "Espresso Shot",
+      "type": "sub_recipe",
+      "inputs": [
+        {
+          "row_id": "e6a6QqX_qe8uGTeaGmrkJ",
+          "type": "ingredient",
+          "ref_id": "vPCmpHGpS-yaRrrc5uEGf",
+          "quantity": 8,
+          "unit": "g"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "Standard ~8 g of beans per single shot. Adjust if cousin pulls double-shots differently.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "2sy6FQcZ95pKRSUnRn_F9",
+      "name": "Club Sandwich Batter",
+      "type": "sub_recipe",
+      "inputs": [
+        {
+          "row_id": "DryJL6yK_H5ALOTZGngbJ",
+          "type": "ingredient",
+          "ref_id": "zum7AVA-gbvr17lMFI9bG",
+          "quantity": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "OxtahNn38ky9ISsL1NpgF",
+          "type": "ingredient",
+          "ref_id": "5kkDj2mIjSS_UOyAf9TXK",
+          "quantity": 1,
+          "unit": "cup"
+        },
+        {
+          "row_id": "ZbGvTmk6kkTP1NU3hOGgJ",
+          "type": "ingredient",
+          "ref_id": "FAxNHAfQMaJWcIMT74-o9",
+          "quantity": 0.25,
+          "unit": "tsp"
+        }
+      ],
+      "yield_quantity": 240,
+      "yield_unit": "ml",
+      "density_factors": [],
+      "notes": "Promoted from inline 'Batter:' section. Yield computed: 2.46 + 236.59 + 1.23 ≈ 240 ml.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "IwOlgGJMUhz5jRdrZrAOD",
+      "name": "Lemon Garlic Chicken Sauce",
+      "type": "sub_recipe",
+      "inputs": [
+        {
+          "row_id": "mZE2fB70FlvDoXW07JY4M",
+          "type": "ingredient",
+          "ref_id": "kx-q-itOS4qFd6A16IJS1",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "row_id": "mLNAu1wMEuRbkZN2fbDwC",
+          "type": "ingredient",
+          "ref_id": "zHa7ijwd5cc8JL0g-Jp1f",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "DKpv0Dj7BguxvOwf6Igvh",
+          "type": "ingredient",
+          "ref_id": "iFBb1sQdzRcidab7CoMlU",
+          "quantity": 4,
+          "unit": "piece"
+        },
+        {
+          "row_id": "dCJM4z0jCyCDHLdFKTWKq",
+          "type": "ingredient",
+          "ref_id": "ui8ljruioe0QWrKpsn46J",
+          "quantity": 3,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "lk-OY81Ozi_PTnOAiSi9i",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 0.25,
+          "unit": "cup"
+        },
+        {
+          "row_id": "FT0hcNLbzqJji1SRkz-6w",
+          "type": "ingredient",
+          "ref_id": "q4cxIoHcE3ZOTdRbS93dE",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "SSolYMZ4RUCdxXfJqBPco",
+          "type": "ingredient",
+          "ref_id": "sERnV86LgtSu7REendOCW",
+          "quantity": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "vJi6IB7_OmoRbz2iY95LV",
+          "type": "ingredient",
+          "ref_id": "7gbzYn5pxOfgT3o_5wJpH",
+          "quantity": 0.25,
+          "unit": "cup"
+        },
+        {
+          "row_id": "-GTC8--05elR_Mbq8I7Cm",
+          "type": "ingredient",
+          "ref_id": "5kkDj2mIjSS_UOyAf9TXK",
+          "quantity": 3,
+          "unit": "tbsp"
+        }
+      ],
+      "yield_quantity": 300,
+      "yield_unit": "ml",
+      "density_factors": [],
+      "notes": "Promoted from inline 'Sauce:' section. Yield computed from sum of liquid+small-solid volumes (~300 ml).",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "X6B6NPrtKahTzKEbsHvIy",
+      "name": "Basil Pesto",
+      "type": "sub_recipe",
+      "inputs": [
+        {
+          "row_id": "Cp18aHi1USHALeePeqEyq",
+          "type": "ingredient",
+          "ref_id": "gcFEbaBp7L7oWOz5NGPjO",
+          "quantity": 1,
+          "unit": "cup"
+        },
+        {
+          "row_id": "PNu1PgTDuW71XFBRC4xXG",
+          "type": "ingredient",
+          "ref_id": "zHa7ijwd5cc8JL0g-Jp1f",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "ryq7UsJ4FYK_9YjENtDY8",
+          "type": "ingredient",
+          "ref_id": "D_b84Lee3xrQqjorDOPFM",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "V_oCS2OTIuzfK3EtpYClx",
+          "type": "ingredient",
+          "ref_id": "iFBb1sQdzRcidab7CoMlU",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "row_id": "3Jmn6s7IgkFtiuzhC_aaj",
+          "type": "ingredient",
+          "ref_id": "CrtvHonG4wvK-W8ZBRtvy",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "sqK4lKfzg4y5g54GqplAQ",
+          "type": "ingredient",
+          "ref_id": "0hjT_Bq_aiH4Bq3NZpva0",
+          "quantity": 1,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "TS-Xl2FWxuWYvYAfge9p_",
+          "type": "ingredient",
+          "ref_id": "kx-q-itOS4qFd6A16IJS1",
+          "quantity": 0.25,
+          "unit": "tsp"
+        }
+      ],
+      "yield_quantity": 100,
+      "yield_unit": "ml",
+      "density_factors": [],
+      "notes": "Pesto. Realistic yield ~100 ml after blending (basil leaves don't retain cup-volume). Override if you batch differently.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "g4Tv59cP6x-EEXh7gTxK1",
+      "name": "Chicken Basil Pesto Sauce",
+      "type": "sub_recipe",
+      "inputs": [
+        {
+          "row_id": "NeWL_w8VrdLxfUWc1Xp-V",
+          "type": "recipe",
+          "ref_id": "X6B6NPrtKahTzKEbsHvIy",
+          "quantity": 4,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "4o9Pwj24jR71dfN1A2-5i",
+          "type": "ingredient",
+          "ref_id": "pyGTilXK4b0ALyG7Oeg2G",
+          "quantity": 6,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "xtw1ZtNfSu6V1jpQBQiIR",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "UZ20RZAqjxhHPluGNlPct",
+          "type": "ingredient",
+          "ref_id": "CrtvHonG4wvK-W8ZBRtvy",
+          "quantity": 2,
+          "unit": "tbsp"
+        }
+      ],
+      "yield_quantity": 190,
+      "yield_unit": "ml",
+      "density_factors": [],
+      "notes": "Yield ≈ 4·14.79 + 6·14.79 + 14.79 + 2·14.79 ≈ 192 ml.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "Od0ovgGjJcxCXDHI0ifCY",
+      "name": "Simple Syrup",
+      "type": "sub_recipe",
+      "inputs": [
+        {
+          "row_id": "3L8zb0rYCeV3iRoVUV5Iw",
+          "type": "ingredient",
+          "ref_id": "S-0evI2ZqGnEkjk6ybveV",
+          "quantity": 1,
+          "unit": "cup"
+        },
+        {
+          "row_id": "89JP_Zk9JQrC9vDwJU5Dp",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 1,
+          "unit": "cup"
+        }
+      ],
+      "yield_quantity": 355,
+      "yield_unit": "ml",
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 0.8474576271186441,
+          "source": "user"
+        }
+      ],
+      "notes": "PDF says '1:1 ratio sugar water'. Per spec: 1 cup sugar + 1 cup water → 355 ml. Tell me if cousin batches differently.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "KCOiF-c_mv4PgbWUNwEaj",
+      "name": "Mixed Milk",
+      "type": "sub_recipe",
+      "inputs": [
+        {
+          "row_id": "HzZL2dyB2XF14m6nZNnS1",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 1,
+          "unit": "cup"
+        },
+        {
+          "row_id": "5Ii21s2V-y0vABNkfvBkG",
+          "type": "ingredient",
+          "ref_id": "9YzcyGpPimehDIa7eIILY",
+          "quantity": 1,
+          "unit": "cup"
+        },
+        {
+          "row_id": "odPd8BuZRvBZ9pnet0kK4",
+          "type": "ingredient",
+          "ref_id": "ErEJIr2U-TQkoRwziQqYj",
+          "quantity": 1,
+          "unit": "gallon"
+        },
+        {
+          "row_id": "J2bB_aDS-jhrWq8PPoFoj",
+          "type": "ingredient",
+          "ref_id": "pyGTilXK4b0ALyG7Oeg2G",
+          "quantity": 2,
+          "unit": "cup"
+        }
+      ],
+      "yield_quantity": 4732,
+      "yield_unit": "ml",
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 1.0,
+          "source": "user"
+        }
+      ],
+      "notes": "Yield computed from sum of ingredient volumes. Earlier spec used 5000 ml — this is ~4732 ml.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "AsIRt2b2lrnwkQ1pilkoh",
+      "name": "Cold Foam",
+      "type": "sub_recipe",
+      "inputs": [
+        {
+          "row_id": "Yj-2Svf0n6umU9oItqB41",
+          "type": "ingredient",
+          "ref_id": "pyGTilXK4b0ALyG7Oeg2G",
+          "quantity": 96,
+          "unit": "g"
+        },
+        {
+          "row_id": "ivYJE_jC3L4VhrNLMYy9H",
+          "type": "ingredient",
+          "ref_id": "PR1V9EJp7-c4Xz7Qg53fa",
+          "quantity": 5,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "jsS8WMM-jDuo4KkgWlv8b",
+          "type": "ingredient",
+          "ref_id": "Xk_vGEgTcSevtPWCPu5OW",
+          "quantity": 2,
+          "unit": "tsp"
+        }
+      ],
+      "yield_quantity": 250,
+      "yield_unit": "ml",
+      "density_factors": [
+        {
+          "from_unit": "g",
+          "base_unit_amount": 1.0526315789473684,
+          "source": "user"
+        }
+      ],
+      "notes": "50-serving batch ⇒ ~5 ml/serving. Confirm.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "7BX-qVmfxH_5UOw7G_gRN",
+      "name": "Matcha Sauce",
+      "type": "sub_recipe",
+      "inputs": [
+        {
+          "row_id": "pmsb8ipVXy7Jisf8N37sX",
+          "type": "ingredient",
+          "ref_id": "q-TNNiQOuprUjibZaAySw",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "JlMW2y-9g2ab-V51RwrFI",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 3,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "zQ2mEOgdv-LbVI6QsMCbS",
+          "type": "recipe",
+          "ref_id": "Od0ovgGjJcxCXDHI0ifCY",
+          "quantity": 2,
+          "unit": "tbsp"
+        }
+      ],
+      "yield_quantity": 100,
+      "yield_unit": "ml",
+      "density_factors": [],
+      "notes": "Sum of input volumes ≈ 103 ml; using 100 ml as yield.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "PcDS39CS5Wx7UH9Xgk-CV",
+      "name": "Biscoff Sauce",
+      "type": "sub_recipe",
+      "inputs": [
+        {
+          "row_id": "XeEyx-tPPXX2ZGJSwmnBB",
+          "type": "ingredient",
+          "ref_id": "pyGTilXK4b0ALyG7Oeg2G",
+          "quantity": 2,
+          "unit": "cup"
+        },
+        {
+          "row_id": "V7QH7Xs2aKEjKUvslJIKE",
+          "type": "ingredient",
+          "ref_id": "2iHU8zD2vaxkxemmpxN3x",
+          "quantity": 1,
+          "unit": "cup"
+        },
+        {
+          "row_id": "b5ncC5bAcsxjB4fuR5gHM",
+          "type": "recipe",
+          "ref_id": "Od0ovgGjJcxCXDHI0ifCY",
+          "quantity": 2,
+          "unit": "fl_oz"
+        }
+      ],
+      "yield_quantity": 770,
+      "yield_unit": "ml",
+      "density_factors": [],
+      "notes": "Sum: 473 + 237 + 59 ≈ 770 ml.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "k8J4jC6Kw9WCdO4itBdln",
+      "name": "Butterfly Pea Tea",
+      "type": "sub_recipe",
+      "inputs": [
+        {
+          "row_id": "myVFXLvayhED0ObaBf_Lh",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 4,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "uIL7X3Pr_wIKlphxJJ3ky",
+          "type": "ingredient",
+          "ref_id": "RbnOaao0dhZc2BpH7isom",
+          "quantity": 1,
+          "unit": "tsp"
+        }
+      ],
+      "yield_quantity": 120,
+      "yield_unit": "ml",
+      "density_factors": [],
+      "notes": "Steeped tea base.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "1_HjQKl6H904hNltP7JPp",
+      "name": "Raspberry Compote",
+      "type": "sub_recipe",
+      "inputs": [
+        {
+          "row_id": "e6waOOBjN9o5X898HveDv",
+          "type": "ingredient",
+          "ref_id": "6VFaFzCCoW0owczozqerv",
+          "quantity": 200,
+          "unit": "g"
+        },
+        {
+          "row_id": "Ukz-106KYeSPJzf2TXyTh",
+          "type": "ingredient",
+          "ref_id": "S-0evI2ZqGnEkjk6ybveV",
+          "quantity": 160,
+          "unit": "g"
+        },
+        {
+          "row_id": "185tWDVCRE4E_vV-wihcJ",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 30,
+          "unit": "g"
+        },
+        {
+          "row_id": "X4M0161NRoG3BuRtXyVx1",
+          "type": "ingredient",
+          "ref_id": "Xk_vGEgTcSevtPWCPu5OW",
+          "quantity": 5,
+          "unit": "g"
+        }
+      ],
+      "yield_quantity": 395,
+      "yield_unit": "g",
+      "density_factors": [
+        {
+          "from_unit": "ml",
+          "base_unit_amount": 0.7692307692307692,
+          "source": "user"
+        }
+      ],
+      "notes": "Mass-based yield (cooked-down compote retains weight, loses some water).",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "w58u1_cO3T4NvGmFMczIN",
+      "name": "Danish Cream Cheese Foam",
+      "type": "sub_recipe",
+      "inputs": [
+        {
+          "row_id": "D92nfX5u5c_stjzD83Wi2",
+          "type": "ingredient",
+          "ref_id": "pyGTilXK4b0ALyG7Oeg2G",
+          "quantity": 50,
+          "unit": "g"
+        },
+        {
+          "row_id": "d3nsdmfm5xyicGq-zyYQl",
+          "type": "ingredient",
+          "ref_id": "h9RMHQAqC028xOg69z32l",
+          "quantity": 30,
+          "unit": "g"
+        },
+        {
+          "row_id": "KAR-SAuWK6umkbtTdOQ6v",
+          "type": "ingredient",
+          "ref_id": "ErEJIr2U-TQkoRwziQqYj",
+          "quantity": 20,
+          "unit": "g"
+        },
+        {
+          "row_id": "m4lqjfkdGe6Mx9iO8m847",
+          "type": "ingredient",
+          "ref_id": "yJO-x03gOjqVs-qXJhrR1",
+          "quantity": 12,
+          "unit": "g"
+        },
+        {
+          "row_id": "Ofu-ScaO2iH_53EhL7Dol",
+          "type": "ingredient",
+          "ref_id": "Xk_vGEgTcSevtPWCPu5OW",
+          "quantity": 1,
+          "unit": "g"
+        }
+      ],
+      "yield_quantity": 113,
+      "yield_unit": "g",
+      "density_factors": [
+        {
+          "from_unit": "ml",
+          "base_unit_amount": 1.0,
+          "source": "user"
+        }
+      ],
+      "notes": "Pinch of salt skipped per decision.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00"
+    },
+    {
+      "id": "EE6Mp6mghb3cCLi8KdY2f",
+      "name": "Club Sandwich",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "iL3PKWWv0stsGvJO-_RSq",
+          "type": "ingredient",
+          "ref_id": "Putgy2w0DBfvFPbr72V-s",
+          "quantity": 300,
+          "unit": "g"
+        },
+        {
+          "row_id": "noYR1cRKxuv26iNqXvflu",
+          "type": "ingredient",
+          "ref_id": "0hjT_Bq_aiH4Bq3NZpva0",
+          "quantity": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "1yD6QeQwpDp_viONzjYUG",
+          "type": "ingredient",
+          "ref_id": "FAxNHAfQMaJWcIMT74-o9",
+          "quantity": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "G72oMnofQ0YTonvGghMY6",
+          "type": "ingredient",
+          "ref_id": "sERnV86LgtSu7REendOCW",
+          "quantity": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "GHyjqMfeRsPqY9s8yQm3e",
+          "type": "ingredient",
+          "ref_id": "kx-q-itOS4qFd6A16IJS1",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "w_Sl4ocA_Jazwy6-simkf",
+          "type": "recipe",
+          "ref_id": "2sy6FQcZ95pKRSUnRn_F9",
+          "quantity": 1,
+          "unit": "ml"
+        },
+        {
+          "row_id": "0Mu1w8ulyDsTqZCCf5gT2",
+          "type": "ingredient",
+          "ref_id": "BHlSDGmZ2TGcTzoQ6joy7",
+          "quantity": 3,
+          "unit": "piece"
+        },
+        {
+          "row_id": "r8OPhgUk_aUwUTCe6IvLt",
+          "type": "ingredient",
+          "ref_id": "ffGtsqzHrYRMlWOmJ0-su",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "row_id": "8xlAzn-1IXOEjGQilcNRf",
+          "type": "ingredient",
+          "ref_id": "RRry76c6Z7vZbHwYocf2o",
+          "quantity": 1,
+          "unit": "piece"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "'Lettuce' qty ambiguous — using 1 head; you'll likely want a fraction. 'Batter' sub-recipe qty TBD.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "JpVZ8HQWYnixDcu2a1Z3z",
+      "name": "Egg Sandwich",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "vrIhaLesd1KdZWVbqbLT4",
+          "type": "ingredient",
+          "ref_id": "RRry76c6Z7vZbHwYocf2o",
+          "quantity": 3,
+          "unit": "piece"
+        },
+        {
+          "row_id": "EPUxGHY5p3lUPc9r5QnZh",
+          "type": "ingredient",
+          "ref_id": "5kkDj2mIjSS_UOyAf9TXK",
+          "quantity": 0.5,
+          "unit": "cup"
+        },
+        {
+          "row_id": "tIwNiUKg_DB5DACZoFI11",
+          "type": "ingredient",
+          "ref_id": "FAxNHAfQMaJWcIMT74-o9",
+          "quantity": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "a0dX8ydVjxTlcHtQQ7ndQ",
+          "type": "ingredient",
+          "ref_id": "0hjT_Bq_aiH4Bq3NZpva0",
+          "quantity": 0.125,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "bZ8Z_hHZ9qqF9iUXGaX4q",
+          "type": "ingredient",
+          "ref_id": "ffGtsqzHrYRMlWOmJ0-su",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "row_id": "_wQOZZ-BeiE_wrMF1ytli",
+          "type": "ingredient",
+          "ref_id": "BHlSDGmZ2TGcTzoQ6joy7",
+          "quantity": 2,
+          "unit": "piece"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": null,
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "rC1Jn-8uEbqSBJEoFMqi8",
+      "name": "Chipotle Chicken Sandwich",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "qAquXkkyMS2pDQWjyvemb",
+          "type": "ingredient",
+          "ref_id": "Putgy2w0DBfvFPbr72V-s",
+          "quantity": 300,
+          "unit": "g"
+        },
+        {
+          "row_id": "3PzDF8fFGUcT9TfKnhObT",
+          "type": "ingredient",
+          "ref_id": "oaT3BfF-JC6XYMeOevBD4",
+          "quantity": 4,
+          "unit": "piece"
+        },
+        {
+          "row_id": "GctR5fXwYgBOpsddEiKbc",
+          "type": "ingredient",
+          "ref_id": "iFBb1sQdzRcidab7CoMlU",
+          "quantity": 2,
+          "unit": "piece"
+        },
+        {
+          "row_id": "6Qsjpg1yEfLNByj8Vf-rU",
+          "type": "ingredient",
+          "ref_id": "UgX3nSjq2uk3f0yoN84px",
+          "quantity": 0.5,
+          "unit": "piece"
+        },
+        {
+          "row_id": "0IUnCSl49O4OAA9XBEaMN",
+          "type": "ingredient",
+          "ref_id": "5kkDj2mIjSS_UOyAf9TXK",
+          "quantity": 4,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "jTee8EdsK53G-F1Vdzt_Q",
+          "type": "ingredient",
+          "ref_id": "JYjB8hWKlRNl952Xq47Je",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "B_I0pR52EMidXHpVIDybA",
+          "type": "ingredient",
+          "ref_id": "kx-q-itOS4qFd6A16IJS1",
+          "quantity": 4,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "leTCILLgHteKpl7vlY6RV",
+          "type": "ingredient",
+          "ref_id": "8bA-MY394o74xKW6Jl_2E",
+          "quantity": 0.5,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "CBC5aB26UoAJ-fHs94QB9",
+          "type": "ingredient",
+          "ref_id": "Rfsts1HoS25uzB2CgajFX",
+          "quantity": 1,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "lyhCyBZhKOskS59jokkRX",
+          "type": "ingredient",
+          "ref_id": "_t3OqycJteHNBxs0POUzn",
+          "quantity": 1,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "IiAE-jrx5pP8O0FGOACkf",
+          "type": "ingredient",
+          "ref_id": "x2bG2Y46w33d6MmlEbtjv",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "row_id": "V_QtEN9ypCYis5iFxFlNF",
+          "type": "ingredient",
+          "ref_id": "qFKP_RKrv_-WOolSMGTIu",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "W5sbHyddV5XBXoWvUdiho",
+          "type": "ingredient",
+          "ref_id": "zHa7ijwd5cc8JL0g-Jp1f",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "TCT3NL-GxvfEhs_CPo9BB",
+          "type": "ingredient",
+          "ref_id": "_t3OqycJteHNBxs0POUzn",
+          "quantity": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "-U-EfSzBOaYCJvOFCJbUs",
+          "type": "ingredient",
+          "ref_id": "SPtAiOrsOnZXaoBpqDaPd",
+          "quantity": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "2hjMPyn09VLax9kfoj6gA",
+          "type": "ingredient",
+          "ref_id": "f6JnCPqvEebWAQIfRHqOK",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "row_id": "nxfkFhPUG59EfjhCTNz7G",
+          "type": "ingredient",
+          "ref_id": "mMwlBII2ufGP89GfpFvQD",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "row_id": "ABf9-MxB1-zYslpWHYKVl",
+          "type": "ingredient",
+          "ref_id": "ffGtsqzHrYRMlWOmJ0-su",
+          "quantity": 1,
+          "unit": "piece"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "Quick cucumber pickle is inline (not labeled). Pinch S&P skipped.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "FHdXBpsYvL7Z1KPB-Y-Tg",
+      "name": "Lemon Garlic Chicken Sandwich",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "4C4lsfhnySrAnJhzZydZl",
+          "type": "ingredient",
+          "ref_id": "Putgy2w0DBfvFPbr72V-s",
+          "quantity": 300,
+          "unit": "g"
+        },
+        {
+          "row_id": "CHRcqZTxWhBwa1ygJxIwW",
+          "type": "ingredient",
+          "ref_id": "8bA-MY394o74xKW6Jl_2E",
+          "quantity": 1,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "7LabQsEyICFD7wRkTzc2r",
+          "type": "ingredient",
+          "ref_id": "0hjT_Bq_aiH4Bq3NZpva0",
+          "quantity": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "Vk7Tu-dED-eEJtwMcgNpp",
+          "type": "ingredient",
+          "ref_id": "_t3OqycJteHNBxs0POUzn",
+          "quantity": 0.5,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "EgV53yOS3MOSYtEuJYv5d",
+          "type": "ingredient",
+          "ref_id": "SPtAiOrsOnZXaoBpqDaPd",
+          "quantity": 0.5,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "Zk79HTM1lZPGTIStFuaSS",
+          "type": "ingredient",
+          "ref_id": "FAxNHAfQMaJWcIMT74-o9",
+          "quantity": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "jLNL3wTYqigZfwIkYPXFr",
+          "type": "ingredient",
+          "ref_id": "kx-q-itOS4qFd6A16IJS1",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "89SDmmZctD4r-TiOqc7Z3",
+          "type": "recipe",
+          "ref_id": "IwOlgGJMUhz5jRdrZrAOD",
+          "quantity": 3,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "cdPZRcP4LhiOkGhwAtahh",
+          "type": "ingredient",
+          "ref_id": "f6JnCPqvEebWAQIfRHqOK",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "row_id": "tuxnblul02hsZhGI4oy-y",
+          "type": "ingredient",
+          "ref_id": "mMwlBII2ufGP89GfpFvQD",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "row_id": "CBtMyNrODCtxwXECrV_Bx",
+          "type": "ingredient",
+          "ref_id": "x2bG2Y46w33d6MmlEbtjv",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "row_id": "cGY1vZpIUhQ7NMy4sJZE7",
+          "type": "ingredient",
+          "ref_id": "qFKP_RKrv_-WOolSMGTIu",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "KwY-sff4cYfZ0PVnUahYB",
+          "type": "ingredient",
+          "ref_id": "zHa7ijwd5cc8JL0g-Jp1f",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "erGYGuh8PJ0mWl8aG8Oty",
+          "type": "ingredient",
+          "ref_id": "_t3OqycJteHNBxs0POUzn",
+          "quantity": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "wImGy99Ih5WgSpuuOb8xh",
+          "type": "ingredient",
+          "ref_id": "SPtAiOrsOnZXaoBpqDaPd",
+          "quantity": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "60rvskTrp6smZyjsIEqjU",
+          "type": "ingredient",
+          "ref_id": "ffGtsqzHrYRMlWOmJ0-su",
+          "quantity": 1,
+          "unit": "piece"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "Sauce qty per sandwich = 3 tbsp placeholder — confirm.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "P_5xmpbEJi4nU13Bndycq",
+      "name": "Breakfast Sandwich",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "YYGuBdPEzKAJkpHkOArWN",
+          "type": "ingredient",
+          "ref_id": "COy73zyWlfYX-ESP6Xn6p",
+          "quantity": 2,
+          "unit": "piece"
+        },
+        {
+          "row_id": "f1EFeR1fnsW71S5hcXLbY",
+          "type": "ingredient",
+          "ref_id": "wTSlGDq8b0d6yw6Z2riOo",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "row_id": "bE2BBWD8GhhkkWEjcagG0",
+          "type": "ingredient",
+          "ref_id": "ffGtsqzHrYRMlWOmJ0-su",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "row_id": "Sf_mv-4YnBFXq5hlJ3Puz",
+          "type": "ingredient",
+          "ref_id": "mMwlBII2ufGP89GfpFvQD",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "row_id": "CIVhwqevaeyt8meSny1AQ",
+          "type": "ingredient",
+          "ref_id": "RRry76c6Z7vZbHwYocf2o",
+          "quantity": 1,
+          "unit": "piece"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": null,
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "Rq2xaX1EgHfnq7-W0zPXI",
+      "name": "Chicken Basil Pesto Pasta",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "MV7P2ncQbyetzbmExCT1c",
+          "type": "ingredient",
+          "ref_id": "Putgy2w0DBfvFPbr72V-s",
+          "quantity": 113,
+          "unit": "g"
+        },
+        {
+          "row_id": "5HvaTdPnFPFu0RtilefA5",
+          "type": "ingredient",
+          "ref_id": "_t3OqycJteHNBxs0POUzn",
+          "quantity": 1,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "BwYFYQ-d662RlJo7L7rEE",
+          "type": "ingredient",
+          "ref_id": "zHa7ijwd5cc8JL0g-Jp1f",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "r4DYZbjJwX12N5184qViq",
+          "type": "recipe",
+          "ref_id": "g4Tv59cP6x-EEXh7gTxK1",
+          "quantity": 1,
+          "unit": "ml"
+        },
+        {
+          "row_id": "vyw4Rlzs6aeSkbgALPjm0",
+          "type": "ingredient",
+          "ref_id": "XBQmVXVlRy1ml1cMjkpWT",
+          "quantity": 100,
+          "unit": "g"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "PDF says '2 chicken thighs (~113g)' — used 113 g directly. 'Salt & pepper to taste' skipped. Sauce qty TBD.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "kTXBC9u23SDeUgOTxemQG",
+      "name": "Alfredo Pasta",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "1Q5N7MkH9V5EoDWCm8W11",
+          "type": "ingredient",
+          "ref_id": "4PmhcekuSHEu2IaKqS7Ji",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "5nSglmb-dXD2EU3b8PrxJ",
+          "type": "ingredient",
+          "ref_id": "nAn2TEC2gFF1gqmpl_noK",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "VWQ3MtQxthD-ByPlqgl4p",
+          "type": "ingredient",
+          "ref_id": "FAxNHAfQMaJWcIMT74-o9",
+          "quantity": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "0VIoIahRxB0fQCSzt30GH",
+          "type": "ingredient",
+          "ref_id": "0hjT_Bq_aiH4Bq3NZpva0",
+          "quantity": 0.75,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "hhoDZLkwJjTadLPrG_Agk",
+          "type": "ingredient",
+          "ref_id": "ErEJIr2U-TQkoRwziQqYj",
+          "quantity": 1,
+          "unit": "cup"
+        },
+        {
+          "row_id": "uhP2rudbLGI4FSStrHPJW",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 0.5,
+          "unit": "cup"
+        },
+        {
+          "row_id": "CBaMMEuV_ie_8az0s9fsy",
+          "type": "ingredient",
+          "ref_id": "JQsY1_6RpDqkM4GOHxACR",
+          "quantity": 100,
+          "unit": "g"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "PDF: '¾ salt' interpreted as ¾ tsp.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "txpkpMRyIJfsdyOAn_I6L",
+      "name": "Tuscan Pasta",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "TZAcjh49YZqbosNAM8TNu",
+          "type": "ingredient",
+          "ref_id": "4PmhcekuSHEu2IaKqS7Ji",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "JgXbfX5S94DgkOs5khzgg",
+          "type": "ingredient",
+          "ref_id": "nAn2TEC2gFF1gqmpl_noK",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "gP69WM0hOqU4F_3aTJYMq",
+          "type": "ingredient",
+          "ref_id": "FAxNHAfQMaJWcIMT74-o9",
+          "quantity": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "2zm2wa_kA3rSaOyKlfohN",
+          "type": "ingredient",
+          "ref_id": "0hjT_Bq_aiH4Bq3NZpva0",
+          "quantity": 0.75,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "_-ETafH6prqVMCGHzjDU0",
+          "type": "ingredient",
+          "ref_id": "ErEJIr2U-TQkoRwziQqYj",
+          "quantity": 1,
+          "unit": "cup"
+        },
+        {
+          "row_id": "NBZszhL39CTuOEogSc0LJ",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 0.5,
+          "unit": "cup"
+        },
+        {
+          "row_id": "od9lDrEQ_F4opKNJFMovn",
+          "type": "ingredient",
+          "ref_id": "JQsY1_6RpDqkM4GOHxACR",
+          "quantity": 100,
+          "unit": "g"
+        },
+        {
+          "row_id": "YCU2T_9gGBcqJy5dmSwpq",
+          "type": "ingredient",
+          "ref_id": "CrtvHonG4wvK-W8ZBRtvy",
+          "quantity": 4,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "_-D_c_vtrtIuqT-n7lZiu",
+          "type": "ingredient",
+          "ref_id": "3bIw6T3rGXirAIJmT9U6f",
+          "quantity": 3.5,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "9eGR6oWFwR6aKSkubRKy7",
+          "type": "ingredient",
+          "ref_id": "Io7WVob42q1740mA5EtTU",
+          "quantity": 1.5,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "VbqdHycjCT5ShSKO3tFXm",
+          "type": "ingredient",
+          "ref_id": "u0_VDi3Pa8EHigzkiht36",
+          "quantity": 0.5,
+          "unit": "cup"
+        },
+        {
+          "row_id": "OZ3DH4Dmq3uUGzvVPOONG",
+          "type": "ingredient",
+          "ref_id": "zHa7ijwd5cc8JL0g-Jp1f",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "0r8woHOGhOHhy_rm7-h1z",
+          "type": "ingredient",
+          "ref_id": "Putgy2w0DBfvFPbr72V-s",
+          "quantity": 113,
+          "unit": "g"
+        },
+        {
+          "row_id": "U--ySalbQZb3rY6grFQnS",
+          "type": "ingredient",
+          "ref_id": "kx-q-itOS4qFd6A16IJS1",
+          "quantity": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "zaYbVRlSUgMCUNkedWUxV",
+          "type": "ingredient",
+          "ref_id": "0hjT_Bq_aiH4Bq3NZpva0",
+          "quantity": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "rWpT_ImJs7snMU_JK16Qi",
+          "type": "ingredient",
+          "ref_id": "FAxNHAfQMaJWcIMT74-o9",
+          "quantity": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "eryBdzpPITvQT1xzrfaQ1",
+          "type": "ingredient",
+          "ref_id": "XBQmVXVlRy1ml1cMjkpWT",
+          "quantity": 100,
+          "unit": "g"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "Recipe lists BOTH fettuccine and penne — likely a copy-paste artifact in source. Kept both per your instruction; remove one if needed.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "2VqgWrJCsUVLoeOa9nL7U",
+      "name": "Peanut Chili Noodles",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "dZJmKA1KkbCCP3FCy6rL_",
+          "type": "ingredient",
+          "ref_id": "-68ru2qQz1Rdai7eRLLvW",
+          "quantity": 4,
+          "unit": "piece"
+        },
+        {
+          "row_id": "0-BFIphRCvZFHDG4-UB7J",
+          "type": "ingredient",
+          "ref_id": "RAV7iqs7yZG2rp25witp0",
+          "quantity": 200,
+          "unit": "g"
+        },
+        {
+          "row_id": "UG4NGDP7cXIvt8onBOrpw",
+          "type": "ingredient",
+          "ref_id": "iFBb1sQdzRcidab7CoMlU",
+          "quantity": 3,
+          "unit": "piece"
+        },
+        {
+          "row_id": "JYh7uN1rjC8kddDXqsTOv",
+          "type": "ingredient",
+          "ref_id": "7Au1lcor5VcTpS6ykGEca",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "s9nrOmTPYzHMd1s3aAmD1",
+          "type": "ingredient",
+          "ref_id": "DFZC52P-OJphK10DasgvM",
+          "quantity": 0.25,
+          "unit": "cup"
+        },
+        {
+          "row_id": "qMcZ-tayZgouwoH02MgwM",
+          "type": "ingredient",
+          "ref_id": "5yl2Mf1MWoNDsO4S7XZ6Z",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "tzx4eQI3hJH9h2zgaW764",
+          "type": "ingredient",
+          "ref_id": "tFb6aKOA4NAXxIoayTD1x",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "isMMuyuQtiskDEsq5avv8",
+          "type": "ingredient",
+          "ref_id": "kx-q-itOS4qFd6A16IJS1",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "5IxJywJFvSPYIsPs-o3gU",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 5,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "1hRqKU5aKWqXChREUKS2J",
+          "type": "ingredient",
+          "ref_id": "FBK_eGpI48P3CmG0efRJi",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "LH4nroDjKR_jgonJEuorQ",
+          "type": "ingredient",
+          "ref_id": "Putgy2w0DBfvFPbr72V-s",
+          "quantity": 113,
+          "unit": "g"
+        },
+        {
+          "row_id": "ItAXaBrZfqHHj2gr-_lVO",
+          "type": "ingredient",
+          "ref_id": "0hjT_Bq_aiH4Bq3NZpva0",
+          "quantity": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "nzURnE7JlGSta1_3xPNRH",
+          "type": "ingredient",
+          "ref_id": "FAxNHAfQMaJWcIMT74-o9",
+          "quantity": 0.25,
+          "unit": "tsp"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": null,
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "GebU1LgVLH12edTtqZMB6",
+      "name": "Fattoush Salad",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "KR3qqwz8RjHYiSLLO-BnH",
+          "type": "ingredient",
+          "ref_id": "ffGtsqzHrYRMlWOmJ0-su",
+          "quantity": 0.5,
+          "unit": "piece"
+        },
+        {
+          "row_id": "CIcLKK3QVGqJ95KG7djqe",
+          "type": "ingredient",
+          "ref_id": "B5LP8-E6-a_MdyFr1wHXf",
+          "quantity": 2,
+          "unit": "piece"
+        },
+        {
+          "row_id": "GlwEzir65RySwtWnWddZw",
+          "type": "ingredient",
+          "ref_id": "x2bG2Y46w33d6MmlEbtjv",
+          "quantity": 2,
+          "unit": "piece"
+        },
+        {
+          "row_id": "aB0K4nhKyaLwV5S3OzEBJ",
+          "type": "ingredient",
+          "ref_id": "Q2n99V7LvnH9Esqs-OQu-",
+          "quantity": 4,
+          "unit": "piece"
+        },
+        {
+          "row_id": "-XGrTbAuUlfV9Ty2GwKHy",
+          "type": "ingredient",
+          "ref_id": "UgX3nSjq2uk3f0yoN84px",
+          "quantity": 0.5,
+          "unit": "piece"
+        },
+        {
+          "row_id": "PBep6wbdc0GPDpAAJThNA",
+          "type": "ingredient",
+          "ref_id": "7gbzYn5pxOfgT3o_5wJpH",
+          "quantity": 8,
+          "unit": "piece"
+        },
+        {
+          "row_id": "mMVkX5JyxiWIc83QhJN-m",
+          "type": "ingredient",
+          "ref_id": "x5sm7KG0cwTina1KEUta9",
+          "quantity": 8,
+          "unit": "piece"
+        },
+        {
+          "row_id": "VZOOkHsOOQGiuzDpvoRGo",
+          "type": "ingredient",
+          "ref_id": "4lRszTdx_AiDMlg0Ztr68",
+          "quantity": 6,
+          "unit": "piece"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": null,
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "I5jD1s0DZHFycUt0nxgQo",
+      "name": "Caesar Salad",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "otlrMxPabbZXcVKb5yRaU",
+          "type": "ingredient",
+          "ref_id": "ffGtsqzHrYRMlWOmJ0-su",
+          "quantity": 0.5,
+          "unit": "piece"
+        },
+        {
+          "row_id": "7Uq3Ic2NWiEb0wNLDORvF",
+          "type": "ingredient",
+          "ref_id": "CrtvHonG4wvK-W8ZBRtvy",
+          "quantity": 0.25,
+          "unit": "cup"
+        },
+        {
+          "row_id": "X6H0Jgy4PapXzcc_3hC4t",
+          "type": "ingredient",
+          "ref_id": "FH8Fi-JQ03StoqFCHkq27",
+          "quantity": 9,
+          "unit": "piece"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "PDF says '8-10 croutons' — using midpoint 9.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "CQ1lzb8cAGezd_YvcSfWn",
+      "name": "Funnel Cake",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "t7PUkL_VDdbhNOZFlWpWq",
+          "type": "ingredient",
+          "ref_id": "nAn2TEC2gFF1gqmpl_noK",
+          "quantity": 2,
+          "unit": "cup"
+        },
+        {
+          "row_id": "J4-g1wcRKoOkxNBaW6sEQ",
+          "type": "ingredient",
+          "ref_id": "S-0evI2ZqGnEkjk6ybveV",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "LoDqJAxuQgdWiNa3-s2Xp",
+          "type": "ingredient",
+          "ref_id": "O78JUt2pguPyqgFuNwNyB",
+          "quantity": 1,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "VBw1xT1k5B3vvUxbSC078",
+          "type": "ingredient",
+          "ref_id": "0hjT_Bq_aiH4Bq3NZpva0",
+          "quantity": 0.5,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "SK3SGrCdvrjW3bLKj00CO",
+          "type": "ingredient",
+          "ref_id": "RRry76c6Z7vZbHwYocf2o",
+          "quantity": 2,
+          "unit": "piece"
+        },
+        {
+          "row_id": "eqN4OVVmDjx0HwZmzbunw",
+          "type": "ingredient",
+          "ref_id": "ErEJIr2U-TQkoRwziQqYj",
+          "quantity": 1.5,
+          "unit": "cup"
+        },
+        {
+          "row_id": "QWgCYd5EF8Z0_gQPM5OXZ",
+          "type": "ingredient",
+          "ref_id": "Xk_vGEgTcSevtPWCPu5OW",
+          "quantity": 1,
+          "unit": "tsp"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "'Oil for frying' skipped.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "LEnfPx7BNaNnZw3bb8jwo",
+      "name": "Soufflé",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "Ti8KKaLb97BZvOQwFEmri",
+          "type": "ingredient",
+          "ref_id": "RRry76c6Z7vZbHwYocf2o",
+          "quantity": 2,
+          "unit": "piece"
+        },
+        {
+          "row_id": "ReFuP9yhbv4jLIQR1aORA",
+          "type": "ingredient",
+          "ref_id": "RRry76c6Z7vZbHwYocf2o",
+          "quantity": 2,
+          "unit": "piece"
+        },
+        {
+          "row_id": "m-ifbxZwkVccPYnPKzN9-",
+          "type": "ingredient",
+          "ref_id": "ErEJIr2U-TQkoRwziQqYj",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "YzJ_xYKxJM81Rsv4fYwK0",
+          "type": "ingredient",
+          "ref_id": "Xk_vGEgTcSevtPWCPu5OW",
+          "quantity": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "lXFoxrcoxeSDOhoHMWJ4q",
+          "type": "ingredient",
+          "ref_id": "61Pc-3k1zzY_CVWnHdStW",
+          "quantity": 30,
+          "unit": "g"
+        },
+        {
+          "row_id": "K1ZqihM0HbNmG7I161MqO",
+          "type": "ingredient",
+          "ref_id": "O78JUt2pguPyqgFuNwNyB",
+          "quantity": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "Iz74QHCVeIck60Rga-YL3",
+          "type": "ingredient",
+          "ref_id": "S-0evI2ZqGnEkjk6ybveV",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "_ARUsCdwZniTbSRrOGmEl",
+          "type": "ingredient",
+          "ref_id": "5KHRoAp8rhSN5R1jEr11T",
+          "quantity": 0.125,
+          "unit": "tsp"
+        },
+        {
+          "row_id": "ffRGDrw4AiMYJ4Sqtcde_",
+          "type": "ingredient",
+          "ref_id": "JSwGAsIOaWPIHKR_feytS",
+          "quantity": 0.5,
+          "unit": "tsp"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "PDF: '1/4 cup (30 g) cake flour' — used 30 g (more precise). 'Neutral oil' skipped.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "w-ECD14oecVkfTHUobOf2",
+      "name": "Taiyaki",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "TYoehgkZ-dbjV6xYWs8YI",
+          "type": "ingredient",
+          "ref_id": "ct-JOJbm-CvyrdY2fON1b",
+          "quantity": 1.5,
+          "unit": "cup"
+        },
+        {
+          "row_id": "JCTjJUnxcz4rafv1y4hl9",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 1,
+          "unit": "cup"
+        },
+        {
+          "row_id": "usI2jYFdb5nZkFLLX5J9h",
+          "type": "ingredient",
+          "ref_id": "4PmhcekuSHEu2IaKqS7Ji",
+          "quantity": 3,
+          "unit": "tbsp"
+        }
+      ],
+      "yield_quantity": 7,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "PDF: '6-9 taiyaki' — using midpoint 7.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "MEssCaOnSthH8Yb4H1frj",
+      "name": "Raspberry Danish Latte",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "QvJiEZOh67Nxk5J9YgGAw",
+          "type": "recipe",
+          "ref_id": "1_HjQKl6H904hNltP7JPp",
+          "quantity": 30,
+          "unit": "g"
+        },
+        {
+          "row_id": "CYss9olLc6Vu7ZIbX7dst",
+          "type": "recipe",
+          "ref_id": "w58u1_cO3T4NvGmFMczIN",
+          "quantity": 30,
+          "unit": "g"
+        },
+        {
+          "row_id": "6uH6MhOiNHuqSb2VWOASL",
+          "type": "recipe",
+          "ref_id": "KCOiF-c_mv4PgbWUNwEaj",
+          "quantity": 200,
+          "unit": "g"
+        },
+        {
+          "row_id": "_6kLyfy-2xyZnYIZeuN2V",
+          "type": "recipe",
+          "ref_id": "A0c0n9Le0DenaglnAGX3x",
+          "quantity": 2,
+          "unit": "piece"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "Compote and foam are batches — using 30 g per drink as placeholder. Confirm.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "tcEByIPWN4Nc9WTqbOkaz",
+      "name": "Creme Brulee Latte",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "DBK6IBMtia0fvYoVVpOaB",
+          "type": "ingredient",
+          "ref_id": "IOUXeVV4MIWRaEyTAx3CE",
+          "quantity": 0.5,
+          "unit": "cup"
+        },
+        {
+          "row_id": "MeK8IbzHfDOPBl8Vf03Gj",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 1,
+          "unit": "cup"
+        },
+        {
+          "row_id": "ArSbUQmWRcCirazgDIPg_",
+          "type": "ingredient",
+          "ref_id": "U_QrVrk2YfEY6eI9oB4Zk",
+          "quantity": 1,
+          "unit": "piece"
+        },
+        {
+          "row_id": "nSv-GeHcfJEo3RVANKNY_",
+          "type": "ingredient",
+          "ref_id": "Xk_vGEgTcSevtPWCPu5OW",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "3zE19Qe3FyvDmvTc5RYeQ",
+          "type": "recipe",
+          "ref_id": "KCOiF-c_mv4PgbWUNwEaj",
+          "quantity": 150,
+          "unit": "g"
+        },
+        {
+          "row_id": "fvLGd_AaWnPpQwRc_oa-t",
+          "type": "recipe",
+          "ref_id": "AsIRt2b2lrnwkQ1pilkoh",
+          "quantity": 30,
+          "unit": "g"
+        },
+        {
+          "row_id": "BtsOBMaO5Z69pwow4nc_C",
+          "type": "recipe",
+          "ref_id": "A0c0n9Le0DenaglnAGX3x",
+          "quantity": 2,
+          "unit": "piece"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "'1 can condensed milk' = 1 can (397 g). 'Pinch of salt' skipped.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "NquYKyivnvjrjVQ2tEtws",
+      "name": "Biscoff Latte",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "-aL48P6hVx7dFKlO_bWuU",
+          "type": "recipe",
+          "ref_id": "PcDS39CS5Wx7UH9Xgk-CV",
+          "quantity": 8,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "aten4PUqC3CoDSpP7M75L",
+          "type": "recipe",
+          "ref_id": "KCOiF-c_mv4PgbWUNwEaj",
+          "quantity": 1.5,
+          "unit": "cup"
+        },
+        {
+          "row_id": "L-Es0kOsk2Gry6eIa8ZTi",
+          "type": "recipe",
+          "ref_id": "A0c0n9Le0DenaglnAGX3x",
+          "quantity": 2,
+          "unit": "piece"
+        },
+        {
+          "row_id": "kQvY7q5L3LnW9H7jwmv3b",
+          "type": "recipe",
+          "ref_id": "AsIRt2b2lrnwkQ1pilkoh",
+          "quantity": 30,
+          "unit": "g"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "Cold foam qty TBD. Biscoff styling skipped.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "e3aZzy5eCVW55z4aJYoBP",
+      "name": "Sakura Matcha Latte",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "LtIFG7QNQ6n5P1f0-qWcn",
+          "type": "recipe",
+          "ref_id": "7BX-qVmfxH_5UOw7G_gRN",
+          "quantity": 3,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "oU6l2baT_Ohkjn19tEp0v",
+          "type": "recipe",
+          "ref_id": "KCOiF-c_mv4PgbWUNwEaj",
+          "quantity": 1.25,
+          "unit": "cup"
+        },
+        {
+          "row_id": "mU7VBBdNPcFxe6wwTo1Ng",
+          "type": "ingredient",
+          "ref_id": "pyGTilXK4b0ALyG7Oeg2G",
+          "quantity": 3,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "fZ_vb6Nr-lbKD6-Dl1CJ9",
+          "type": "recipe",
+          "ref_id": "Od0ovgGjJcxCXDHI0ifCY",
+          "quantity": 3,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "yCvHyd0-7RnpWTXiu2yYC",
+          "type": "ingredient",
+          "ref_id": "9ckhOoiCKuPBVbVwZISrF",
+          "quantity": 3,
+          "unit": "tbsp"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "Sakura froth is 3 tbsp each of heavy cream + simple syrup + sakura powder.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "V0AYp4Skv-caGPGGMevR4",
+      "name": "Matcha Latte",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "uLUvMXInlW399tRS_DOhH",
+          "type": "recipe",
+          "ref_id": "7BX-qVmfxH_5UOw7G_gRN",
+          "quantity": 4,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "aChatRnhnuN7Pei_dBj5i",
+          "type": "ingredient",
+          "ref_id": "ErEJIr2U-TQkoRwziQqYj",
+          "quantity": 1.5,
+          "unit": "cup"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "PDF says 'milk' (not Mixed Milk). Dusting top skipped.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "7Ao0yhp3ZxXgtLdUoqVdi",
+      "name": "Hot Chocolate",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "A3c23LZQ9yt2yknM2nZeU",
+          "type": "ingredient",
+          "ref_id": "1Jv0d_eG_vhvqTV_ZKEMW",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "oT6p3JFyDilKaZZMjScXu",
+          "type": "ingredient",
+          "ref_id": "IOUXeVV4MIWRaEyTAx3CE",
+          "quantity": 1,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "RQu2OMQJ0O6_w_VNrBf56",
+          "type": "ingredient",
+          "ref_id": "ErEJIr2U-TQkoRwziQqYj",
+          "quantity": 8,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "Dp8e6dHlZMJv69CZRp4TE",
+          "type": "ingredient",
+          "ref_id": "FIwzEampDmb8eQhcv4fhG",
+          "quantity": 2,
+          "unit": "piece"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "Whipped cream + chocolate drizzle decor skipped.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "RKPwxRXBAhIPwlALtg__R",
+      "name": "Butterfly Pea Lemonade — After the Storm",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "JiBWbKkaDtEU9YEjq0DKO",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 1,
+          "unit": "cup"
+        },
+        {
+          "row_id": "MeyPdxiN3GITBNYHHFWpQ",
+          "type": "ingredient",
+          "ref_id": "IMLhwISedSEA7HLdk5oj3",
+          "quantity": 4.5,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "8rcuGNmfq87ii-NzVsocF",
+          "type": "ingredient",
+          "ref_id": "-HP1D1Jot-Pw3ktOfcMD3",
+          "quantity": 1,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "16zsZUJiae3yXcvJ7pOYw",
+          "type": "ingredient",
+          "ref_id": "5qWwUNmvEq7cVhCUwlqcf",
+          "quantity": 1,
+          "unit": "cup"
+        },
+        {
+          "row_id": "w0CCuLGpTmKBLHHePBqbo",
+          "type": "recipe",
+          "ref_id": "k8J4jC6Kw9WCdO4itBdln",
+          "quantity": 4,
+          "unit": "fl_oz"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": null,
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "dhkh1eSMFFk36C6FmrMbf",
+      "name": "Mango Popping Boba Soda",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "Q4j3JmLwmSEfWiMpcvMqN",
+          "type": "ingredient",
+          "ref_id": "bzOgOX95iy6KmDODPjlbb",
+          "quantity": 1.5,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "GxdsgX6LP68-wHBceM33t",
+          "type": "ingredient",
+          "ref_id": "iqano2B7xeyxFitFeHfRL",
+          "quantity": 5,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "j3nmXsBQ_aQJW1ZEh5U95",
+          "type": "ingredient",
+          "ref_id": "5qWwUNmvEq7cVhCUwlqcf",
+          "quantity": 1.5,
+          "unit": "cup"
+        },
+        {
+          "row_id": "Bnni2irhgqTAu_trFzn8Z",
+          "type": "ingredient",
+          "ref_id": "iqano2B7xeyxFitFeHfRL",
+          "quantity": 1,
+          "unit": "tbsp"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": null,
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "tHE_isjwds_9eVSs8mEa3",
+      "name": "Wildberry Soda",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "5pOnH0qahSd5YPoZ2__oa",
+          "type": "ingredient",
+          "ref_id": "5Mipjce0TLit5qPxp8cuD",
+          "quantity": 0.5,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "jxV0tnPkDJQo6Lasx0ssT",
+          "type": "recipe",
+          "ref_id": "Od0ovgGjJcxCXDHI0ifCY",
+          "quantity": 2,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "mZo39Nsv46R4jPuAdVVdY",
+          "type": "ingredient",
+          "ref_id": "5qWwUNmvEq7cVhCUwlqcf",
+          "quantity": 1.5,
+          "unit": "cup"
+        },
+        {
+          "row_id": "f2v8PFGXgvQQlCzjb3eKC",
+          "type": "ingredient",
+          "ref_id": "kx-q-itOS4qFd6A16IJS1",
+          "quantity": 0.25,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "KGTpmLX3J8JGOUuHaS8c0",
+          "type": "ingredient",
+          "ref_id": "v38M5DfsyDE8bp0-4q_Vr",
+          "quantity": 1,
+          "unit": "fl_oz"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": null,
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "p2rzvzC-cdkwV7n82VyvJ",
+      "name": "Rose Lychee Soda",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "ekSAAtGPi8kLDSZdY45nK",
+          "type": "ingredient",
+          "ref_id": "IXwj7R7PUCXLgrMYRPiUJ",
+          "quantity": 0.5,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "CKAwzfd3k3ygLAZeHmwis",
+          "type": "ingredient",
+          "ref_id": "TFLsPIVkhH3qOtQrg5QAn",
+          "quantity": 1,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "Fw9kAlBFzsPxv81Xm_vFw",
+          "type": "ingredient",
+          "ref_id": "kx-q-itOS4qFd6A16IJS1",
+          "quantity": 0.75,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "Dk4OFWFs79mEeS450iy8r",
+          "type": "ingredient",
+          "ref_id": "5qWwUNmvEq7cVhCUwlqcf",
+          "quantity": 1.5,
+          "unit": "cup"
+        },
+        {
+          "row_id": "2f78DLVttd7x7bB7PtpkS",
+          "type": "recipe",
+          "ref_id": "k8J4jC6Kw9WCdO4itBdln",
+          "quantity": 1,
+          "unit": "fl_oz"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": "Source has 'OR' alt with yuzu — used primary version.",
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "cKNBgUNvKlxvW0SDUuLml",
+      "name": "Mint Mojito with Butterfly",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "R8aZKiyhz259RpL8d39sz",
+          "type": "ingredient",
+          "ref_id": "ClFn-A3VJtqG--x0abL-_",
+          "quantity": 2,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "2-zxp71KC-05ni3iJDsT1",
+          "type": "ingredient",
+          "ref_id": "kx-q-itOS4qFd6A16IJS1",
+          "quantity": 0.75,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "2aMslx2ens5APSJE5flog",
+          "type": "ingredient",
+          "ref_id": "5qWwUNmvEq7cVhCUwlqcf",
+          "quantity": 1,
+          "unit": "cup"
+        },
+        {
+          "row_id": "6FHJbNJcRod117VapdLvI",
+          "type": "recipe",
+          "ref_id": "k8J4jC6Kw9WCdO4itBdln",
+          "quantity": 3,
+          "unit": "fl_oz"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": null,
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "-XdFlY784aEIQ2EPd72vB",
+      "name": "Elderberry Healer",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "XL_kacnXPHbYOm4YuAzS-",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 8,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "9HRsr8DF6WEg4iv08aeey",
+          "type": "ingredient",
+          "ref_id": "MTgnuaSoZV9tUpcqIon08",
+          "quantity": 1.5,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "aYhpjpg1hmGCl2VDGyppF",
+          "type": "ingredient",
+          "ref_id": "3Jl0eLRKVAnJOuAVrGVwq",
+          "quantity": 0.5,
+          "unit": "tbsp"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": null,
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "12Xp9hSIfnaVQaU33EoQR",
+      "name": "Hibiscus Berry Tea",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "VVQNAN6FJz-qi1ezOAcGT",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 8,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "t4C1MjCOokdCQ1Mumun3L",
+          "type": "ingredient",
+          "ref_id": "MTgnuaSoZV9tUpcqIon08",
+          "quantity": 1.5,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "fWCjrFJeqD_5LqrK4ee6-",
+          "type": "ingredient",
+          "ref_id": "3Jl0eLRKVAnJOuAVrGVwq",
+          "quantity": 0.5,
+          "unit": "tbsp"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": null,
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "ce4uHdCK6cEnKUXh5byd8",
+      "name": "Orange Blossom",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "y4K4DBwmG6Cf0jclt92CF",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 8,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "Nt5W6HpetK2bT9pmwdCBp",
+          "type": "ingredient",
+          "ref_id": "MTgnuaSoZV9tUpcqIon08",
+          "quantity": 1.5,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "WoaAV1Rgx-G59cAuFL0Q5",
+          "type": "ingredient",
+          "ref_id": "3Jl0eLRKVAnJOuAVrGVwq",
+          "quantity": 0.5,
+          "unit": "tbsp"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": null,
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "zNFlJ7OIxl65ErMhWkjhe",
+      "name": "Golden Yunnan",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "lDCRLS-zvZEiXnBcbFRjc",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 8,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "LuDIlnXugmFiEGS4W0ac_",
+          "type": "ingredient",
+          "ref_id": "MTgnuaSoZV9tUpcqIon08",
+          "quantity": 1.5,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "t7ip6luKQ-8TIhKi4rcy2",
+          "type": "ingredient",
+          "ref_id": "3Jl0eLRKVAnJOuAVrGVwq",
+          "quantity": 0.5,
+          "unit": "tbsp"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": null,
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "4fJpa0c8b7Nc7kKibOtAz",
+      "name": "Kashmiri Chai",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "Mr7vkLI9p-a4MtFTgI9wR",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 8,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "6iFPG02OgDNu-oG25yafo",
+          "type": "ingredient",
+          "ref_id": "MTgnuaSoZV9tUpcqIon08",
+          "quantity": 1.5,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "BVDNIXL87RK0X_C_dPxdq",
+          "type": "ingredient",
+          "ref_id": "AspI4dLg_V-SVGZRrcXGI",
+          "quantity": 1,
+          "unit": "tsp"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": null,
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    },
+    {
+      "id": "MIhc02v1VLJUc32MQoKIZ",
+      "name": "Karak Chai",
+      "type": "menu_item",
+      "inputs": [
+        {
+          "row_id": "jrMO37okG_YutxP4a_6vf",
+          "type": "ingredient",
+          "ref_id": "2uCzsOXY-anL_CMmZ433V",
+          "quantity": 8,
+          "unit": "fl_oz"
+        },
+        {
+          "row_id": "fUH_9yi66eF7cSyQ7SrS0",
+          "type": "ingredient",
+          "ref_id": "MTgnuaSoZV9tUpcqIon08",
+          "quantity": 1.5,
+          "unit": "tbsp"
+        },
+        {
+          "row_id": "RtkHd8nEJNYTpRUuqaATm",
+          "type": "ingredient",
+          "ref_id": "wYHMaJ_PVifCYwPo1JK4X",
+          "quantity": 1,
+          "unit": "piece"
+        }
+      ],
+      "yield_quantity": 1,
+      "yield_unit": "piece",
+      "density_factors": [],
+      "notes": null,
+      "created_at": "2026-05-08T00:23:12.785480+00:00",
+      "updated_at": "2026-05-08T00:23:12.785480+00:00",
+      "sale_price": null,
+      "sales_volume_per_period": null
+    }
+  ],
+  "settings": [
+    {
+      "id": "singleton",
+      "period_label": "per day"
+    }
+  ]
+}

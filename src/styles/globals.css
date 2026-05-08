@@ -1,0 +1,167 @@
+@import "@fontsource-variable/fraunces";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-base: #a8c2ba;
+    --bg-surface: #fffcf5;
+    --bg-surface-alt: #f6eed8;
+    --border: #ddceaf;
+    --border-strong: #bca47c;
+    --text-primary: #3a2a1c;
+    --text-secondary: #6b5640;
+    --text-muted: #9c8a6e;
+    --accent: #a86f3d;
+    --accent-hover: #8c5a2e;
+    --accent-soft: #ebdbc0;
+    --success: #506b45;
+    --warning: #c8893a;
+    --error: #a85540;
+    --info: #2d575e;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: "General Sans", "Switzer", ui-sans-serif, system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Layered: one warm cognac halo top-right against the cool green-blue base,
+     * plus a barely-there paper-grain pattern. Keeps the page calm. */
+    background-image:
+      radial-gradient(circle at 95% 5%, rgba(168, 111, 61, 0.18) 0%, transparent 38%),
+      radial-gradient(circle at 5% 100%, rgba(255, 252, 245, 0.10) 0%, transparent 35%),
+      radial-gradient(rgba(20, 40, 38, 0.035) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 4px 4px;
+    background-position: 0 0, 0 0, 0 0;
+    background-attachment: fixed, fixed, scroll;
+  }
+
+  ::selection {
+    background-color: var(--accent-soft);
+    color: var(--text-primary);
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* Tabular numbers for data-heavy tables */
+  .nums {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  .display {
+    font-family: "Fraunces Variable", Fraunces, ui-serif, Georgia, serif;
+    font-optical-sizing: auto;
+    letter-spacing: -0.01em;
+  }
+
+  /* Hero numbers — recipe costs and the like */
+  .hero-num {
+    font-family: "Fraunces Variable", Fraunces, ui-serif, Georgia, serif;
+    font-variant-numeric: tabular-nums;
+    font-weight: 450;
+    letter-spacing: -0.02em;
+  }
+
+  /* Header label small caps */
+  .label-cap {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+}
+
+@layer components {
+  .input-base {
+    @apply w-full rounded bg-bg-surface px-3 py-2.5 text-text-primary;
+    @apply border border-border outline-none transition-colors duration-150 ease-out-soft;
+  }
+  .input-base:hover {
+    border-color: var(--border-strong);
+  }
+  .input-base:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(168, 111, 61, 0.18);
+  }
+  .input-base::placeholder {
+    color: var(--text-muted);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded px-4 py-2 font-medium transition-colors duration-150 ease-out-soft;
+    background-color: var(--accent);
+    color: white;
+  }
+  .btn-primary:hover {
+    background-color: var(--accent-hover);
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded px-3 py-2 transition-colors duration-150 ease-out-soft;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    background: transparent;
+  }
+  .btn-ghost:hover {
+    background-color: var(--accent-soft);
+    border-color: var(--border-strong);
+  }
+
+  .btn-info {
+    @apply inline-flex items-center justify-center gap-2 rounded px-4 py-2 font-medium transition-colors duration-150 ease-out-soft;
+    background-color: var(--info);
+    color: white;
+  }
+  .btn-info:hover {
+    background-color: #1f4147;
+  }
+
+  .btn-text {
+    @apply inline-flex items-center justify-center gap-1.5 rounded px-2 py-1 text-text-secondary transition-colors duration-150 ease-out-soft;
+  }
+  .btn-text:hover {
+    color: var(--text-primary);
+    background-color: var(--accent-soft);
+  }
+
+  .card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(58, 42, 28, 0.06), 0 4px 12px rgba(58, 42, 28, 0.04);
+  }
+
+  .table-row-hover:hover {
+    background-color: var(--accent-soft);
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-xs;
+    background-color: var(--accent-soft);
+    color: var(--text-secondary);
+  }
+}

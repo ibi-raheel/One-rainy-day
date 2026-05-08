@@ -1,0 +1,27 @@
+# dependencies
+node_modules/
+
+# build artifacts
+dist/
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# OS
+.DS_Store
+
+# logs
+*.log
+
+# editor / cache
+.vite/
+coverage/
+.idea/
+.vscode/
+
+# runtime data (these are local to each install)
+cafe-data.json
+market.json
+backups/
