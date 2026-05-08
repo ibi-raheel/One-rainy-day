@@ -147,9 +147,9 @@ body::after {
 @keyframes backdropIn { from { opacity: 0; } to { opacity: 1; } }
 .modal {
   width: 100%; max-width: 720px; max-height: calc(100vh - 80px);
-  background: rgba(255, 252, 245, 0.97);
-  backdrop-filter: blur(24px) saturate(140%);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  background: rgba(255, 252, 245, 0.99);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 252, 245, 0.65);
   border-radius: 18px;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 30px 80px -20px rgba(0,0,0,0.6);
@@ -450,9 +450,9 @@ body::after {
   position: sticky; top: 0; z-index: 5;
   display: flex; align-items: center; gap: 14px;
   padding: 14px 28px;
-  background: rgba(40, 48, 52, 0.72);
-  backdrop-filter: blur(14px) saturate(120%);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  background: rgba(40, 48, 52, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 .topbar .crumbs { color: rgba(255,252,245,0.55); }
@@ -528,8 +528,8 @@ body::after {
   background:
     linear-gradient(135deg, rgba(255,253,246,0.18) 0%, rgba(168,111,61,0.10) 100%),
     rgba(255, 252, 245, 0.06);
-  backdrop-filter: blur(28px) saturate(140%);
-  -webkit-backdrop-filter: blur(28px) saturate(140%);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
   border: 1px solid rgba(255,255,255,0.14);
   border-radius: var(--radius-lg);
   padding: 28px 30px 24px;
@@ -587,8 +587,8 @@ body::after {
 /* Cards */
 .card {
   background: rgba(255, 252, 245, 0.92);
-  backdrop-filter: blur(22px) saturate(140%);
-  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
   border: 1px solid rgba(255, 252, 245, 0.55);
   border-radius: var(--radius);
   box-shadow:
@@ -618,8 +618,8 @@ body::after {
 .kpi {
   position: relative; padding: 18px 20px 16px;
   background: rgba(255, 252, 245, 0.78);
-  backdrop-filter: blur(22px) saturate(140%);
-  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
   border: 1px solid rgba(255,255,255,0.55);
   border-radius: var(--radius);
   overflow: hidden;
@@ -877,8 +877,8 @@ body::after {
   padding: 16px 18px; border-radius: var(--radius);
   border: 1px solid rgba(255,255,255,0.55);
   background: rgba(255, 252, 245, 0.78);
-  backdrop-filter: blur(22px) saturate(140%);
-  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 18px 40px -22px rgba(0,0,0,0.55);
   transition: transform .25s var(--ease), box-shadow .25s var(--ease);
 }
@@ -891,8 +891,8 @@ body::after {
 .rcards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 .rcard {
   background: rgba(255, 252, 245, 0.78);
-  backdrop-filter: blur(22px) saturate(140%);
-  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
   border: 1px solid rgba(255,255,255,0.55);
   border-radius: var(--radius);
   padding: 18px 20px;
@@ -911,13 +911,94 @@ body::after {
 }
 .rcard .label-cap { color: var(--text-2); }
 
-/* ----- Tailwind compatibility shim -----
- * Existing components in src/features/*.tsx use Tailwind classes pointing at
- * the OLD palette tokens (text-text-primary, bg-bg-surface, etc.).
- * Until each component is migrated, these classes need to keep working.
- * The block below just re-creates them as plain CSS so legacy markup stays
- * legible during the design migration. Delete once all components updated.
- */
+/* ----- Legacy component classes used by Ingredient form, Recipe editor,
+ *       MultiSelectPopover, etc. They drive most of the day-to-day forms.
+ *       Re-implemented so they look right against the new cream paper. */
+
+.input-base {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  color: var(--ink);
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  outline: none;
+  font: inherit;
+  transition: border-color .15s var(--ease), box-shadow .15s var(--ease);
+}
+.input-base:hover { border-color: var(--border-strong); }
+.input-base:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(168, 111, 61, 0.18);
+}
+.input-base::placeholder { color: var(--text-muted); }
+
+.btn-primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s var(--ease);
+  white-space: nowrap;
+}
+.btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: all .15s var(--ease);
+  white-space: nowrap;
+}
+.btn-ghost:hover { background: var(--accent-mist); border-color: var(--border-strong); }
+
+.btn-text {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 0;
+  background: transparent;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all .15s var(--ease);
+}
+.btn-text:hover { color: var(--ink); background: var(--accent-mist); }
+
+.btn-info {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--info);
+  background: var(--info);
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s var(--ease);
+  white-space: nowrap;
+}
+.btn-info:hover { background: #1f4147; border-color: #1f4147; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--accent-mist);
+  color: var(--text-2);
+  font-size: 11px;
+}
+
+.table-row-hover:hover { background: var(--bg-surface-alt); }
+
+/* ----- Tailwind utility shim — used by older component markup. ----- */
 .text-text-primary { color: var(--ink); }
 .text-text-secondary { color: var(--text-2); }
 .text-text-muted { color: var(--text-muted); }
@@ -925,6 +1006,7 @@ body::after {
 .bg-bg-base { background-color: var(--bg-base); }
 .bg-bg-surfaceAlt { background-color: var(--bg-surface-alt); }
 .text-accent { color: var(--accent); }
+.text-accent-hover { color: var(--accent-hover); }
 .bg-accent-soft { background-color: var(--accent-soft); }
 .text-success { color: var(--success); }
 .text-warning { color: var(--warning); }

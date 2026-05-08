@@ -5,7 +5,7 @@ import { computeRecipeCost } from "@/lib/cost";
 import { unitLabel } from "@/lib/units";
 import { I } from "@/components/design/Icons";
 import { Rainfield } from "@/components/design/Rain";
-import { RecipeEditor } from "./RecipeEditor";
+import { RecipeEditModal } from "./RecipeEditModal";
 import type { Recipe } from "@/db/types";
 
 type Filter = "all" | "menu" | "sub";
@@ -63,38 +63,7 @@ export function RecipesTab() {
     setOpenId(id);
   };
 
-  // Editor mode — keep the existing editor functionality intact but show
-  // it on top of the cards page so all the rich tooling (breakdown, scale,
-  // density factors, etc.) keeps working.
   const openRecipe = recipes.find((r) => r.id === openId) || null;
-
-  if (openRecipe) {
-    return (
-      <div className="view">
-        <div className="page-head fade-up">
-          <Rainfield count={14} />
-          <div className="head-row">
-            <div style={{ flex: 1 }}>
-              <h1>{openRecipe.name}</h1>
-              <p className="subtle">
-                {openRecipe.type === "menu_item" ? "Menu item" : "Sub-recipe"} · {openRecipe.inputs.length} inputs ·
-                yields {openRecipe.yield_quantity} {unitLabel(openRecipe.yield_unit)}
-              </p>
-            </div>
-            <div className="head-stats">
-              <button className="btn" onClick={() => setOpenId(null)}>
-                ← All recipes
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="card" style={{ padding: 28 }}>
-          <RecipeEditor recipe={openRecipe} />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="view">
@@ -108,7 +77,9 @@ export function RecipesTab() {
             </p>
           </div>
           <div className="head-stats">
-            <button className="btn"><I.Filter /> Filter</button>
+            <button className="btn" onClick={() => createRecipe("sub_recipe")}>
+              <I.Plus /> Sub-recipe
+            </button>
             <button className="btn primary" onClick={() => createRecipe("menu_item")}>
               <I.Plus /> New recipe
             </button>
@@ -170,6 +141,13 @@ export function RecipesTab() {
             );
           })}
         </div>
+      )}
+
+      {openRecipe && (
+        <RecipeEditModal
+          recipe={openRecipe}
+          onClose={() => setOpenId(null)}
+        />
       )}
     </div>
   );

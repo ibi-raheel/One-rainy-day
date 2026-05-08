@@ -4,6 +4,10 @@ import { I } from "@/components/design/Icons";
 import { CountUp } from "@/components/design/CountUp";
 import { Rainfield } from "@/components/design/Rain";
 
+async function copyToClipboard(text: string): Promise<boolean> {
+  try { await navigator.clipboard.writeText(text); return true; } catch { return false; }
+}
+
 type Status = "ok" | "low" | "critical";
 type Filter = "all" | Status;
 
@@ -34,6 +38,27 @@ export function StockTab() {
   const ingredients = useApp((s) => s.ingredients);
   const [filter, setFilter] = useState<Filter>("all");
   const [drag, setDrag] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const copyOrderList = async () => {
+    const lines = [
+      "ORDER SOON",
+      "",
+      "Sam's Club:",
+      "  • Heavy cream × 4 half-gal",
+      "  • Eggs × 1 flat",
+      "",
+      "Restaurant Depot:",
+      "  • Turkey ham × 1 tray",
+    ];
+    const ok = await copyToClipboard(lines.join("\n"));
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } else {
+      alert("Couldn't copy — clipboard unavailable.");
+    }
+  };
 
   // If real ingredients exist, derive a stock row per ingredient using package
   // amount + a heuristic status (low if cost_per_base flagged otherwise ok).
@@ -231,7 +256,9 @@ export function StockTab() {
           <h3>Order soon</h3>
           <span className="card-sub">grouped by supplier</span>
           <div className="right">
-            <button className="btn">Copy list</button>
+            <button className="btn" onClick={copyOrderList}>
+              {copied ? <><I.Check /> Copied</> : "Copy list"}
+            </button>
             <button className="btn primary" onClick={() => window.openModal?.("order")}>
               <I.Plus /> New order
             </button>

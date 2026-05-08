@@ -67,6 +67,8 @@ export function MarketTab() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [onlyOnSale, setOnlyOnSale] = useState(false);
+  const [browseTab, setBrowseTab] = useState<"cheapest" | "sales" | "browse">("cheapest");
+  const [browseQuery, setBrowseQuery] = useState("");
   const [applyTarget, setApplyTarget] = useState<{ ingredientId: string; product: MarketProductLite } | null>(null);
 
   useEffect(() => {
@@ -111,6 +113,29 @@ export function MarketTab() {
     }
     return out.slice(0, 6);
   }, [snapshot, productsById]);
+
+  // Active sales — every available product with on_sale=true, ranked by discount.
+  const onSaleProducts = useMemo(() => {
+    if (!snapshot) return [] as MarketProduct[];
+    return [...snapshot.products]
+      .filter((p) => p.on_sale && p.available)
+      .sort((a, b) => b.discount_pct - a.discount_pct)
+      .slice(0, 60);
+  }, [snapshot]);
+
+  // Browse — search across every product
+  const browseProducts = useMemo(() => {
+    if (!snapshot) return [] as MarketProduct[];
+    const q = browseQuery.trim().toLowerCase();
+    if (!q) return snapshot.products.slice(0, 80);
+    return snapshot.products
+      .filter((p) =>
+        p.title.toLowerCase().includes(q) ||
+        (p.vendor ?? "").toLowerCase().includes(q) ||
+        p.source_name.toLowerCase().includes(q)
+      )
+      .slice(0, 80);
+  }, [snapshot, browseQuery]);
 
   // Build the find-cheapest table — one row per matched ingredient, with the best comparable price.
   const cheapestRows = useMemo(() => {
@@ -195,10 +220,9 @@ export function MarketTab() {
             </p>
           </div>
           <div className="head-stats">
-            <button className="btn" onClick={refresh} disabled={refreshing}>
-              <I.Refresh /> {refreshing ? "Refreshing…" : "Refresh"}
+            <button className="btn primary" onClick={refresh} disabled={refreshing}>
+              <I.Refresh /> {refreshing ? "Refreshing…" : "Refresh prices"}
             </button>
-            <button className="btn primary"><I.Sparkles /> Generate alerts</button>
           </div>
         </div>
       </div>
@@ -293,21 +317,75 @@ export function MarketTab() {
         })}
       </div>
 
-      {/* Find cheapest */}
+      {/* Tabbed product browser: Cheapest / Sales / Browse */}
       <div className="card fade-up">
         <div className="card-head">
-          <h3>Find cheapest</h3>
-          <span className="card-sub">apples-to-apples public price compare</span>
+          <h3>
+            {browseTab === "cheapest"
+              ? "Find cheapest"
+              : browseTab === "sales"
+              ? "Active sales"
+              : "Browse all products"}
+          </h3>
+          <span className="card-sub">
+            {browseTab === "cheapest"
+              ? "apples-to-apples public price compare"
+              : browseTab === "sales"
+              ? `${onSaleProducts.length} on sale right now`
+              : `${browseProducts.length} of ${snapshot.products.length}`}
+          </span>
           <div className="right">
-            <button
-              className={`btn ${onlyOnSale ? "primary" : ""}`}
-              onClick={() => setOnlyOnSale((v) => !v)}
-            >
-              <I.Filter /> Only on-sale
-            </button>
+            <div className="segmented">
+              <button
+                className={browseTab === "cheapest" ? "on" : ""}
+                onClick={() => setBrowseTab("cheapest")}
+              >
+                Cheapest ({cheapestRows.length})
+              </button>
+              <button
+                className={browseTab === "sales" ? "on" : ""}
+                onClick={() => setBrowseTab("sales")}
+              >
+                Active sales ({onSaleProducts.length})
+              </button>
+              <button
+                className={browseTab === "browse" ? "on" : ""}
+                onClick={() => setBrowseTab("browse")}
+              >
+                Browse
+              </button>
+            </div>
+            {browseTab === "cheapest" && (
+              <button
+                className={`btn ${onlyOnSale ? "primary" : ""}`}
+                onClick={() => setOnlyOnSale((v) => !v)}
+              >
+                <I.Filter /> Only on-sale
+              </button>
+            )}
           </div>
         </div>
-        <table className="tbl nums">
+
+        {browseTab === "browse" && (
+          <div style={{ padding: "12px 20px 0" }}>
+            <div style={{ position: "relative", maxWidth: 380 }}>
+              <I.Search />
+              <input
+                className="input-base"
+                placeholder="Search products by name, vendor, or source…"
+                value={browseQuery}
+                onChange={(e) => setBrowseQuery(e.target.value)}
+                style={{ paddingLeft: 34 }}
+              />
+              <span style={{ position: "absolute", left: 11, top: 11, color: "var(--text-muted)" }}>
+                <I.Search />
+              </span>
+            </div>
+          </div>
+        )}
+
+        {browseTab === "cheapest" && (
+          <table className="tbl nums">
           <thead>
             <tr>
               <th>Ingredient</th>
@@ -380,6 +458,139 @@ export function MarketTab() {
             )}
           </tbody>
         </table>
+        )}
+
+        {browseTab === "sales" && (
+          <table className="tbl nums">
+            <thead>
+              <tr>
+                <th style={{ width: 80 }}>Discount</th>
+                <th>Product</th>
+                <th>Source</th>
+                <th className="r">Sale price</th>
+                <th className="r">Was</th>
+                <th className="r"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {onSaleProducts.length === 0 ? (
+                <tr>
+                  <td colSpan={6} style={{ textAlign: "center", padding: 30, color: "var(--text-muted)" }}>
+                    Nothing on sale at any source right now. Try Refresh — sources update at different times.
+                  </td>
+                </tr>
+              ) : (
+                onSaleProducts.map((p) => (
+                  <tr key={p.id}>
+                    <td>
+                      <span
+                        className={`pill ${p.discount_pct >= 30 ? "red" : p.discount_pct >= 15 ? "amber" : "cool"}`}
+                      >
+                        −{p.discount_pct}%
+                      </span>
+                    </td>
+                    <td className="name-cell">
+                      <a
+                        href={p.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "var(--ink)", textDecoration: "none" }}
+                      >
+                        {p.title}
+                      </a>
+                      <div className="muted" style={{ fontSize: 11.5, marginTop: 2 }}>
+                        {p.pack_size_text}
+                        {p.vendor ? ` · ${p.vendor}` : ""}
+                      </div>
+                    </td>
+                    <td>{p.source_name}</td>
+                    <td className="r" style={{ color: "var(--success)", fontWeight: 500 }}>
+                      ${p.price.toFixed(2)}
+                    </td>
+                    <td className="r muted" style={{ textDecoration: "line-through" }}>
+                      ${p.compare_at_price?.toFixed(2)}
+                    </td>
+                    <td className="r">
+                      <a
+                        href={p.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn"
+                        style={{ textDecoration: "none" }}
+                      >
+                        View <I.ArrowR />
+                      </a>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        )}
+
+        {browseTab === "browse" && (
+          <table className="tbl nums">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Source</th>
+                <th>Pack</th>
+                <th className="r">Price</th>
+                <th className="r"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {browseProducts.length === 0 ? (
+                <tr>
+                  <td colSpan={5} style={{ textAlign: "center", padding: 30, color: "var(--text-muted)" }}>
+                    No matches. Try a different search.
+                  </td>
+                </tr>
+              ) : (
+                browseProducts.map((p) => (
+                  <tr key={p.id}>
+                    <td className="name-cell">
+                      <a
+                        href={p.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "var(--ink)", textDecoration: "none" }}
+                      >
+                        {p.title}
+                      </a>
+                      {p.vendor && (
+                        <div className="muted" style={{ fontSize: 11.5, marginTop: 2 }}>
+                          {p.vendor}
+                        </div>
+                      )}
+                    </td>
+                    <td>{p.source_name}</td>
+                    <td className="muted" style={{ fontSize: 12 }}>{p.pack_size_text || "—"}</td>
+                    <td className="r" style={{ fontWeight: 500 }}>
+                      ${p.price.toFixed(2)}
+                      {p.on_sale && (
+                        <span style={{ marginLeft: 6, fontSize: 10, color: "var(--warning)" }}>
+                          −{p.discount_pct}%
+                        </span>
+                      )}
+                    </td>
+                    <td className="r">
+                      <a
+                        href={p.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn"
+                        style={{ textDecoration: "none" }}
+                      >
+                        Open
+                      </a>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {applyTarget && (

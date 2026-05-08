@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useApp } from "@/store/app";
 import { computeDemand, computeRecipeCost } from "@/lib/cost";
 import { I } from "@/components/design/Icons";
@@ -7,6 +7,7 @@ import { CountUp } from "@/components/design/CountUp";
 import { Rainfield } from "@/components/design/Rain";
 
 type SortKey = "name" | "cost" | "price" | "margin" | "vol";
+type PrepView = "today" | "tomorrow" | "week";
 
 interface PrepRow {
   id: number;
@@ -15,6 +16,8 @@ interface PrepRow {
   forItems: string[];
   status: "pending" | "in_progress" | "done";
   minutes: number;
+  /** Which day-bucket this prep belongs to. */
+  when: PrepView;
 }
 
 interface AlertRow {
@@ -32,10 +35,12 @@ const TODAY = new Date().toLocaleDateString("en-US", {
 });
 
 const DEFAULT_PREP: PrepRow[] = [
-  { id: 1, name: "Vanilla syrup batch", yield: "1.2 L", forItems: ["Vanilla latte", "Iced vanilla cold brew"], status: "pending", minutes: 18 },
-  { id: 2, name: "Egg-and-cheese filling", yield: "24 sandwiches", forItems: ["Breakfast sando"], status: "in_progress", minutes: 12 },
-  { id: 3, name: "Chai concentrate", yield: "800 ml", forItems: ["Dirty chai", "Iced chai"], status: "done", minutes: 14 },
-  { id: 4, name: "Turkey-ham slice prep", yield: "32 portions", forItems: ["Turkey sando"], status: "pending", minutes: 9 },
+  { id: 1, name: "Vanilla syrup batch",     yield: "1.2 L",          forItems: ["Vanilla latte", "Iced vanilla cold brew"], status: "pending",     minutes: 18, when: "today" },
+  { id: 2, name: "Egg-and-cheese filling",  yield: "24 sandwiches",  forItems: ["Breakfast sando"],                          status: "in_progress", minutes: 12, when: "today" },
+  { id: 3, name: "Chai concentrate",        yield: "800 ml",         forItems: ["Dirty chai", "Iced chai"],                  status: "done",        minutes: 14, when: "today" },
+  { id: 4, name: "Turkey-ham slice prep",   yield: "32 portions",    forItems: ["Turkey sando"],                             status: "pending",     minutes:  9, when: "today" },
+  { id: 5, name: "Cold brew batch",         yield: "5 L",            forItems: ["Iced cold brew"],                           status: "pending",     minutes: 30, when: "tomorrow" },
+  { id: 6, name: "Pesto refresh",           yield: "500 ml",         forItems: ["Avocado toast", "Pesto chicken sando"],     status: "pending",     minutes: 25, when: "week" },
 ];
 
 export function DashboardTab() {
@@ -43,10 +48,31 @@ export function DashboardTab() {
   const recipes = useApp((s) => s.recipes);
   const ingredientsById = useApp((s) => s.ingredientsById);
   const recipesById = useApp((s) => s.recipesById);
+  const settings = useApp((s) => s.settings);
+  const setPeriodLabel = useApp((s) => s.setPeriodLabel);
+  const reload = useApp((s) => s.load);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const refreshActionItems = async () => {
+    setRefreshing(true);
+    try { await reload(); } finally {
+      setTimeout(() => setRefreshing(false), 400);
+    }
+  };
 
   const [doneIds, setDoneIds] = useState<Set<number>>(() => new Set([3]));
   const [sortKey, setSortKey] = useState<SortKey>("margin");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+
+  // Today's prep state — view filter + editable list + inline add input
+  const [prepView, setPrepView] = useState<PrepView>("today");
+  const [prepList, setPrepList] = useState<PrepRow[]>(DEFAULT_PREP);
+  const [adding, setAdding] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newYield, setNewYield] = useState("");
+  const [newMinutes, setNewMinutes] = useState("");
+  const newNameRef = useRef<HTMLInputElement | null>(null);
+  const [copied, setCopied] = useState(false);
 
   // Menu items as Dashboard rows
   const menuRows = useMemo(() => {
@@ -130,6 +156,13 @@ export function DashboardTab() {
     .sort((a, b) => b.cost - a.cost)
     .slice(0, 8);
 
+  useEffect(() => {
+    if (adding) newNameRef.current?.focus();
+  }, [adding]);
+
+  const visiblePrep = useMemo(() => prepList.filter((p) => p.when === prepView), [prepList, prepView]);
+  const remainingPrep = visiblePrep.filter((p) => !(doneIds.has(p.id) || p.status === "done")).length;
+
   // Today's prep
   const toggleDone = (id: number) => {
     setDoneIds((s) => {
@@ -138,6 +171,52 @@ export function DashboardTab() {
       else n.add(id);
       return n;
     });
+  };
+
+  const startAdd = () => { setNewName(""); setNewYield(""); setNewMinutes(""); setAdding(true); };
+  const cancelAdd = () => { setAdding(false); };
+  const commitAdd = () => {
+    const name = newName.trim();
+    if (!name) { cancelAdd(); return; }
+    const minutes = Math.max(1, Math.min(999, parseInt(newMinutes || "10", 10) || 10));
+    const yieldStr = newYield.trim() || "1 batch";
+    const nextId = (prepList.reduce((m, p) => Math.max(m, p.id), 0) || 0) + 1;
+    const row: PrepRow = {
+      id: nextId,
+      name,
+      yield: yieldStr,
+      forItems: ["—"],
+      status: "pending",
+      minutes,
+      when: prepView,
+    };
+    setPrepList((cur) => [row, ...cur]);
+    setAdding(false);
+    setNewName(""); setNewYield(""); setNewMinutes("");
+  };
+
+  const onAddKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") { e.preventDefault(); commitAdd(); }
+    else if (e.key === "Escape") { e.preventDefault(); cancelAdd(); }
+  };
+
+  const copyShoppingList = async () => {
+    const lines: string[] = [];
+    lines.push(`SHOPPING LIST · ${TODAY}`);
+    lines.push("");
+    for (const d of orderRows) {
+      lines.push(`  • ${d.ingredient.name}: ${d.base_amount.toFixed(d.base_amount < 10 ? 2 : 1)} ${d.ingredient.base_unit}` +
+                  ` (≈ ${d.package_amount.toFixed(2)} × ${d.ingredient.package_unit}) — $${d.cost.toFixed(2)}`);
+    }
+    lines.push("");
+    lines.push(`Total: $${orderRows.reduce((s, d) => s + d.cost, 0).toFixed(2)}`);
+    try {
+      await navigator.clipboard.writeText(lines.join("\n"));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      alert("Couldn't copy to clipboard. Tip: this needs HTTPS.");
+    }
   };
 
   // Alerts feed — combine stock + market signals
@@ -290,41 +369,131 @@ export function DashboardTab() {
           <div className="card-head">
             <h3>Today's prep</h3>
             <span className="card-sub">
-              {DEFAULT_PREP.filter((p) => !doneIds.has(p.id) && p.status !== "done").length} remaining
+              {prepView === "today"
+                ? `${remainingPrep} remaining`
+                : `${visiblePrep.length} scheduled`}
             </span>
             <div className="right">
               <div className="segmented">
-                <button className="on">Today</button>
-                <button>Tomorrow</button>
-                <button>Week</button>
+                <button
+                  className={prepView === "today" ? "on" : ""}
+                  onClick={() => setPrepView("today")}
+                >Today</button>
+                <button
+                  className={prepView === "tomorrow" ? "on" : ""}
+                  onClick={() => setPrepView("tomorrow")}
+                >Tomorrow</button>
+                <button
+                  className={prepView === "week" ? "on" : ""}
+                  onClick={() => setPrepView("week")}
+                >Week</button>
               </div>
-              <button className="btn ghost"><I.Plus /></button>
+              <button
+                className="btn ghost"
+                onClick={() => (adding ? cancelAdd() : startAdd())}
+                title="Add prep item"
+                aria-label="Add prep"
+              ><I.Plus /></button>
             </div>
           </div>
           <div className="prep-list">
-            {DEFAULT_PREP.map((p) => {
-              const isDone = doneIds.has(p.id) || p.status === "done";
-              const cls = isDone ? "done" : p.status === "in_progress" ? "in_progress" : "";
-              return (
+            {adding && (
+              <div className="prep-row" style={{ background: "var(--accent-mist)", cursor: "default" }}>
                 <div
-                  key={p.id}
-                  className={`prep-row ${isDone ? "done" : ""}`}
-                  onClick={() => toggleDone(p.id)}
-                >
-                  <div className={`prep-check ${cls}`}>
-                    {isDone && <I.Check />}
+                  className="prep-check"
+                  style={{ borderColor: "var(--accent)", background: "white" }}
+                />
+                <div>
+                  <input
+                    ref={newNameRef}
+                    className="prep-name"
+                    placeholder="What needs prepping?"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    onKeyDown={onAddKey}
+                    onBlur={() => { if (!newName.trim()) cancelAdd(); }}
+                    style={{
+                      border: 0, outline: 0, background: "transparent",
+                      fontFamily: "inherit", fontSize: "inherit",
+                      fontWeight: 500, color: "var(--ink)", width: "100%",
+                    }}
+                  />
+                  <div className="prep-meta">
+                    <input
+                      placeholder="yield (1 batch)"
+                      value={newYield}
+                      onChange={(e) => setNewYield(e.target.value)}
+                      onKeyDown={onAddKey}
+                      style={{
+                        border: 0, outline: 0, background: "transparent",
+                        font: "inherit", color: "var(--text-2)",
+                        width: 120,
+                      }}
+                    />
+                    <span style={{ color: "var(--text-muted)" }}> · Enter to save · Esc to cancel</span>
                   </div>
-                  <div>
-                    <div className="prep-name">{p.name}</div>
-                    <div className="prep-meta">For {p.forItems.join(" · ")}</div>
-                  </div>
-                  <span className="prep-yield">{p.yield}</span>
-                  <span className="prep-time">
-                    {p.minutes}<small>min</small>
-                  </span>
                 </div>
-              );
-            })}
+                <span className="prep-yield" style={{ padding: 0 }}>
+                  <input
+                    placeholder="min"
+                    type="number"
+                    min="1"
+                    value={newMinutes}
+                    onChange={(e) => setNewMinutes(e.target.value)}
+                    onKeyDown={onAddKey}
+                    style={{
+                      border: "1px solid var(--border)", borderRadius: 6,
+                      padding: "2px 6px", width: 56, textAlign: "right",
+                      font: "inherit", background: "white",
+                    }}
+                  />
+                </span>
+                <span className="prep-time" style={{ display: "flex", gap: 6 }}>
+                  <button
+                    className="btn primary"
+                    style={{ padding: "4px 10px", fontSize: 12 }}
+                    onClick={commitAdd}
+                  >Save</button>
+                  <button
+                    className="btn ghost"
+                    style={{ padding: "4px 8px", fontSize: 12 }}
+                    onClick={cancelAdd}
+                  ><I.X /></button>
+                </span>
+              </div>
+            )}
+            {visiblePrep.length === 0 && !adding ? (
+              <div style={{ padding: 28, textAlign: "center", color: "var(--text-muted)", fontSize: 13 }}>
+                {prepView === "tomorrow"
+                  ? "Nothing prepped for tomorrow yet."
+                  : prepView === "week"
+                  ? "Nothing prepped for the week yet."
+                  : "No prep needed today."}
+                <div style={{ marginTop: 8 }}>
+                  <button className="btn" onClick={startAdd}><I.Plus /> Add prep</button>
+                </div>
+              </div>
+            ) : (
+              visiblePrep.map((p) => {
+                const isDone = doneIds.has(p.id) || p.status === "done";
+                const cls = isDone ? "done" : p.status === "in_progress" ? "in_progress" : "";
+                return (
+                  <div
+                    key={p.id}
+                    className={`prep-row ${isDone ? "done" : ""}`}
+                    onClick={() => toggleDone(p.id)}
+                  >
+                    <div className={`prep-check ${cls}`}>{isDone && <I.Check />}</div>
+                    <div>
+                      <div className="prep-name">{p.name}</div>
+                      <div className="prep-meta">For {p.forItems.join(" · ")}</div>
+                    </div>
+                    <span className="prep-yield">{p.yield}</span>
+                    <span className="prep-time">{p.minutes}<small>min</small></span>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
 
@@ -333,7 +502,16 @@ export function DashboardTab() {
             <h3>Action items</h3>
             <span className="card-sub">{alerts.length} fresh</span>
             <div className="right">
-              <button className="btn ghost"><I.Refresh /></button>
+              <button
+                className="btn ghost"
+                onClick={refreshActionItems}
+                disabled={refreshing}
+                title="Refresh action items"
+                aria-label="Refresh"
+                style={refreshing ? { opacity: 0.6 } : undefined}
+              >
+                <I.Refresh />
+              </button>
             </div>
           </div>
           <div className="alerts">
@@ -359,12 +537,16 @@ export function DashboardTab() {
           <h3>Menu economics</h3>
           <span className="card-sub">cost · price · margin · sales/day</span>
           <div className="right">
-            <select className="btn" style={{ paddingRight: 24 }} defaultValue="per day">
-              <option>per day</option>
-              <option>per week</option>
-              <option>per month</option>
+            <select
+              className="btn"
+              style={{ paddingRight: 24 }}
+              value={settings?.period_label ?? "per day"}
+              onChange={(e) => setPeriodLabel(e.target.value)}
+            >
+              <option value="per day">per day</option>
+              <option value="per week">per week</option>
+              <option value="per month">per month</option>
             </select>
-            <button className="btn"><I.Filter /> Filter</button>
           </div>
         </div>
         <div style={{ overflowX: "auto" }}>
@@ -423,7 +605,9 @@ export function DashboardTab() {
           <h3>Order planning</h3>
           <span className="card-sub">demand · cost · suggested package · market signal</span>
           <div className="right">
-            <button className="btn">Copy shopping list</button>
+            <button className="btn" onClick={copyShoppingList} disabled={orderRows.length === 0}>
+              {copied ? <><I.Check /> Copied</> : "Copy shopping list"}
+            </button>
             <button className="btn primary" onClick={() => window.openModal?.("order")}>
               <I.Plus /> New order
             </button>

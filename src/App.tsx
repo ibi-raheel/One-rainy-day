@@ -21,6 +21,7 @@ type ModalKey = "scan" | "review" | "order" | "quick";
 declare global {
   interface Window {
     openModal?: (m: ModalKey | null) => void;
+    switchTab?: (t: TabKey) => void;
   }
 }
 
@@ -62,7 +63,21 @@ export default function App() {
 
   useEffect(() => {
     window.openModal = setModal;
-    return () => { window.openModal = undefined; };
+    window.switchTab = setTab;
+    return () => { window.openModal = undefined; window.switchTab = undefined; };
+  }, []);
+
+  // ⌘K / Ctrl+K opens the Quick add palette (matches the topbar kbd hint)
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const isCmdK = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k";
+      if (isCmdK) {
+        e.preventDefault();
+        setModal("quick");
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   useEffect(() => {
@@ -81,7 +96,7 @@ export default function App() {
 
   return (
     <TooltipProvider>
-      <PageRain count={90} />
+      <PageRain count={35} />
       <div className="app">
         <aside className="sidebar">
           <div className="brand">
@@ -144,15 +159,23 @@ export default function App() {
             <div className="crumbs">
               Workspace / <strong>{activeNav?.label ?? "Dashboard"}</strong>
             </div>
-            <div className="search">
+            <div
+              className="search"
+              role="button"
+              tabIndex={0}
+              onClick={() => setModal("quick")}
+              onKeyDown={(e) => { if (e.key === "Enter") setModal("quick"); }}
+              style={{ cursor: "pointer" }}
+            >
               <I.Search />
-              <input placeholder="Search recipes, ingredients, suppliers…" />
+              <input
+                placeholder="Search recipes, ingredients, suppliers…"
+                onFocus={() => setModal("quick")}
+                readOnly
+                style={{ cursor: "pointer" }}
+              />
               <kbd>⌘K</kbd>
             </div>
-            <button className="icon-btn" aria-label="Notifications">
-              <I.Bell />
-              <span className="pip" />
-            </button>
             <button className="btn primary" onClick={() => setModal("quick")}>
               <I.Plus /> Quick add
             </button>

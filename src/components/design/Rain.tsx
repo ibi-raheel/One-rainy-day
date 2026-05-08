@@ -55,14 +55,6 @@ export function PageRain({ count = 90 }: { count?: number }) {
       }),
     [count]
   );
-  const splashes = useMemo(
-    () =>
-      Array.from({ length: 14 }, () => ({
-        left: Math.random() * 100,
-        delay: Math.random() * 2.4,
-      })),
-    []
-  );
   return (
     <div className="page-rain" aria-hidden="true">
       {drops.map((d, i) => (
@@ -75,13 +67,6 @@ export function PageRain({ count = 90 }: { count?: number }) {
             animationDuration: `${d.dur}s`,
             animationDelay: `${d.delay}s`,
           }}
-        />
-      ))}
-      {splashes.map((s, i) => (
-        <span
-          key={`s${i}`}
-          className="splash"
-          style={{ left: `${s.left}%`, animationDelay: `${s.delay}s` }}
         />
       ))}
     </div>

@@ -64,6 +64,11 @@ export interface Recipe {
   // menu_item only:
   sale_price?: number;
   sales_volume_per_period?: number;
+  // procedure (new — Edit modal "Procedure" tab)
+  procedure?: string;
+  hold_temp?: string;
+  hold_time?: string;
+  equipment?: string;
   notes?: string;
   created_at: string;
   updated_at: string;
