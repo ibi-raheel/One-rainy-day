@@ -1,72 +1,75 @@
 import { useEffect, useRef, useState } from "react";
 import { useApp } from "./store/app";
 import { api } from "./db/api";
-import { Tabs } from "./components/ui/Tabs";
+import { I } from "./components/design/Icons";
+import { Umbrella } from "./components/design/Umbrella";
+import { PageRain } from "./components/design/Rain";
 import { TooltipProvider } from "./components/ui/Tooltip";
 import { IngredientsTab } from "./features/ingredients/IngredientsTab";
 import { RecipesTab } from "./features/recipes/RecipesTab";
 import { DashboardTab } from "./features/dashboard/DashboardTab";
 import { MarketTab } from "./features/market/MarketTab";
+import { StockTab } from "./features/stock/StockTab";
+import { SuppliersTab } from "./features/suppliers/SuppliersTab";
+import { ScanReceiptModal } from "./features/modals/ScanReceiptModal";
+import { ReviewModal } from "./features/modals/ReviewModal";
+import { NewOrderModal } from "./features/modals/NewOrderModal";
+import { QuickAddModal } from "./features/modals/QuickAddModal";
 
-type TabKey = "ingredients" | "recipes" | "market" | "dashboard";
+type ModalKey = "scan" | "review" | "order" | "quick";
 
-function UmbrellaMark({ size = 40 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 64 64"
-      fill="none"
-      aria-hidden="true"
-      className="-mb-1 shrink-0"
-    >
-      {/* faint background coin */}
-      <circle cx="32" cy="32" r="30" fill="#F4EAD3" />
-      {/* canopy */}
-      <path d="M10 33 C10 21 19 14.5 32 14.5 C45 14.5 54 21 54 33 Z" fill="#A86F3D" />
-      <path
-        d="M21 33 C21 25 26 19 32 19 C38 19 43 25 43 33"
-        stroke="#FAF5EA"
-        strokeWidth="1.4"
-        opacity="0.55"
-        fill="none"
-      />
-      <path d="M32 14.5 L32 33" stroke="#FAF5EA" strokeWidth="1" opacity="0.45" />
-      {/* canopy ridge highlight */}
-      <path d="M10 33 L54 33" stroke="#8C5A2E" strokeWidth="1" opacity="0.5" />
-      {/* handle */}
-      <path
-        d="M32 33 L32 47 Q32 53 26 53"
-        stroke="#A86F3D"
-        strokeWidth="3"
-        strokeLinecap="round"
-        fill="none"
-      />
-      {/* raindrops in teal */}
-      <ellipse cx="14" cy="48" rx="1.6" ry="2.4" fill="#2D575E" opacity="0.6" />
-      <ellipse cx="49" cy="44" rx="1.8" ry="2.8" fill="#2D575E" opacity="0.78" />
-      <ellipse cx="56" cy="52" rx="1.4" ry="2" fill="#2D575E" opacity="0.55" />
-      <ellipse cx="20" cy="56" rx="1.2" ry="1.8" fill="#2D575E" opacity="0.45" />
-    </svg>
-  );
+declare global {
+  interface Window {
+    openModal?: (m: ModalKey | null) => void;
+  }
 }
 
+type TabKey =
+  | "dashboard"
+  | "recipes"
+  | "ingredients"
+  | "stock"
+  | "market"
+  | "suppliers";
+
+interface NavDef {
+  key: TabKey;
+  label: string;
+  icon: React.ReactNode;
+  badge?: number;
+  badgeMuted?: number;
+  section?: string;
+}
+
+const NAV: NavDef[] = [
+  { key: "dashboard",   label: "Dashboard",   icon: <I.Dashboard /> },
+  { key: "recipes",     label: "Recipes",     icon: <I.Recipes /> },
+  { key: "ingredients", label: "Ingredients", icon: <I.Ingredients /> },
+  { key: "stock",       label: "Stock",       icon: <I.Stock /> },
+  { key: "market",      label: "Market",      icon: <I.Market /> },
+];
+
+const NAV_OPS: NavDef[] = [
+  { key: "suppliers",   label: "Suppliers",   icon: <I.Box /> },
+];
 
 export default function App() {
   const load = useApp((s) => s.load);
   const loaded = useApp((s) => s.loaded);
-  const [tab, setTab] = useState<TabKey>("ingredients");
+  const [tab, setTab] = useState<TabKey>("dashboard");
+  const [modal, setModal] = useState<ModalKey | null>(null);
   const debounceRef = useRef<number | null>(null);
 
   useEffect(() => {
+    window.openModal = setModal;
+    return () => { window.openModal = undefined; };
+  }, []);
+
+  useEffect(() => {
     load();
-    // Subscribe to server change events; debounce-refetch so a burst of
-    // edits from a remote client only triggers one refetch.
     const unsubscribe = api.subscribeToChanges(() => {
       if (debounceRef.current) window.clearTimeout(debounceRef.current);
-      debounceRef.current = window.setTimeout(() => {
-        load();
-      }, 400);
+      debounceRef.current = window.setTimeout(() => load(), 400);
     });
     return () => {
       unsubscribe();
@@ -74,59 +77,140 @@ export default function App() {
     };
   }, [load]);
 
+  const activeNav = [...NAV, ...NAV_OPS].find((n) => n.key === tab);
+
   return (
     <TooltipProvider>
-      <div className="min-h-full">
-        {/* Full-bleed palette bar — directly references the swatch palette */}
-        <div className="h-1.5 w-full flex">
-          <div className="bg-success" style={{ width: "26%" }} />
-          <div className="bg-info" style={{ width: "14%" }} />
-          <div className="bg-accent" style={{ width: "34%" }} />
-          <div className="bg-warning" style={{ width: "14%" }} />
-          <div className="bg-error" style={{ width: "12%" }} />
-        </div>
+      <PageRain count={90} />
+      <div className="app">
+        <aside className="sidebar">
+          <div className="brand">
+            <Umbrella size={36} />
+            <div>
+              <div className="brand-name">One Rainy Day</div>
+              <div className="brand-sub">Cafe ops</div>
+            </div>
+          </div>
 
-        <div className="mx-auto max-w-[1200px] px-8 pt-10 pb-20">
-          <header className="mb-10">
-            <div className="flex items-end gap-5">
-              <UmbrellaMark size={64} />
-              <div className="flex-1">
-                <h1 className="display text-[44px] font-medium tracking-tight text-text-primary leading-[1.02]">
-                  One Rainy Day
-                </h1>
-                <p className="mt-2 text-sm text-text-secondary tracking-wide">
-                  Cost & recipes
-                </p>
+          <div className="nav">
+            <div className="nav-section">Workspace</div>
+            {NAV.map((n) => (
+              <div
+                key={n.key}
+                className={`nav-item ${tab === n.key ? "active" : ""}`}
+                onClick={() => setTab(n.key)}
+              >
+                <span className="nav-dot" />
+                {n.icon}
+                <span>{n.label}</span>
+                {n.badge != null && <span className="badge">{n.badge}</span>}
+                {n.badgeMuted != null && <span className="badge muted">{n.badgeMuted}</span>}
+              </div>
+            ))}
+
+            <div className="nav-section">Operations</div>
+            {NAV_OPS.map((n) => (
+              <div
+                key={n.key}
+                className={`nav-item ${tab === n.key ? "active" : ""}`}
+                onClick={() => setTab(n.key)}
+              >
+                <span className="nav-dot" />
+                {n.icon}
+                <span>{n.label}</span>
+              </div>
+            ))}
+            <div className="nav-item" style={{ opacity: 0.7, cursor: "default" }}>
+              <span className="nav-dot" />
+              <I.Sparkles />
+              <span>AI assistant</span>
+              <span className="badge muted">soon</span>
+            </div>
+          </div>
+
+          <div className="sidebar-foot">
+            <div className="user-chip">
+              <div className="avatar">HK</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 12.5, fontWeight: 500, color: "var(--ink)" }}>Huda K.</div>
+                <div style={{ fontSize: 11, color: "var(--text-muted)" }}>Owner · Edgewater</div>
               </div>
             </div>
-          </header>
+          </div>
+        </aside>
 
-          <Tabs
-            value={tab}
-            onValueChange={(v) => setTab(v as TabKey)}
-            tabs={[
-              { value: "ingredients", label: "Ingredients" },
-              { value: "recipes", label: "Recipes" },
-              { value: "market", label: "Market" },
-              { value: "dashboard", label: "Dashboard" },
-            ]}
-          />
+        <main className="main">
+          <div className="topbar">
+            <div className="crumbs">
+              Workspace / <strong>{activeNav?.label ?? "Dashboard"}</strong>
+            </div>
+            <div className="search">
+              <I.Search />
+              <input placeholder="Search recipes, ingredients, suppliers…" />
+              <kbd>⌘K</kbd>
+            </div>
+            <button className="icon-btn" aria-label="Notifications">
+              <I.Bell />
+              <span className="pip" />
+            </button>
+            <button className="btn primary" onClick={() => setModal("quick")}>
+              <I.Plus /> Quick add
+            </button>
+          </div>
 
-          <div className="mt-7">
+          <div className="page">
             {!loaded ? (
-              <div className="text-text-muted">Loading…</div>
-            ) : tab === "ingredients" ? (
-              <IngredientsTab />
+              <div style={{ padding: 40, color: "var(--text-muted)" }}>Loading…</div>
+            ) : tab === "dashboard" ? (
+              <DashboardTab />
             ) : tab === "recipes" ? (
               <RecipesTab />
+            ) : tab === "ingredients" ? (
+              <IngredientsTab />
+            ) : tab === "stock" ? (
+              <StockTab />
             ) : tab === "market" ? (
               <MarketTab />
             ) : (
-              <DashboardTab />
+              <SuppliersTab />
             )}
+          </div>
+        </main>
+      </div>
+
+      {modal === "scan" && (
+        <ScanReceiptModal
+          onClose={() => setModal(null)}
+          onReview={() => setModal("review")}
+        />
+      )}
+      {modal === "review" && <ReviewModal onClose={() => setModal(null)} />}
+      {modal === "order" && <NewOrderModal onClose={() => setModal(null)} />}
+      {modal === "quick" && (
+        <QuickAddModal
+          onClose={() => setModal(null)}
+          onScan={() => setModal("scan")}
+          onOrder={() => setModal("order")}
+        />
+      )}
+    </TooltipProvider>
+  );
+}
+
+function ComingSoon({ name }: { name: string }) {
+  return (
+    <div className="view">
+      <div className="page-head fade-up">
+        <div className="head-row">
+          <div style={{ flex: 1 }}>
+            <h1>{name}</h1>
+            <p className="subtle">Designed and ready — wiring up next.</p>
           </div>
         </div>
       </div>
-    </TooltipProvider>
+      <div className="card" style={{ padding: 40, textAlign: "center", color: "var(--text-muted)" }}>
+        Building this view now.
+      </div>
+    </div>
   );
 }

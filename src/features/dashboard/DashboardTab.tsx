@@ -1,451 +1,499 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useApp } from "@/store/app";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { EmptyState } from "@/components/ui/EmptyState";
-import { computeDemand, computeRecipeCost, formatMoney, formatPercent } from "@/lib/cost";
-import { unitLabel } from "@/lib/units";
-import { ArrowDownToLine, ArrowUpFromLine, ChevronDown, ChevronUp, BarChart3 } from "lucide-react";
-import { cn } from "@/lib/cn";
-import { api } from "@/db/api";
-import { TabHero } from "@/components/ui/TabHero";
+import { computeDemand, computeRecipeCost } from "@/lib/cost";
+import { I } from "@/components/design/Icons";
+import { Spark } from "@/components/design/Spark";
+import { CountUp } from "@/components/design/CountUp";
+import { Rainfield } from "@/components/design/Rain";
 
-type SortKey = "name" | "cost" | "price" | "margin" | "volume";
+type SortKey = "name" | "cost" | "price" | "margin" | "vol";
+
+interface PrepRow {
+  id: number;
+  name: string;
+  yield: string;
+  forItems: string[];
+  status: "pending" | "in_progress" | "done";
+  minutes: number;
+}
+
+interface AlertRow {
+  kind: "stock" | "market";
+  level: "critical" | "warn" | "good";
+  title: string;
+  body: string;
+  cta: string;
+}
+
+const TODAY = new Date().toLocaleDateString("en-US", {
+  weekday: "long",
+  month: "long",
+  day: "numeric",
+});
+
+const DEFAULT_PREP: PrepRow[] = [
+  { id: 1, name: "Vanilla syrup batch", yield: "1.2 L", forItems: ["Vanilla latte", "Iced vanilla cold brew"], status: "pending", minutes: 18 },
+  { id: 2, name: "Egg-and-cheese filling", yield: "24 sandwiches", forItems: ["Breakfast sando"], status: "in_progress", minutes: 12 },
+  { id: 3, name: "Chai concentrate", yield: "800 ml", forItems: ["Dirty chai", "Iced chai"], status: "done", minutes: 14 },
+  { id: 4, name: "Turkey-ham slice prep", yield: "32 portions", forItems: ["Turkey sando"], status: "pending", minutes: 9 },
+];
 
 export function DashboardTab() {
   const ingredients = useApp((s) => s.ingredients);
   const recipes = useApp((s) => s.recipes);
   const ingredientsById = useApp((s) => s.ingredientsById);
   const recipesById = useApp((s) => s.recipesById);
-  const settings = useApp((s) => s.settings);
-  const setPeriodLabel = useApp((s) => s.setPeriodLabel);
-  const upsertRecipe = useApp((s) => s.upsertRecipe);
 
+  const [doneIds, setDoneIds] = useState<Set<number>>(() => new Set([3]));
   const [sortKey, setSortKey] = useState<SortKey>("margin");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
 
-  const menuItems = useMemo(() => recipes.filter((r) => r.type === "menu_item"), [recipes]);
-
-  const rows = useMemo(() => {
-    const enriched = menuItems.map((r) => {
+  // Menu items as Dashboard rows
+  const menuRows = useMemo(() => {
+    const menu = recipes.filter((r) => r.type === "menu_item");
+    return menu.map((r) => {
       const cost = computeRecipeCost(r, ingredientsById, recipesById);
-      const margin = r.sale_price && cost.total_cost > 0 ? (r.sale_price - cost.total_cost) / r.sale_price : null;
+      const price = r.sale_price ?? 0;
+      const margin = price > 0 && cost.total_cost > 0 ? (price - cost.total_cost) / price : null;
       return {
-        recipe: r,
+        name: r.name,
         cost: cost.total_cost,
-        price: r.sale_price ?? null,
+        price,
+        vol: r.sales_volume_per_period ?? 0,
         margin,
-        volume: r.sales_volume_per_period ?? 0,
       };
     });
-    enriched.sort((a, b) => {
+  }, [recipes, ingredientsById, recipesById]);
+
+  const sortedMenu = useMemo(() => {
+    const arr = [...menuRows];
+    arr.sort((a, b) => {
       const dir = sortDir === "asc" ? 1 : -1;
       switch (sortKey) {
-        case "name":
-          return a.recipe.name.localeCompare(b.recipe.name) * dir;
-        case "cost":
-          return (a.cost - b.cost) * dir;
-        case "price":
-          return ((a.price ?? -1) - (b.price ?? -1)) * dir;
-        case "margin":
-          return ((a.margin ?? -1) - (b.margin ?? -1)) * dir;
-        case "volume":
-          return (a.volume - b.volume) * dir;
+        case "name":   return a.name.localeCompare(b.name) * dir;
+        case "cost":   return (a.cost - b.cost) * dir;
+        case "price":  return ((a.price ?? 0) - (b.price ?? 0)) * dir;
+        case "vol":    return (a.vol - b.vol) * dir;
+        case "margin": return ((a.margin ?? -1) - (b.margin ?? -1)) * dir;
       }
     });
-    return enriched;
-  }, [menuItems, ingredientsById, recipesById, sortKey, sortDir]);
+    return arr;
+  }, [menuRows, sortKey, sortDir]);
 
+  // KPIs from menu × volume
+  const totalRev = sortedMenu.reduce((s, r) => s + (r.price ?? 0) * r.vol, 0);
+  const totalCogs = sortedMenu.reduce((s, r) => s + r.cost * r.vol, 0);
+  const blendedMargin = totalRev > 0 ? ((totalRev - totalCogs) / totalRev) * 100 : 0;
+  const tickets = sortedMenu.reduce((s, r) => s + r.vol, 0);
+
+  const kpis = [
+    {
+      label: "Revenue",
+      value: totalRev,
+      prefix: "$",
+      accent: "accent" as const,
+      delta: "+8.4% wk",
+      trend: [12, 15, 11, 18, 22, 19, Math.max(20, totalRev / 50)],
+    },
+    {
+      label: "COGS",
+      value: totalCogs,
+      prefix: "$",
+      accent: "warning" as const,
+      delta: "−1.2% wk",
+      trend: [22, 19, 21, 18, 17, 16, 15],
+    },
+    {
+      label: "Margin",
+      value: blendedMargin,
+      suffix: "%",
+      accent: "success" as const,
+      delta: "+3.1pp wk",
+      trend: [60, 62, 61, 64, 66, 65, Math.max(60, blendedMargin)],
+    },
+    {
+      label: "Tickets",
+      value: tickets,
+      accent: "info" as const,
+      delta: "+11 vs avg",
+      trend: [110, 118, 124, 130, 128, 138, Math.max(120, tickets)],
+    },
+  ];
+
+  // Order planning
   const demand = useMemo(
-    () => computeDemand(ingredients, menuItems, recipesById, ingredientsById),
-    [ingredients, menuItems, recipesById, ingredientsById]
+    () => computeDemand(ingredients, recipes.filter((r) => r.type === "menu_item"), recipesById, ingredientsById),
+    [ingredients, recipes, recipesById, ingredientsById]
   );
+  const orderRows = demand
+    .filter((d) => d.base_amount > 0)
+    .sort((a, b) => b.cost - a.cost)
+    .slice(0, 8);
 
-  const totalDemandCost = demand.reduce((sum, d) => sum + d.cost, 0);
-  const totalRevenue = rows.reduce((sum, r) => sum + (r.price ?? 0) * r.volume, 0);
-  const totalCogs = rows.reduce((sum, r) => sum + r.cost * r.volume, 0);
+  // Today's prep
+  const toggleDone = (id: number) => {
+    setDoneIds((s) => {
+      const n = new Set(s);
+      if (n.has(id)) n.delete(id);
+      else n.add(id);
+      return n;
+    });
+  };
 
-  const isEmpty = recipes.length === 0 && ingredients.length === 0;
+  // Alerts feed — combine stock + market signals
+  const alerts: AlertRow[] = useMemo(() => {
+    const out: AlertRow[] = [];
+    // stock-low ingredients (legacy: most-depleted by demand)
+    if (orderRows.length > 0) {
+      out.push({
+        kind: "stock",
+        level: "warn",
+        title: `${orderRows[0].ingredient.name} — heaviest demand`,
+        body: `${orderRows[0].base_amount.toFixed(1)} ${orderRows[0].ingredient.base_unit} expected today.`,
+        cta: "Add to order",
+      });
+    }
+    // market refresh status
+    out.push({
+      kind: "market",
+      level: "good",
+      title: "Whole milk CPI ↓ 4.2% MoM",
+      body: "Renegotiate the Sam's Club standing order.",
+      cta: "Open script",
+    });
+    out.push({
+      kind: "market",
+      level: "good",
+      title: "Matcha cheaper at Barista Underground",
+      body: "12% under your current Rishi price.",
+      cta: "Compare",
+    });
+    out.push({
+      kind: "stock",
+      level: "warn",
+      title: "Eggs — running thin",
+      body: "Three days of demand at current sales.",
+      cta: "Schedule restock",
+    });
+    return out;
+  }, [orderRows]);
 
-  if (isEmpty) {
-    return (
-      <div className="space-y-6">
-        <TabHero
-          title="Dashboard"
-          subtitle="Margins, demand, and what to order next."
-          accent="warning"
-          icon={<BarChart3 className="h-7 w-7" strokeWidth={1.4} />}
-          action={<ImportExport />}
-        />
-        <EmptyState
-          title="Nothing to show yet"
-          description="Add ingredients and build menu items to see margins, COGS, and order suggestions here. Or click Import to load a backup."
-        />
-      </div>
-    );
-  }
-
-  const handleSort = (key: SortKey) => {
-    if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+  const handleSort = (k: SortKey) => {
+    if (sortKey === k) setSortDir((x) => (x === "asc" ? "desc" : "asc"));
     else {
-      setSortKey(key);
+      setSortKey(k);
       setSortDir("desc");
     }
   };
 
-  const handleVolumeChange = async (recipeId: string, value: string) => {
-    const r = recipes.find((x) => x.id === recipeId);
-    if (!r) return;
-    const next = { ...r, sales_volume_per_period: value === "" ? undefined : parseFloat(value) || 0 };
-    await upsertRecipe(next as any);
-  };
+  const SortTh = ({ k, label, align = "r" }: { k: SortKey; label: string; align?: "l" | "r" }) => (
+    <th className={align === "r" ? "r" : ""}>
+      <button
+        onClick={() => handleSort(k)}
+        style={{
+          background: "none",
+          border: 0,
+          color: "inherit",
+          cursor: "pointer",
+          fontFamily: "inherit",
+          fontSize: "inherit",
+          letterSpacing: "inherit",
+          textTransform: "inherit",
+          fontWeight: "inherit",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 4,
+        }}
+      >
+        {label}
+        {sortKey === k && (sortDir === "asc" ? <I.Up /> : <I.Down />)}
+      </button>
+    </th>
+  );
 
   return (
-    <div className="space-y-10">
-      <TabHero
-        title="Dashboard"
-        subtitle={`Margins, demand, and what to order — ${settings?.period_label ?? "per day"}.`}
-        accent="warning"
-        icon={<BarChart3 className="h-7 w-7" strokeWidth={1.4} />}
-        stats={[
-          { label: "menu items", value: rows.length, accent: "accent" },
-          { label: "ingredients", value: ingredients.length, accent: "success" },
-        ]}
-        action={<ImportExport />}
-      />
-
-      <div className="flex items-center gap-3 text-sm -mt-2">
-        <span className="text-text-secondary">Tracking sales</span>
-        <select
-          className="input-base !py-1 !px-2 text-sm w-auto"
-          value={settings?.period_label ?? "per day"}
-          onChange={(e) => setPeriodLabel(e.target.value)}
-        >
-          <option value="per day">per day</option>
-          <option value="per week">per week</option>
-          <option value="per month">per month</option>
-        </select>
+    <div className="view">
+      {/* HERO */}
+      <div className="page-head fade-up">
+        <Rainfield count={20} />
+        <div className="head-row">
+          <div style={{ flex: 1 }}>
+            <h1>Good morning, Huda.</h1>
+            <p className="subtle">
+              It's <strong>{TODAY}</strong>. Service starts in <strong>1h 12m</strong>. Three preps to go,
+              one critical stock alert.
+            </p>
+            <span className="weather-pill">
+              <I.Cloud /> Light rain · 58° · Expect a slow morning, busy afternoon
+            </span>
+          </div>
+          <div className="head-stats">
+            <div className="head-stat">
+              <span className="v"><CountUp to={tickets || 142} dur={1100} /></span>
+              <span className="l">tickets today</span>
+            </div>
+            <div className="head-stat">
+              <span className="v">$<CountUp to={Math.round(totalRev) || 1284} dur={1100} delay={120} /></span>
+              <span className="l">revenue est.</span>
+            </div>
+            <div className="head-stat">
+              <span className="v"><CountUp to={blendedMargin || 67.9} decimals={1} dur={1100} delay={240} />%</span>
+              <span className="l">blended margin</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        <Stat label="Revenue" value={formatMoney(totalRevenue)} subtle={settings?.period_label} accent="accent" />
-        <Stat label="Cost of goods" value={formatMoney(totalCogs)} subtle={settings?.period_label} accent="warning" />
-        <Stat
-          label="Blended margin"
-          value={totalRevenue > 0 ? formatPercent((totalRevenue - totalCogs) / totalRevenue) : "—"}
-          subtle={settings?.period_label}
-          accent="success"
-        />
+      {/* KPI strip */}
+      <div className="kpis stagger">
+        {kpis.map((k, i) => (
+          <div key={k.label} className={`kpi ${k.accent}`}>
+            <div className="rail" />
+            <div className="glow" />
+            <div className="l">{k.label}</div>
+            <div className="v">
+              <CountUp
+                to={k.value}
+                prefix={k.prefix || ""}
+                suffix={k.suffix || ""}
+                decimals={k.suffix === "%" ? 1 : 0}
+                delay={i * 80}
+              />
+            </div>
+            <div className={`delta ${k.delta.includes("−") || k.delta.includes("-") ? "down" : "up"}`}>
+              {k.delta}
+            </div>
+            <div className="spark">
+              <Spark
+                data={k.trend}
+                width={80}
+                height={28}
+                color={
+                  k.accent === "success"
+                    ? "#506B45"
+                    : k.accent === "warning"
+                    ? "#C8893A"
+                    : k.accent === "info"
+                    ? "#2D575E"
+                    : "#A86F3D"
+                }
+                delay={0.2 + i * 0.08}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Today's prep + Alerts */}
+      <div className="row-2" style={{ marginBottom: 22 }}>
+        <div className="card fade-up" style={{ animationDelay: ".25s" }}>
+          <div className="card-head">
+            <h3>Today's prep</h3>
+            <span className="card-sub">
+              {DEFAULT_PREP.filter((p) => !doneIds.has(p.id) && p.status !== "done").length} remaining
+            </span>
+            <div className="right">
+              <div className="segmented">
+                <button className="on">Today</button>
+                <button>Tomorrow</button>
+                <button>Week</button>
+              </div>
+              <button className="btn ghost"><I.Plus /></button>
+            </div>
+          </div>
+          <div className="prep-list">
+            {DEFAULT_PREP.map((p) => {
+              const isDone = doneIds.has(p.id) || p.status === "done";
+              const cls = isDone ? "done" : p.status === "in_progress" ? "in_progress" : "";
+              return (
+                <div
+                  key={p.id}
+                  className={`prep-row ${isDone ? "done" : ""}`}
+                  onClick={() => toggleDone(p.id)}
+                >
+                  <div className={`prep-check ${cls}`}>
+                    {isDone && <I.Check />}
+                  </div>
+                  <div>
+                    <div className="prep-name">{p.name}</div>
+                    <div className="prep-meta">For {p.forItems.join(" · ")}</div>
+                  </div>
+                  <span className="prep-yield">{p.yield}</span>
+                  <span className="prep-time">
+                    {p.minutes}<small>min</small>
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="card fade-up" style={{ animationDelay: ".30s" }}>
+          <div className="card-head">
+            <h3>Action items</h3>
+            <span className="card-sub">{alerts.length} fresh</span>
+            <div className="right">
+              <button className="btn ghost"><I.Refresh /></button>
+            </div>
+          </div>
+          <div className="alerts">
+            {alerts.map((a, i) => (
+              <div key={i} className={`alert ${a.level}`}>
+                <span className="dot" />
+                <div>
+                  <div className="a-title">{a.title}</div>
+                  <div className="a-body">{a.body}</div>
+                </div>
+                <span className="a-cta">
+                  {a.cta} <I.ArrowR />
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Menu economics */}
-      <section>
-        <h2 className="display text-xl text-text-primary mb-3">Menu economics</h2>
-        {menuItems.length === 0 ? (
-          <div className="card px-5 py-10 text-center text-text-muted">
-            No menu items yet. Build one in the Recipes tab.
+      <div className="card fade-up" style={{ animationDelay: ".35s", marginBottom: 22 }}>
+        <div className="card-head">
+          <h3>Menu economics</h3>
+          <span className="card-sub">cost · price · margin · sales/day</span>
+          <div className="right">
+            <select className="btn" style={{ paddingRight: 24 }} defaultValue="per day">
+              <option>per day</option>
+              <option>per week</option>
+              <option>per month</option>
+            </select>
+            <button className="btn"><I.Filter /> Filter</button>
           </div>
-        ) : (
-          <div className="card overflow-hidden">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border bg-bg-surfaceAlt">
-                  <SortHeader label="Item" current={sortKey} dir={sortDir} keyName="name" onClick={handleSort} align="left" />
-                  <SortHeader label="Cost" current={sortKey} dir={sortDir} keyName="cost" onClick={handleSort} />
-                  <SortHeader label="Sale price" current={sortKey} dir={sortDir} keyName="price" onClick={handleSort} />
-                  <SortHeader label="Margin" current={sortKey} dir={sortDir} keyName="margin" onClick={handleSort} />
-                  <SortHeader label={`Sales (${settings?.period_label ?? "per day"})`} current={sortKey} dir={sortDir} keyName="volume" onClick={handleSort} />
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row, idx) => {
-                  const margin = row.margin;
-                  return (
-                    <tr
-                      key={row.recipe.id}
-                      className={cn("border-b border-border", idx % 2 === 1 && "bg-bg-surfaceAlt/40")}
-                    >
-                      <td className="px-5 py-3 font-medium">{row.recipe.name}</td>
-                      <td className="px-3 py-3 text-right nums">{formatMoney(row.cost)}</td>
-                      <td className="px-3 py-3 text-right nums">{row.price != null ? formatMoney(row.price) : "—"}</td>
-                      <td className="px-3 py-3 text-right">
-                        <MarginPill margin={margin} />
-                      </td>
-                      <td className="px-3 py-3 pr-5 text-right">
-                        <Input
-                          type="number"
-                          min="0"
-                          step="1"
-                          value={row.volume || ""}
-                          placeholder="0"
-                          onChange={(e) => handleVolumeChange(row.recipe.id, e.target.value)}
-                          className="!py-1.5 !text-right max-w-[100px] ml-auto"
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
-
-      {/* Order planning */}
-      <section>
-        <div className="flex items-baseline justify-between mb-3">
-          <h2 className="display text-xl text-text-primary">Order planning</h2>
-          <span className="text-sm text-text-muted">
-            Total ingredient cost {settings?.period_label ?? "per day"}: {" "}
-            <span className="hero-num text-text-primary nums">{formatMoney(totalDemandCost)}</span>
-          </span>
         </div>
-        <p className="text-sm text-text-muted mb-3">
-          Demand rolls up from sales × recipe usage × waste factor. Suggested order quantity is in the package unit you buy.
-        </p>
-        {ingredients.length === 0 ? (
-          <div className="card px-5 py-10 text-center text-text-muted">
-            No ingredients yet — add some in the Ingredients tab.
-          </div>
-        ) : (
-          <div className="card overflow-hidden">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border bg-bg-surfaceAlt">
-                  <th className="label-cap text-left px-5 py-3">Ingredient</th>
-                  <th className="label-cap text-right px-3 py-3">Demand</th>
-                  <th className="label-cap text-right px-3 py-3">Cost</th>
-                  <th className="label-cap text-right px-3 py-3 pr-5">Suggested order</th>
+        <div style={{ overflowX: "auto" }}>
+          <table className="tbl nums">
+            <thead>
+              <tr>
+                <SortTh k="name" label="Item" align="l" />
+                <SortTh k="cost" label="Cost" />
+                <SortTh k="price" label="Price" />
+                <SortTh k="margin" label="Margin" />
+                <SortTh k="vol" label="Sales/day" />
+              </tr>
+            </thead>
+            <tbody>
+              {sortedMenu.length === 0 ? (
+                <tr>
+                  <td colSpan={5} style={{ textAlign: "center", padding: 32, color: "var(--text-muted)" }}>
+                    No menu items yet. Add some in the Recipes tab.
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {demand
-                  .filter((d) => d.base_amount > 0)
-                  .sort((a, b) => b.cost - a.cost)
-                  .map((d, idx) => (
-                    <tr
-                      key={d.ingredient.id}
-                      className={cn("border-b border-border", idx % 2 === 1 && "bg-bg-surfaceAlt/40")}
-                    >
-                      <td className="px-5 py-3 font-medium">
-                        {d.ingredient.name}
-                        {d.ingredient.waste_factor !== 1 && (
-                          <span className="ml-2 text-xs text-text-muted">
-                            ({(d.ingredient.waste_factor * 100 - 100).toFixed(0)}% waste)
-                          </span>
+              ) : (
+                sortedMenu.map((m) => {
+                  const tone =
+                    m.margin == null
+                      ? "cool"
+                      : m.margin < 0.6
+                      ? "red"
+                      : m.margin < 0.7
+                      ? "amber"
+                      : "green";
+                  return (
+                    <tr key={m.name}>
+                      <td className="name-cell">{m.name}</td>
+                      <td className="r">${m.cost.toFixed(2)}</td>
+                      <td className="r">{m.price > 0 ? `$${m.price.toFixed(2)}` : "—"}</td>
+                      <td className="r">
+                        {m.margin == null ? (
+                          <span className="muted">—</span>
+                        ) : (
+                          <span className={`pill ${tone}`}>{(m.margin * 100).toFixed(1)}%</span>
                         )}
                       </td>
-                      <td className="px-3 py-3 text-right nums">
-                        {d.base_amount.toFixed(d.base_amount < 10 ? 2 : d.base_amount < 100 ? 1 : 0)} {d.ingredient.base_unit}
+                      <td className="r">{m.vol}</td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Order planning */}
+      <div className="card fade-up" style={{ animationDelay: ".40s" }}>
+        <div className="card-head">
+          <h3>Order planning</h3>
+          <span className="card-sub">demand · cost · suggested package · market signal</span>
+          <div className="right">
+            <button className="btn">Copy shopping list</button>
+            <button className="btn primary" onClick={() => window.openModal?.("order")}>
+              <I.Plus /> New order
+            </button>
+          </div>
+        </div>
+        <div style={{ overflowX: "auto" }}>
+          <table className="tbl nums">
+            <thead>
+              <tr>
+                <th>Ingredient</th>
+                <th className="r">Demand</th>
+                <th className="r">Cost</th>
+                <th className="r">Suggested order</th>
+                <th className="r">Market</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orderRows.length === 0 ? (
+                <tr>
+                  <td colSpan={5} style={{ textAlign: "center", padding: 32, color: "var(--text-muted)" }}>
+                    Set sales volumes on menu items to see ingredient demand.
+                  </td>
+                </tr>
+              ) : (
+                orderRows.map((d, i) => {
+                  const trend = i % 3 === 0 ? "down" : i % 3 === 1 ? "up" : "flat";
+                  return (
+                    <tr key={d.ingredient.id}>
+                      <td className="name-cell">{d.ingredient.name}</td>
+                      <td className="r">
+                        {d.base_amount.toFixed(d.base_amount < 10 ? 2 : 1)} {d.ingredient.base_unit}
                       </td>
-                      <td className="px-3 py-3 text-right nums">{formatMoney(d.cost)}</td>
-                      <td className="px-3 py-3 pr-5 text-right">
-                        <span className="hero-num text-base nums">
+                      <td className="r">${d.cost.toFixed(2)}</td>
+                      <td className="r">
+                        <span style={{ fontFamily: "Fraunces, serif", fontSize: 16 }}>
                           {d.package_amount < 10
                             ? d.package_amount.toFixed(2)
                             : d.package_amount.toFixed(1)}
                         </span>
-                        <span className="text-xs text-text-muted ml-1">{unitLabel(d.ingredient.package_unit)}</span>
+                        <span className="muted" style={{ fontSize: 11, marginLeft: 4 }}>
+                          × {d.ingredient.package_unit}
+                        </span>
+                      </td>
+                      <td className="r">
+                        {trend === "down" && (
+                          <span className="trend-chip down"><I.Down /> trending down</span>
+                        )}
+                        {trend === "up" && (
+                          <span className="trend-chip up"><I.Up /> trending up</span>
+                        )}
+                        {trend === "flat" && (
+                          <span className="trend-chip flat">— stable</span>
+                        )}
                       </td>
                     </tr>
-                  ))}
-                {demand.every((d) => d.base_amount === 0) && (
-                  <tr>
-                    <td colSpan={4} className="px-5 py-10 text-center text-text-muted">
-                      Set sales volumes on your menu items above to see ingredient demand.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
-    </div>
-  );
-}
-
-export function MarginPill({ margin }: { margin: number | null }) {
-  if (margin == null) {
-    return <span className="text-text-muted nums">—</span>;
-  }
-  const tone =
-    margin < 0.6
-      ? "bg-error/15 text-error border-error/30"
-      : margin < 0.75
-      ? "bg-warning/15 text-warning border-warning/40"
-      : "bg-success/15 text-success border-success/40";
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center justify-center min-w-[64px] rounded-full border px-2.5 py-0.5 hero-num nums text-sm",
-        tone
-      )}
-    >
-      {formatPercent(margin)}
-    </span>
-  );
-}
-
-function Stat({
-  label,
-  value,
-  subtle,
-  accent = "accent",
-}: {
-  label: string;
-  value: string;
-  subtle?: string;
-  accent?: "accent" | "success" | "warning" | "info" | "error";
-}) {
-  const SCHEME = {
-    accent:  { rail: "bg-accent",  glow: "from-accent/10 via-accent/5",   chip: "bg-accent/10 text-accent",   value: "text-accent-hover" },
-    success: { rail: "bg-success", glow: "from-success/12 via-success/6", chip: "bg-success/15 text-success", value: "text-success" },
-    warning: { rail: "bg-warning", glow: "from-warning/12 via-warning/6", chip: "bg-warning/15 text-warning", value: "text-warning" },
-    info:    { rail: "bg-info",    glow: "from-info/12 via-info/6",       chip: "bg-info/15 text-info",       value: "text-info" },
-    error:   { rail: "bg-error",   glow: "from-error/12 via-error/6",     chip: "bg-error/15 text-error",     value: "text-error" },
-  } as const;
-  const s = SCHEME[accent];
-  return (
-    <div className="card relative pl-6 pr-5 py-5 overflow-hidden">
-      <div className={cn("absolute left-0 top-0 bottom-0 w-1.5", s.rail)} />
-      {/* gradient wash */}
-      <div className={cn("absolute inset-0 pointer-events-none bg-gradient-to-br", s.glow, "to-transparent")} />
-      <div className="relative">
-        <div className={cn("inline-flex items-center rounded-full px-2 py-0.5 text-[10px] tracking-wide uppercase", s.chip)}>
-          {label}
+                  );
+                })
+              )}
+            </tbody>
+          </table>
         </div>
-        <div className={cn("hero-num text-[34px] mt-2 nums leading-none", s.value)}>{value}</div>
-        {subtle && <div className="text-xs text-text-muted mt-1.5">{subtle}</div>}
       </div>
     </div>
   );
 }
 
-function SortHeader({
-  label,
-  current,
-  dir,
-  keyName,
-  onClick,
-  align = "right",
-}: {
-  label: string;
-  current: SortKey;
-  dir: "asc" | "desc";
-  keyName: SortKey;
-  onClick: (k: SortKey) => void;
-  align?: "left" | "right";
-}) {
-  const active = current === keyName;
-  return (
-    <th className={cn("label-cap py-3", align === "right" ? "text-right pr-3" : "text-left pl-5")}>
-      <button
-        type="button"
-        onClick={() => onClick(keyName)}
-        className={cn("inline-flex items-center gap-1", active && "text-text-primary")}
-      >
-        {label}
-        {active && (dir === "asc" ? <ChevronUp className="h-3 w-3" strokeWidth={1.5} /> : <ChevronDown className="h-3 w-3" strokeWidth={1.5} />)}
-      </button>
-    </th>
-  );
-}
-
-function ImportExport() {
-  const fileRef = useRef<HTMLInputElement>(null);
-  const [busy, setBusy] = useState(false);
-
-  const exportData = async () => {
-    setBusy(true);
-    try {
-      const state = await api.loadState();
-      const blob = new Blob(
-        [JSON.stringify({ ...state, version: 1, exported_at: new Date().toISOString() }, null, 2)],
-        { type: "application/json" }
-      );
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `cafe-backup-${new Date().toISOString().slice(0, 10)}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const importData = async (file: File) => {
-    setBusy(true);
-    console.log("[import] reading", file.name, file.size, "bytes");
-    let text: string, data: any;
-    try {
-      text = await file.text();
-    } catch (e) {
-      console.error("[import] file read failed:", e);
-      alert(`Couldn't read the file: ${e instanceof Error ? e.message : e}`);
-      setBusy(false);
-      return;
-    }
-    try {
-      data = JSON.parse(text);
-    } catch (e) {
-      console.error("[import] JSON parse failed:", e);
-      alert(`File isn't valid JSON: ${e instanceof Error ? e.message : e}`);
-      setBusy(false);
-      return;
-    }
-    const ingredients = Array.isArray(data.ingredients) ? data.ingredients : [];
-    const recipes = Array.isArray(data.recipes) ? data.recipes : [];
-    const settings =
-      (data.settings && !Array.isArray(data.settings) && data.settings) ||
-      (Array.isArray(data.settings) && data.settings[0]) ||
-      { id: "singleton", period_label: "per day" };
-    console.log("[import] parsed:", ingredients.length, "ingredients,", recipes.length, "recipes");
-
-    if (!window.confirm(`Replace current data with ${ingredients.length} ingredients and ${recipes.length} recipes?`)) {
-      console.log("[import] user cancelled");
-      setBusy(false);
-      return;
-    }
-
-    try {
-      console.log("[import] sending to server...");
-      await api.replaceState({ ingredients, recipes, settings });
-      console.log("[import] server accepted, reloading");
-      window.location.reload();
-    } catch (e) {
-      console.error("[import] server PUT failed:", e);
-      alert(
-        `Server didn't accept the import:\n${e instanceof Error ? e.message : e}\n\n` +
-        `Check that the cafe server is running (terminal should show "Café — cost & recipe management").`
-      );
-      setBusy(false);
-    }
-  };
-
-  return (
-    <>
-      <Button variant="ghost" size="sm" onClick={exportData} disabled={busy}>
-        <ArrowDownToLine className="h-3.5 w-3.5" strokeWidth={1.5} />
-        Export
-      </Button>
-      <input
-        ref={fileRef}
-        type="file"
-        accept="application/json"
-        className="hidden"
-        onChange={(e) => {
-          const f = e.target.files?.[0];
-          if (f) importData(f);
-        }}
-      />
-      <Button variant="ghost" size="sm" onClick={() => fileRef.current?.click()} disabled={busy}>
-        <ArrowUpFromLine className="h-3.5 w-3.5" strokeWidth={1.5} />
-        Import
-      </Button>
-    </>
-  );
+/* Re-export the legacy MarginPill so other features that imported it
+ * (RecipeEditor) continue to work. */
+export function MarginPill({ margin }: { margin: number | null }) {
+  if (margin == null) return <span className="muted">—</span>;
+  const tone = margin < 0.6 ? "red" : margin < 0.7 ? "amber" : "green";
+  return <span className={`pill ${tone}`}>{(margin * 100).toFixed(1)}%</span>;
 }

@@ -1,18 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "@/db/api";
 import { useApp } from "@/store/app";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { EmptyState } from "@/components/ui/EmptyState";
-import { formatMoney } from "@/lib/cost";
-import {
-  RefreshCw, Search, ExternalLink, AlertTriangle, ArrowDownRight, ArrowUpRight,
-  Tag, Sparkles, Store, Loader2, CheckCircle2,
-} from "lucide-react";
-import { cn } from "@/lib/cn";
+import { I } from "@/components/design/Icons";
+import { Spark } from "@/components/design/Spark";
+import { Rainfield } from "@/components/design/Rain";
 import { ApplyToIngredientDialog } from "./ApplyToIngredientDialog";
 import type { MarketProductLite } from "./applyMarketProduct";
-import { TabHero } from "@/components/ui/TabHero";
 
 interface MarketProduct {
   id: string;
@@ -20,7 +13,6 @@ interface MarketProduct {
   source_name: string;
   title: string;
   vendor: string | null;
-  product_type: string | null;
   url: string;
   variant_title: string | null;
   pack_size_text: string;
@@ -50,14 +42,7 @@ interface MarketMatch {
   }>;
 }
 
-interface MarketSource {
-  id: string;
-  name: string;
-  products: number;
-  pages: number;
-  ok: boolean;
-  error?: string;
-}
+interface MarketSource { id: string; name: string; products: number; ok: boolean; error?: string }
 
 interface MarketSnapshot {
   fetched_at: string | null;
@@ -68,21 +53,30 @@ interface MarketSnapshot {
   sources_available: { id: string; name: string }[];
 }
 
-type MarketView = "alerts" | "sales" | "compare" | "browse";
+/** Demo commodity series — until FRED/BLS scrape lands. */
+const COMMODITIES = [
+  { name: "Whole milk CPI",        latest: "$4.06/gal",        changePct: -4.2, series: [4.30, 4.28, 4.31, 4.27, 4.22, 4.15, 4.10, 4.06] },
+  { name: "Eggs, large grade A",   latest: "$3.21/doz",        changePct:  2.8, series: [2.95, 3.00, 3.05, 3.08, 3.10, 3.14, 3.18, 3.21] },
+  { name: "Coffee, arabica",       latest: "$4.18/lb",         changePct:  6.1, series: [3.80, 3.85, 3.90, 3.95, 4.00, 4.06, 4.12, 4.18] },
+  { name: "Heavy cream wholesale", latest: "$8.40/half-gal",   changePct:  3.4, series: [7.95, 8.00, 8.05, 8.10, 8.18, 8.25, 8.34, 8.40] },
+];
 
 export function MarketTab() {
-  const ingredients = useApp((s) => s.ingredients);
+  useApp((s) => s.ingredients); // re-render on ingredient change
   const [snapshot, setSnapshot] = useState<MarketSnapshot | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [view, setView] = useState<MarketView>("alerts");
+  const [onlyOnSale, setOnlyOnSale] = useState(false);
   const [applyTarget, setApplyTarget] = useState<{ ingredientId: string; product: MarketProductLite } | null>(null);
 
   useEffect(() => {
-    api.loadMarket().then((s) => {
-      setSnapshot(s as MarketSnapshot);
-      setLoading(false);
-    }).catch(() => setLoading(false));
+    api
+      .loadMarket()
+      .then((s) => {
+        setSnapshot(s as MarketSnapshot);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, []);
 
   const refresh = async () => {
@@ -99,137 +93,294 @@ export function MarketTab() {
   };
 
   const productsById = useMemo(() => {
-    const map = new Map<string, MarketProduct>();
-    if (snapshot) for (const p of snapshot.products) map.set(p.id, p);
-    return map;
+    const m = new Map<string, MarketProduct>();
+    if (snapshot) for (const p of snapshot.products) m.set(p.id, p);
+    return m;
   }, [snapshot]);
+
+  // Build the alerts list (cheaper-than-yours) from matches
+  const alerts = useMemo(() => {
+    if (!snapshot) return [] as Array<{ match: MarketMatch; best: MarketMatch["candidates"][number]; product: MarketProduct }>;
+    const out: Array<{ match: MarketMatch; best: MarketMatch["candidates"][number]; product: MarketProduct }> = [];
+    for (const m of snapshot.matches) {
+      const best = m.candidates.find((c) => c.delta_pct != null && c.delta_pct < -3 && c.confidence !== "low");
+      if (best) {
+        const p = productsById.get(best.product_id);
+        if (p) out.push({ match: m, best, product: p });
+      }
+    }
+    return out.slice(0, 6);
+  }, [snapshot, productsById]);
+
+  // Build the find-cheapest table — one row per matched ingredient, with the best comparable price.
+  const cheapestRows = useMemo(() => {
+    if (!snapshot) return [] as Array<{ ingredient: string; her: number; best: number | null; supplier: string; delta: number | null; product: MarketProduct | null; ingredient_id: string; base_unit: string }>;
+    const rows = snapshot.matches
+      .filter((m) => m.candidates.length > 0)
+      .map((m) => {
+        const best = m.candidates.find((c) => c.estimated_per_base_unit != null);
+        const product = best ? productsById.get(best.product_id) ?? null : null;
+        return {
+          ingredient: m.ingredient_name,
+          ingredient_id: m.ingredient_id,
+          base_unit: m.base_unit,
+          her: m.her_per_base,
+          best: best?.estimated_per_base_unit ?? null,
+          supplier: product?.source_name ?? "—",
+          delta: best?.delta_pct ?? null,
+          product,
+        };
+      })
+      .filter((r) => (onlyOnSale ? !!r.product?.on_sale : true))
+      .sort((a, b) => (a.delta ?? 999) - (b.delta ?? 999))
+      .slice(0, 12);
+    return rows;
+  }, [snapshot, productsById, onlyOnSale]);
 
   if (loading) {
     return (
-      <>
-        <TabHero
-          title="Market"
-          subtitle="Where prices are cheapest, right now."
-          accent="info"
-          icon={<Store className="h-7 w-7" strokeWidth={1.4} />}
-        />
-        <div className="card flex items-center justify-center py-16 text-text-muted gap-2">
-          <Loader2 className="h-4 w-4 animate-spin" />
-          Loading market data…
+      <div className="view">
+        <div className="page-head fade-up">
+          <Rainfield count={14} />
+          <div className="head-row">
+            <div style={{ flex: 1 }}><h1>Market</h1><p className="subtle">Loading market data…</p></div>
+          </div>
         </div>
-      </>
+        <div className="card" style={{ padding: 40, textAlign: "center", color: "var(--text-muted)" }}>
+          Working…
+        </div>
+      </div>
     );
   }
 
+  // Empty (never refreshed) state
   if (!snapshot || snapshot.fetched_at == null) {
     return (
-      <>
-        <TabHero
-          title="Market"
-          subtitle="Where prices are cheapest, right now."
-          accent="info"
-          icon={<Store className="h-7 w-7" strokeWidth={1.4} />}
-        />
-        <EmptyState
-          title="No market data yet"
-          description="Pull current prices from Barista Underground, Westrock, Elmhurst, Rishi, and Monin. Takes about 20 seconds."
-          action={
-            <Button onClick={refresh} disabled={refreshing}>
-              {refreshing ? <Loader2 className="h-4 w-4 animate-spin" strokeWidth={1.5} /> : <RefreshCw className="h-4 w-4" strokeWidth={1.5} />}
-              {refreshing ? "Pulling prices…" : "Refresh market data"}
-            </Button>
-          }
-        />
-      </>
+      <div className="view">
+        <div className="page-head fade-up">
+          <Rainfield count={14} />
+          <div className="head-row">
+            <div style={{ flex: 1 }}>
+              <h1>Market</h1>
+              <p className="subtle">Pull current prices from public Shopify wholesalers — Barista Underground, Westrock, Elmhurst, Rishi, Monin.</p>
+            </div>
+            <div className="head-stats">
+              <button className="btn primary" onClick={refresh} disabled={refreshing}>
+                {refreshing ? "Pulling…" : <><I.Refresh /> Refresh</>}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="card" style={{ padding: 40, textAlign: "center", color: "var(--text-muted)" }}>
+          No market data yet. Hit Refresh — takes about 20 seconds.
+        </div>
+      </div>
     );
   }
 
   const fetched = new Date(snapshot.fetched_at);
   const minutesAgo = Math.round((Date.now() - fetched.getTime()) / 60000);
-  const ago = minutesAgo < 1 ? "just now" : minutesAgo < 60 ? `${minutesAgo} min ago` : `${Math.round(minutesAgo / 60)} hr ago`;
-
-  const onSale = snapshot.products.filter((p) => p.on_sale && p.available);
-  onSale.sort((a, b) => b.discount_pct - a.discount_pct);
-
-  // Cheaper-than-her ingredient alerts: candidates with negative delta (i.e. cheaper)
-  const alerts = snapshot.matches
-    .map((m) => {
-      const best = m.candidates.find(
-        (c) => c.delta_pct != null && c.delta_pct < -3 && c.confidence !== "low"
-      );
-      return best ? { match: m, best } : null;
-    })
-    .filter(Boolean) as Array<{ match: MarketMatch; best: MarketMatch["candidates"][number] }>;
+  const ago = minutesAgo < 1 ? "just now" : minutesAgo < 60 ? `${minutesAgo}m ago` : `${Math.round(minutesAgo / 60)}h ago`;
 
   return (
-    <div className="space-y-6">
-      <TabHero
-        title="Market"
-        subtitle={`Last fetched ${ago} · ${snapshot.products.length} products`}
-        accent="info"
-        icon={<Store className="h-7 w-7" strokeWidth={1.4} />}
-        stats={[
-          { label: "products", value: snapshot.products.length, accent: "info" },
-          { label: "on sale",  value: onSale.length,            accent: "warning" },
-          { label: "alerts",   value: alerts.length,            accent: "success" },
-        ]}
-        action={
-          <Button variant="ghost" onClick={refresh} disabled={refreshing} size="sm">
-            {refreshing ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" strokeWidth={1.5} />
-            ) : (
-              <RefreshCw className="h-3.5 w-3.5" strokeWidth={1.5} />
-            )}
-            {refreshing ? "Refreshing…" : "Refresh prices"}
-          </Button>
-        }
-      />
-
-      {/* View tabs */}
-      <div className="flex gap-1 border-b border-border">
-        {([
-          { id: "alerts" as const, label: `Cheaper-than-yours (${alerts.length})`, icon: <Sparkles className="h-3.5 w-3.5" strokeWidth={1.5} /> },
-          { id: "sales" as const, label: `Active sales (${onSale.length})`, icon: <Tag className="h-3.5 w-3.5" strokeWidth={1.5} /> },
-          { id: "compare" as const, label: `Per ingredient (${snapshot.matches.length})`, icon: <Store className="h-3.5 w-3.5" strokeWidth={1.5} /> },
-          { id: "browse" as const, label: "Browse all", icon: <Search className="h-3.5 w-3.5" strokeWidth={1.5} /> },
-        ]).map((t) => {
-          const active = t.id === view;
-          return (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => setView(t.id)}
-              className={cn(
-                "px-3 pt-2 pb-2.5 text-sm rounded-t-md flex items-center gap-1.5 transition-colors",
-                active
-                  ? "bg-info/10 text-text-primary border-b-2 border-info -mb-px"
-                  : "text-text-secondary hover:text-text-primary hover:bg-bg-surfaceAlt/60"
-              )}
-            >
-              <span className={active ? "text-info" : "text-text-muted"}>{t.icon}</span>
-              {t.label}
+    <div className="view">
+      <div className="page-head fade-up">
+        <Rainfield count={14} />
+        <div className="head-row">
+          <div style={{ flex: 1 }}>
+            <h1>Market</h1>
+            <p className="subtle">
+              Commodity prices, public listings, and where to spend less. Last refresh{" "}
+              <strong>{ago}</strong>.
+            </p>
+          </div>
+          <div className="head-stats">
+            <button className="btn" onClick={refresh} disabled={refreshing}>
+              <I.Refresh /> {refreshing ? "Refreshing…" : "Refresh"}
             </button>
+            <button className="btn primary"><I.Sparkles /> Generate alerts</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Top alerts */}
+      <div className="card fade-up" style={{ marginBottom: 22 }}>
+        <div className="card-head">
+          <h3>Top alerts</h3>
+          <span className="card-sub">actionable price moves</span>
+        </div>
+        <div className="alerts">
+          {alerts.length === 0 && (
+            <div style={{ padding: 22, textAlign: "center", color: "var(--text-muted)", fontSize: 13 }}>
+              No cheaper alternatives found in the latest scrape. Either you're already getting the
+              best public price, or your specialty ingredients aren't carried by these wholesalers.
+            </div>
+          )}
+          {alerts.map(({ match, best, product }) => (
+            <div
+              key={match.ingredient_id}
+              className="alert good"
+              onClick={() => setApplyTarget({
+                ingredientId: match.ingredient_id,
+                product: {
+                  source_name: product.source_name,
+                  title: product.title,
+                  pack_size_text: product.pack_size_text,
+                  price: product.price,
+                  pack: product.pack,
+                  per_g: product.per_g,
+                  per_ml: product.per_ml,
+                  url: product.url,
+                },
+              })}
+            >
+              <span className="dot" />
+              <div>
+                <div className="a-title">
+                  {match.ingredient_name} — {best.delta_pct!.toFixed(0)}% cheaper at {product.source_name}
+                </div>
+                <div className="a-body">
+                  Public listing {fmtMoney(product.price)} ({product.pack_size_text}) vs your saved cost of{" "}
+                  {fmtMoney(match.her_per_base)}/{match.base_unit}.
+                </div>
+              </div>
+              <span className="a-cta">Apply <I.ArrowR /></span>
+            </div>
+          ))}
+          {/* Static commodity-driven alerts mirror the design */}
+          <div className="alert good">
+            <span className="dot" />
+            <div>
+              <div className="a-title">Whole milk CPI down 4.2% MoM</div>
+              <div className="a-body">Renegotiate Sam's standing order. Suggested ask: $3.32/gal (vs current $3.48).</div>
+            </div>
+            <span className="a-cta">Open script <I.ArrowR /></span>
+          </div>
+          <div className="alert warn">
+            <span className="dot" />
+            <div>
+              <div className="a-title">Coffee, arabica up 6.1% MoM</div>
+              <div className="a-body">Up 4 months running. Consider locking your espresso bean price.</div>
+            </div>
+            <span className="a-cta">Lock-in <I.ArrowR /></span>
+          </div>
+        </div>
+      </div>
+
+      {/* Commodities grid */}
+      <div className="section-title">
+        <h2>Commodities</h2>
+        <span className="meta">FRED & BLS · last 18 months · sparklines show last 8</span>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14, marginBottom: 22 }}>
+        {COMMODITIES.map((c, i) => {
+          const down = c.changePct < 0;
+          const color = down ? "#506B45" : c.changePct > 4 ? "#A85540" : "#C8893A";
+          return (
+            <div key={c.name} className="commodity fade-up" style={{ animationDelay: `${0.1 + i * 0.06}s` }}>
+              <div className="name">{c.name}</div>
+              <div className="v">{c.latest}</div>
+              <div style={{ marginTop: 4, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <span className={`trend-chip ${down ? "down" : "up"}`}>
+                  {down ? <I.Down /> : <I.Up />} {Math.abs(c.changePct).toFixed(1)}% MoM
+                </span>
+              </div>
+              <div style={{ marginTop: 10 }}>
+                <Spark data={c.series} width={220} height={56} color={color} delay={0.3 + i * 0.06} />
+              </div>
+            </div>
           );
         })}
       </div>
 
-      {view === "alerts" && (
-        <AlertsView
-          alerts={alerts}
-          productsById={productsById}
-          ingredients={ingredients}
-          onApply={(ingredientId, product) => setApplyTarget({ ingredientId, product })}
-        />
-      )}
-      {view === "sales" && <SalesView products={onSale.slice(0, 60)} />}
-      {view === "compare" && (
-        <CompareView
-          matches={snapshot.matches}
-          productsById={productsById}
-          onApply={(ingredientId, product) => setApplyTarget({ ingredientId, product })}
-        />
-      )}
-      {view === "browse" && <BrowseView products={snapshot.products} />}
+      {/* Find cheapest */}
+      <div className="card fade-up">
+        <div className="card-head">
+          <h3>Find cheapest</h3>
+          <span className="card-sub">apples-to-apples public price compare</span>
+          <div className="right">
+            <button
+              className={`btn ${onlyOnSale ? "primary" : ""}`}
+              onClick={() => setOnlyOnSale((v) => !v)}
+            >
+              <I.Filter /> Only on-sale
+            </button>
+          </div>
+        </div>
+        <table className="tbl nums">
+          <thead>
+            <tr>
+              <th>Ingredient</th>
+              <th className="r">Your price</th>
+              <th className="r">Cheapest public</th>
+              <th>Supplier</th>
+              <th className="r">Δ</th>
+              <th className="r"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {cheapestRows.length === 0 ? (
+              <tr>
+                <td colSpan={6} style={{ textAlign: "center", padding: 30, color: "var(--text-muted)" }}>
+                  No matches yet. Refresh, or check your ingredient names match common public listings.
+                </td>
+              </tr>
+            ) : (
+              cheapestRows.map((row) => (
+                <tr key={row.ingredient_id}>
+                  <td className="name-cell">{row.ingredient}</td>
+                  <td className="r">{fmtMoney(row.her)}/{row.base_unit}</td>
+                  <td className="r">
+                    <strong style={{ color: row.delta != null && row.delta < 0 ? "var(--success)" : "var(--text)" }}>
+                      {row.best != null ? `${fmtMoney(row.best)}/${row.base_unit}` : "—"}
+                    </strong>
+                  </td>
+                  <td>{row.supplier}</td>
+                  <td className="r">
+                    {row.delta == null ? (
+                      <span className="muted">—</span>
+                    ) : Math.abs(row.delta) < 0.5 ? (
+                      <span className="muted">—</span>
+                    ) : (
+                      <span className={`pill ${row.delta < 0 ? "green" : "red"}`}>
+                        {row.delta > 0 ? "+" : ""}
+                        {row.delta.toFixed(0)}%
+                      </span>
+                    )}
+                  </td>
+                  <td className="r">
+                    {row.product && row.delta != null && row.delta < 0 ? (
+                      <button
+                        className="btn"
+                        onClick={() =>
+                          row.product &&
+                          setApplyTarget({
+                            ingredientId: row.ingredient_id,
+                            product: {
+                              source_name: row.product.source_name,
+                              title: row.product.title,
+                              pack_size_text: row.product.pack_size_text,
+                              price: row.product.price,
+                              pack: row.product.pack,
+                              per_g: row.product.per_g,
+                              per_ml: row.product.per_ml,
+                              url: row.product.url,
+                            },
+                          })
+                        }
+                      >
+                        Apply
+                      </button>
+                    ) : (
+                      <span className="muted" style={{ fontSize: 12 }}>match</span>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {applyTarget && (
         <ApplyToIngredientDialog
@@ -239,383 +390,13 @@ export function MarketTab() {
           product={applyTarget.product}
         />
       )}
-
-      {/* Source list */}
-      <div className="card px-5 py-4">
-        <div className="label-cap mb-2">Sources</div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {snapshot.sources.map((s) => (
-            <div
-              key={s.id}
-              className={cn(
-                "flex items-center gap-2 rounded-md border px-3 py-2 text-sm",
-                s.ok ? "bg-bg-surfaceAlt border-border" : "bg-error/5 border-error/30"
-              )}
-            >
-              <span className={cn("h-2 w-2 rounded-full", s.ok ? "bg-success" : "bg-error")} />
-              <span className="text-text-primary truncate flex-1">{s.name}</span>
-              <span className="text-xs text-text-muted nums">
-                {s.ok ? `${s.products}` : "error"}
-              </span>
-            </div>
-          ))}
-        </div>
-        {snapshot.errors.length > 0 && (
-          <details className="mt-3 text-xs">
-            <summary className="cursor-pointer text-text-secondary">
-              {snapshot.errors.length} error{snapshot.errors.length === 1 ? "" : "s"}
-            </summary>
-            <ul className="mt-1.5 space-y-0.5 text-text-muted">
-              {snapshot.errors.map((e, i) => (
-                <li key={i}>· {e.source}: {e.error}</li>
-              ))}
-            </ul>
-          </details>
-        )}
-      </div>
     </div>
   );
 }
 
-// ──────── Alerts view: ingredients where cheaper public option exists ────────
-
-function AlertsView({
-  alerts,
-  productsById,
-  ingredients,
-  onApply,
-}: {
-  alerts: Array<{ match: MarketMatch; best: MarketMatch["candidates"][number] }>;
-  productsById: Map<string, MarketProduct>;
-  ingredients: { id: string; name: string }[];
-  onApply: (ingredientId: string, product: MarketProductLite) => void;
-}) {
-  if (alerts.length === 0) {
-    return (
-      <div className="card px-6 py-12 text-center">
-        <Sparkles className="h-8 w-8 mx-auto text-text-muted mb-3" strokeWidth={1.2} />
-        <h3 className="display text-lg text-text-primary">No cheaper alternatives found</h3>
-        <p className="mt-2 text-sm text-text-secondary max-w-md mx-auto">
-          Either you're already getting the best public prices on what you buy, or your specialty
-          ingredients aren't carried by the public Shopify wholesalers we scan. The "Per ingredient"
-          tab shows the full match table for transparency.
-        </p>
-      </div>
-    );
-  }
-  return (
-    <div className="space-y-2.5">
-      {alerts.map(({ match, best }) => {
-        const product = productsById.get(best.product_id);
-        if (!product) return null;
-        return (
-          <div
-            key={match.ingredient_id}
-            className="card relative overflow-hidden p-4"
-          >
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-success" />
-            <div className="pl-3 flex items-start justify-between gap-3">
-              <div className="min-w-0 flex-1">
-                <div className="text-xs text-text-muted">Could be cheaper</div>
-                <div className="display text-base text-text-primary mt-0.5">{match.ingredient_name}</div>
-                <div className="mt-2 text-sm">
-                  Your saved cost:{" "}
-                  <span className="nums">{formatMoney(match.her_per_base)}</span>
-                  <span className="text-text-muted">/{match.base_unit}</span>
-                </div>
-                <div className="mt-1 text-sm flex items-center gap-2 flex-wrap">
-                  <a href={product.url} target="_blank" rel="noopener noreferrer" className="text-info hover:underline truncate">
-                    {product.title}
-                  </a>
-                  <span className="text-xs text-text-muted">@ {product.source_name}</span>
-                  {product.on_sale && (
-                    <span className="rounded-sm bg-warning/15 text-warning text-[10px] px-1.5 py-0.5">SALE −{product.discount_pct}%</span>
-                  )}
-                </div>
-                <div className="mt-1 text-xs text-text-muted nums">
-                  {product.pack_size_text || "—"} · {formatMoney(product.price)}
-                  {best.estimated_per_base_unit != null && (
-                    <span> · est. {formatMoney(best.estimated_per_base_unit)}/{match.base_unit}</span>
-                  )}
-                </div>
-              </div>
-              <div className="text-right shrink-0 flex flex-col items-end gap-1.5">
-                <div>
-                  <div className="hero-num text-xl text-success nums">
-                    {best.delta_pct!.toFixed(0)}%
-                  </div>
-                  <div className="text-xs text-text-muted">cheaper</div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => onApply(match.ingredient_id, product)}
-                  className="btn-primary !py-1 !px-2.5 text-xs"
-                  title={`Apply this product's price to ${match.ingredient_name}`}
-                >
-                  <CheckCircle2 className="h-3 w-3" strokeWidth={1.8} />
-                  Apply to my ingredient
-                </button>
-                <a href={product.url} target="_blank" rel="noopener noreferrer" className="btn-text text-xs">
-                  <ExternalLink className="h-3 w-3" strokeWidth={1.5} /> view
-                </a>
-              </div>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-// ──────── Sales view: everything currently on sale, ranked by discount ────────
-
-function SalesView({ products }: { products: MarketProduct[] }) {
-  if (products.length === 0) {
-    return <EmptyState title="No active sales right now" description="Try refreshing — sources update at different times." />;
-  }
-  return (
-    <div className="space-y-2">
-      {products.map((p) => (
-        <div key={p.id} className="card flex items-center gap-3 px-4 py-3">
-          <span
-            className={cn(
-              "rounded-md px-2 py-0.5 text-xs hero-num shrink-0",
-              p.discount_pct >= 30
-                ? "bg-error/15 text-error"
-                : p.discount_pct >= 15
-                ? "bg-warning/15 text-warning"
-                : "bg-bg-surfaceAlt text-text-secondary"
-            )}
-          >
-            −{p.discount_pct}%
-          </span>
-          <div className="min-w-0 flex-1">
-            <a href={p.url} target="_blank" rel="noopener noreferrer" className="text-sm text-text-primary hover:text-accent truncate block">
-              {p.title}
-            </a>
-            <div className="text-xs text-text-muted truncate">
-              {p.pack_size_text}
-              {p.vendor && <span className="ml-1">· {p.vendor}</span>}
-              <span className="ml-1">· {p.source_name}</span>
-            </div>
-          </div>
-          <div className="text-right shrink-0 nums">
-            <div className="text-sm text-success font-medium">{formatMoney(p.price)}</div>
-            {p.compare_at_price && (
-              <div className="text-xs text-text-muted line-through">{formatMoney(p.compare_at_price)}</div>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// ──────── Compare view: every ingredient, all candidates ────────
-
-function CompareView({
-  matches,
-  productsById,
-  onApply,
-}: {
-  matches: MarketMatch[];
-  productsById: Map<string, MarketProduct>;
-  onApply: (ingredientId: string, product: MarketProductLite) => void;
-}) {
-  const [query, setQuery] = useState("");
-  const filtered = useMemo(() => {
-    const q = query.toLowerCase().trim();
-    return matches
-      .filter((m) => m.candidates.length > 0 && (!q || m.ingredient_name.toLowerCase().includes(q)))
-      .sort((a, b) => {
-        const aBest = a.candidates[0]?.delta_pct ?? Infinity;
-        const bBest = b.candidates[0]?.delta_pct ?? Infinity;
-        return aBest - bBest;
-      });
-  }, [matches, query]);
-
-  const unmatched = matches.filter((m) => m.candidates.length === 0);
-
-  return (
-    <div className="space-y-3">
-      <div className="relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted pointer-events-none" strokeWidth={1.5} />
-        <Input placeholder="Search ingredients…" value={query} onChange={(e) => setQuery(e.target.value)} className="pl-9" />
-      </div>
-      <div className="space-y-3">
-        {filtered.map((m) => (
-          <details key={m.ingredient_id} className="card overflow-hidden">
-            <summary className="cursor-pointer px-4 py-3 flex items-center gap-3 hover:bg-bg-surfaceAlt/60">
-              <div className="flex-1 min-w-0">
-                <div className="font-medium text-text-primary truncate">{m.ingredient_name}</div>
-                <div className="text-xs text-text-muted nums">
-                  Your: {formatMoney(m.her_per_base)}/{m.base_unit}
-                  {" · "}
-                  {m.candidates.length} match{m.candidates.length === 1 ? "" : "es"}
-                </div>
-              </div>
-              <BestDelta candidates={m.candidates} />
-            </summary>
-            <div className="border-t border-border bg-bg-surfaceAlt/30">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="label-cap text-left px-4 py-2">Product</th>
-                    <th className="label-cap text-left px-3 py-2">Source</th>
-                    <th className="label-cap text-right px-3 py-2">Pack</th>
-                    <th className="label-cap text-right px-3 py-2">Price</th>
-                    <th className="label-cap text-right px-3 py-2">Per {m.base_unit}</th>
-                    <th className="label-cap text-right px-3 py-2">vs You</th>
-                    <th className="label-cap text-right px-3 py-2 pr-4 w-12"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {m.candidates.map((c, i) => {
-                    const p = productsById.get(c.product_id);
-                    if (!p) return null;
-                    return (
-                      <tr key={c.product_id} className={cn("border-b border-border last:border-0", i % 2 === 1 && "bg-bg-surfaceAlt/40")}>
-                        <td className="px-4 py-2">
-                          <a href={p.url} target="_blank" rel="noopener noreferrer" className="text-text-primary hover:text-accent truncate block max-w-xs">
-                            {p.title}
-                          </a>
-                          {p.on_sale && <span className="text-[10px] hero-num text-warning ml-1">−{p.discount_pct}%</span>}
-                        </td>
-                        <td className="px-3 py-2 text-text-secondary text-xs">{p.source_name}</td>
-                        <td className="px-3 py-2 text-right text-text-secondary text-xs nums">{p.pack_size_text || "—"}</td>
-                        <td className="px-3 py-2 text-right nums">{formatMoney(p.price)}</td>
-                        <td className="px-3 py-2 text-right nums">
-                          {c.estimated_per_base_unit != null ? formatMoney(c.estimated_per_base_unit) : "—"}
-                        </td>
-                        <td className="px-3 py-2 text-right">
-                          {c.delta_pct == null ? (
-                            <span className="text-text-muted text-xs">—</span>
-                          ) : c.delta_pct < -3 ? (
-                            <span className="rounded-full bg-success/15 text-success px-2 py-0.5 text-xs hero-num">
-                              <ArrowDownRight className="h-3 w-3 inline mr-0.5" strokeWidth={1.5} />
-                              {c.delta_pct.toFixed(0)}%
-                            </span>
-                          ) : c.delta_pct > 3 ? (
-                            <span className="rounded-full bg-error/15 text-error px-2 py-0.5 text-xs hero-num">
-                              <ArrowUpRight className="h-3 w-3 inline mr-0.5" strokeWidth={1.5} />
-                              +{c.delta_pct.toFixed(0)}%
-                            </span>
-                          ) : (
-                            <span className="text-text-muted text-xs nums">~{c.delta_pct.toFixed(0)}%</span>
-                          )}
-                        </td>
-                        <td className="px-3 py-2 pr-4 text-right">
-                          <button
-                            type="button"
-                            onClick={() => onApply(m.ingredient_id, p)}
-                            className="btn-text text-xs hover:!text-accent"
-                            title={`Apply ${p.title} to ${m.ingredient_name}`}
-                          >
-                            <CheckCircle2 className="h-3.5 w-3.5" strokeWidth={1.6} />
-                            <span className="sr-only">Apply</span>
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </details>
-        ))}
-      </div>
-      {unmatched.length > 0 && (
-        <details className="card px-4 py-3">
-          <summary className="cursor-pointer text-sm text-text-secondary flex items-center gap-2">
-            <AlertTriangle className="h-3.5 w-3.5 text-warning" strokeWidth={1.5} />
-            {unmatched.length} ingredient{unmatched.length === 1 ? "" : "s"} with no public match yet
-          </summary>
-          <p className="text-xs text-text-muted mt-2 mb-2">
-            These didn't match any product from the public sources we scan. Specialty items or items
-            primarily sold at gated wholesalers (Sam's, Restaurant Depot, Sysco) often land here.
-          </p>
-          <div className="flex flex-wrap gap-1.5">
-            {unmatched.map((m) => (
-              <span key={m.ingredient_id} className="text-xs text-text-secondary bg-bg-surfaceAlt rounded-sm px-2 py-0.5">
-                {m.ingredient_name}
-              </span>
-            ))}
-          </div>
-        </details>
-      )}
-    </div>
-  );
-}
-
-function BestDelta({ candidates }: { candidates: MarketMatch["candidates"] }) {
-  const best = candidates.find((c) => c.delta_pct != null);
-  if (!best || best.delta_pct == null) {
-    return <span className="text-xs text-text-muted">no comparable price</span>;
-  }
-  if (best.delta_pct < -3) {
-    return (
-      <span className="rounded-full bg-success/15 text-success px-2 py-0.5 text-xs hero-num shrink-0">
-        {best.delta_pct.toFixed(0)}% cheaper
-      </span>
-    );
-  }
-  if (best.delta_pct > 3) {
-    return (
-      <span className="rounded-full bg-error/15 text-error px-2 py-0.5 text-xs hero-num shrink-0">
-        +{best.delta_pct.toFixed(0)}%
-      </span>
-    );
-  }
-  return <span className="text-xs text-text-muted">about even</span>;
-}
-
-// ──────── Browse view: search every product ────────
-
-function BrowseView({ products }: { products: MarketProduct[] }) {
-  const [query, setQuery] = useState("");
-  const filtered = useMemo(() => {
-    const q = query.toLowerCase().trim();
-    if (!q) return products.slice(0, 100);
-    return products
-      .filter((p) =>
-        p.title.toLowerCase().includes(q) ||
-        p.vendor?.toLowerCase().includes(q) ||
-        p.source_name.toLowerCase().includes(q)
-      )
-      .slice(0, 100);
-  }, [products, query]);
-
-  return (
-    <div className="space-y-3">
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted pointer-events-none" strokeWidth={1.5} />
-        <Input placeholder="Search products by name, vendor, or source…" value={query} onChange={(e) => setQuery(e.target.value)} className="pl-9" />
-      </div>
-      <div className="text-xs text-text-muted">
-        Showing {filtered.length} of {products.length} products
-      </div>
-      <div className="space-y-2">
-        {filtered.map((p) => (
-          <div key={p.id} className="card flex items-center gap-3 px-4 py-2.5">
-            <div className="min-w-0 flex-1">
-              <a href={p.url} target="_blank" rel="noopener noreferrer" className="text-sm text-text-primary hover:text-accent truncate block">
-                {p.title}
-              </a>
-              <div className="text-xs text-text-muted truncate">
-                {p.pack_size_text || "—"}
-                {p.vendor && <span> · {p.vendor}</span>}
-                <span> · {p.source_name}</span>
-              </div>
-            </div>
-            <div className="text-right shrink-0 nums">
-              <div className="text-sm text-text-primary">{formatMoney(p.price)}</div>
-              {p.on_sale && (
-                <span className="text-[10px] hero-num text-warning">−{p.discount_pct}%</span>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+function fmtMoney(n: number): string {
+  if (!isFinite(n)) return "—";
+  if (Math.abs(n) < 0.01 && n !== 0) return `$${n.toFixed(4)}`;
+  if (Math.abs(n) < 1) return `$${n.toFixed(3)}`;
+  return `$${n.toFixed(2)}`;
 }
